@@ -10,9 +10,7 @@ const dataBaseName = "hotel-booking";
 
 const collections = {
     rooms: "rooms",
-    months: "months",
-    persons: "persons",
-    bookings: "bookings"
+    booking: "booking"
 }
 
 const mongoUrl = process.env.MONGODB_URL;
