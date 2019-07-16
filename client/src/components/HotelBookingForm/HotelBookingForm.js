@@ -42,7 +42,7 @@ class HotelBookingForm extends Component {
 
     componentDidMount() {
         if (this.props.showModal) {
-            console.log(this.props)
+            console.log('%c props', 'color: red', this.props)
             let disable = false;
             if (this.props.status === 'viewBooking') {
                 disable = true;

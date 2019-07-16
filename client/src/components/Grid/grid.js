@@ -144,7 +144,7 @@ class Grid extends Component {
             let dateNumber = dateFNS.getDate(date);
             item[dateNumber] = {
                 ...item[dateNumber],
-                bookingId: booking._id,
+                booking: booking,
                 showBooking: true,
                 name: `${booking.firstName} ${booking.lastName}`,
                 color
