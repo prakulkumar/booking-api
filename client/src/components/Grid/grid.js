@@ -10,7 +10,8 @@ class Grid extends Component {
         showModal: false,
         items: [],
         rooms: [],
-        monthlyBooking: {},
+        monthObj: {},
+        bookingArray: [],
         loading: true,
         detailsForForm: {}
     }
@@ -31,58 +32,163 @@ class Grid extends Component {
         return rgb;
     }
 
-    componentDidMount() {
+    componentDidMount = async () => {
         const date = new Date();
-        console.log(1212121, dateFNS.addMonths(new Date(2019, 0), 1));
-
-        const monthNumber = dateFNS.getMonth(date);
-        const year = dateFNS.getYear(date);
-        const numberOfDays = dateFNS.getDaysInMonth(new Date(year, monthNumber));
-
-        const monthlyBookingObj = {
-            monthNumber,
-            year,
-            numberOfDays,
-            bookingId: 12345
+        const monthObj = {
+            monthNumber: dateFNS.getMonth(date),
+            year: dateFNS.getYear(date),
+            numberOfDays: dateFNS.getDaysInMonth(date)
         }
 
-        this.setState({ monthlyBooking: monthlyBookingObj });
-        this.getRooms(monthlyBookingObj)
+        this.setState({ monthObj, rooms: (await this.getRooms()).data });
+
+        const tempArray = new Array(this.state.rooms.length);
+        this.finalArray(tempArray, this.state.monthObj);
+        this.setBookingsForMonth(this.state.monthObj);
     }
 
-    getRooms = (monthlyBookingObj) => {
-        axios.get('/getRooms')
-            .then(res => {
-                this.setState({ rooms: res.data });
-
-                const tempArray = new Array(this.state.rooms.length);
-                this.finalArray(tempArray, monthlyBookingObj);
-                this.getMonthObj({ year: monthlyBookingObj.year, monthNumber: monthlyBookingObj.monthNumber });
-            }).catch(error => console.log(error));
+    getBookings = async (monthObj) => {
+        try {
+            return await axios.post('/bookings/filterByMonth', monthObj);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
-    getMonthObj = (monthObj) => {
-        axios.post('/checkForMonthObj', monthObj)
-            .then(res => {
-                console.log(res.data);
-                if (res.status === 200) {
-                    this.bookRoom(res.data[0]);
-                    this.setState({ loading: false });
-                }
-            })
-            .catch(error => {
-                console.log(error);
-                this.setState({ loading: false })
-            })
+    getRooms = async () => {
+        try {
+            return await axios.get('/rooms');
+        } catch (error) {
+            console.log(error);
+        }
     }
 
-    finalArray = (tempArray, monthlyBooking) => {
+    finalArray = (tempArray, monthObj) => {
         for (let i = 0; i < tempArray.length; i++) {
-            tempArray[i] = new Array(monthlyBooking.numberOfDays).fill({ roomNumber: this.state.rooms[i].roomNumber, available: true});
+            tempArray[i] = new Array(monthObj.numberOfDays)
+                .fill({
+                    roomNumber: this.state.rooms[i].roomNumber,
+                    roomId: this.state.rooms[i]._id
+                });
             tempArray[i].unshift({ showRoomNumber: this.state.rooms[i].roomNumber });
         }
 
-        this.setState({ items: tempArray, monthlyBooking });
+        this.setState({ items: tempArray });
+    }
+
+    // cloning = (values) => {
+    //     let newValues = [...values];
+    //     newValues.forEach((value, index) => {
+    //         let updatedValue = [...value];
+    //         updatedValue[0] = { ...updatedValue[0] };
+    //         newValues[index] = updatedValue;
+    //     });
+
+    //     return newValues;
+    // }
+
+    setBookingsForMonth = (monthObj) => {
+        this.getBookings(monthObj).then(result => {
+            if (result.status === 200) {
+                result.data.forEach(booking => {
+                    if (booking.months.length === 1) this.setBookingForMonth(booking);
+                    else if (booking.months.length > 1) this.setBookingForMonths(booking);
+                });
+                this.setState({ loading: false });
+            };
+        });
+    }
+
+    setBookingForMonth = (booking) => {
+        let color = this.getRandomColor();
+        let checkIn = new Date(booking.checkIn);
+        let checkOut = new Date(booking.checkOut);
+        booking.rooms.forEach(roomId => {
+            this.setBookedRooms(roomId, checkIn, checkOut, color, booking);
+        });
+    }
+
+    setBookingForMonths = (booking) => {
+        let checkIn, checkOut;
+        let color = this.getRandomColor();
+        let monthObj = this.state.monthObj;
+        let index = booking.months.findIndex(month => month.monthNumber === monthObj.monthNumber);
+
+        if (index === 0) {
+            checkIn = new Date(booking.checkIn);
+            checkOut = new Date(`${monthObj.monthNumber + 1}/${monthObj.numberOfDays}/${monthObj.year}`)
+        }
+
+        else if (index === booking.months.length - 1) {
+            checkIn = new Date(`${monthObj.monthNumber + 1}/1/${monthObj.year}`);
+            checkOut = new Date(booking.checkOut);
+        }
+
+        else {
+            checkIn = new Date(`${monthObj.monthNumber + 1}/1/${monthObj.year}`);
+            checkOut = new Date(`${monthObj.monthNumber + 1}/${monthObj.numberOfDays}/${monthObj.year}`);
+        }
+
+        booking.rooms.forEach(roomId => {
+            this.setBookedRooms(roomId, checkIn, checkOut, color, booking);
+        });
+    }
+
+    setBookedRooms = (roomId, checkIn, checkOut, color, booking) => {
+        let bookedRoom = this.state.rooms.find(room => room._id === roomId);
+        let items = [...this.state.items];
+        let item = items.find(item => item[0].showRoomNumber === bookedRoom.roomNumber);
+        let dates = dateFNS.eachDay(checkIn, checkOut);
+
+        dates.forEach(date => {
+            let dateNumber = dateFNS.getDate(date);
+            item[dateNumber] = {
+                ...item[dateNumber],
+                bookingId: booking._id,
+                showBooking: true,
+                name: `${booking.firstName} ${booking.lastName}`,
+                color
+            };
+        });
+
+        this.setState({ items });
+    }
+
+    // showModalHandler = (subitem, dayOfMonth) => {
+    //     const monthlyBooking = this.state.monthlyBooking;
+    //     subitem.date = new Date(monthlyBooking.year, monthlyBooking.monthNumber, dayOfMonth);
+    //     this.setState({ detailsForForm: subitem, showModal: true });
+    // }
+
+    // closeModalHandler = () => {
+    //     this.setState({ showModal: false });
+    // }
+
+    // handleBookings = () => {
+    //     this.getRooms(this.state.monthlyBooking);
+    // }
+
+    // modalStatus = () => {
+    //     return this.state.detailsForForm.available ? 'newBooking' : 'viewBooking';
+    // }
+
+    changeMonth = (value) => {
+        this.setState({ loading: true });
+        const monthObj = { ...this.state.monthObj };
+        const newMonthDate = dateFNS.addMonths(new Date(monthObj.year, monthObj.monthNumber), value);
+        monthObj.monthNumber = dateFNS.getMonth(newMonthDate);
+        monthObj.numberOfDays = dateFNS.getDaysInMonth(newMonthDate);
+        monthObj.year = dateFNS.getYear(newMonthDate);
+
+        this.setState({ monthObj });
+
+        const tempArray = new Array(this.state.rooms.length);
+        this.finalArray(tempArray, monthObj);
+        this.setBookingsForMonth(monthObj);
+    }
+
+    getNameOfMonth = () => {
+        return dateFNS.format(new Date(this.state.monthObj.year, this.state.monthObj.monthNumber), 'MMMM').toUpperCase();
     }
 
     renderShortName = (name) => {
@@ -93,11 +199,26 @@ class Grid extends Component {
     setClassForCell = (subitemIndex) => {
         let date = dateFNS.getDate(new Date());
         let month = dateFNS.getMonth(new Date());
-        return subitemIndex < date && month === this.state.monthlyBooking.monthNumber ? 'template_subitem noselect pointerCursor disable-cell' : 'template_subitem noselect pointerCursor';
+        return subitemIndex < date && month === this.state.monthObj.monthNumber ? 'template_subitem noselect pointerCursor disable-cell' : 'template_subitem noselect pointerCursor';
     }
 
     tooltipPlacement = (itemIndex) => {
         return itemIndex === 0 || itemIndex === 1 ? 'bottom' : 'top';
+    }
+
+    setClassForNavigatingMonth = () => {
+        let month = dateFNS.getMonth(new Date());
+        return month === this.state.monthObj.monthNumber ? "fa fa-chevron-left disableMonthNav" : "fa fa-chevron-left pointerCursor";
+    }
+
+    renderOverlay = () => {
+        return (this.state.loading ?
+            <div className="template_overlay">
+                <div className="template_overlay__container">
+                    <div className="spinner-border text-light" role="status"></div>
+                </div>
+            </div>
+            : null)
     }
 
     renderItems = () => {
@@ -119,106 +240,10 @@ class Grid extends Component {
         )
     }
 
-    booking = (bookObj, color) => {
-        const tempArray = [...this.state.items];
-        const find = tempArray.find(item => item[0].showRoomNumber === bookObj.roomNumber);
-
-        if (find) {
-            console.log(33333, bookObj);
-
-            const a = {
-                checkIn: "2019-07-13T18:30:00.000Z",
-                checkOut: "2019-07-17T18:30:00.000Z"
-            }
-
-            console.log(dateFNS.eachDay(a.checkIn, a.checkOut));
-
-            bookObj.dates.forEach(date => {
-                let dateNumber = dateFNS.getDate(new Date(date));
-                find[dateNumber] = { ...find[dateNumber], bookingId: bookObj.bookingId, showBooking: true, name: bookObj.personName, color, available: false };
-            });
-        }
-        this.setState({ items: tempArray });
-    }
-
-    bookRoom = (monthObj) => {
-        monthObj.bookingArray.forEach(item => {
-            const color = this.getRandomColor();
-            this.booking(item, color);
-        })
-    }
-
-    changeMonth = (value) => {
-        this.setState({ loading: true });
-        const monthlyBooking = { ...this.state.monthlyBooking };
-        const numberOfDays = dateFNS.getDaysInMonth(new Date(monthlyBooking.year, monthlyBooking.monthNumber + value));
-        monthlyBooking.monthNumber = monthlyBooking.monthNumber + value;
-
-        monthlyBooking.numberOfDays = numberOfDays;
-
-        monthlyBooking.bookingId = monthlyBooking.bookingId + value;
-
-        if (monthlyBooking.monthNumber > 11) {
-            monthlyBooking.monthNumber = 0;
-        } else if (monthlyBooking.monthNumber < 0) {
-            monthlyBooking.monthNumber = 11;
-        }
-
-        if (value === 1 && monthlyBooking.monthNumber === 0) {
-            monthlyBooking.year = monthlyBooking.year + 1;
-        } else if (value === -1 && monthlyBooking.monthNumber === 11) {
-            monthlyBooking.year = monthlyBooking.year - 1;
-        }
-
-        this.setState({ monthlyBooking });
-
-        const tempArray = new Array(this.state.rooms.length);
-        this.finalArray(tempArray, monthlyBooking);
-
-        this.getMonthObj({ year: monthlyBooking.year, monthNumber: monthlyBooking.monthNumber });
-    }
-
-    getNameOfMonth = () => {
-        return dateFNS.format(new Date(this.state.monthlyBooking.year, this.state.monthlyBooking.monthNumber), 'MMMM').toUpperCase();
-    }
-
-    showModalHandler = (subitem, dayOfMonth) => {
-        const monthlyBooking = this.state.monthlyBooking;
-        subitem.date = new Date(monthlyBooking.year, monthlyBooking.monthNumber, dayOfMonth);
-        this.setState({ detailsForForm: subitem, showModal: true });
-    }
-
-    closeModalHandler = () => {
-        this.setState({ showModal: false });
-    }
-
-    renderOverlay = () => {
-        return (this.state.loading ?
-            <div className="template_overlay">
-                <div className="template_overlay__container">
-                    <div className="spinner-border text-light" role="status"></div>
-                </div>
-            </div>
-            : null)
-    }
-
-    setClassForNavigatingMonth = () => {
-        let month = dateFNS.getMonth(new Date());
-        return month === this.state.monthlyBooking.monthNumber ? "fa fa-chevron-left disableMonthNav" : "fa fa-chevron-left pointerCursor";
-    }
-
-    handleBookings = () => {
-        this.getRooms(this.state.monthlyBooking);
-    }
-
-    modalStatus = () => {
-        return this.state.detailsForForm.available ? 'newBooking' : 'viewBooking';
-    }
-
     render() {
         let newRow = [];
-        if (this.state.monthlyBooking.numberOfDays) {
-            newRow = new Array(this.state.monthlyBooking.numberOfDays + 1);
+        if (this.state.monthObj.numberOfDays) {
+            newRow = new Array(this.state.monthObj.numberOfDays + 1);
             for (let i = 0; i < newRow.length; i++) {
                 if (i !== 0) { newRow[i] = { date: i } } else { newRow[i] = {} }
             }
@@ -227,13 +252,13 @@ class Grid extends Component {
         return (
             <div className="template_container">
                 {this.renderOverlay()}
-                {this.state.monthlyBooking.year ? <div style={{ height: '100%' }}>
+                {this.state.monthObj.year ? <div style={{ height: '100%' }}>
                     <Navbar bg='light' className="app__navbar">
                         <i className={this.setClassForNavigatingMonth()} onClick={() => this.changeMonth(-1)}></i>
-                        <div style={{ fontWeight: 'bold', fontSize: '18px' }}>{this.getNameOfMonth()} {this.state.monthlyBooking.year}</div>
+                        <div style={{ fontWeight: 'bold', fontSize: '18px' }}>{this.getNameOfMonth()} {this.state.monthObj.year}</div>
                         <i className="fa fa-chevron-right pointerCursor" onClick={() => this.changeMonth(1)}></i>
                     </Navbar>
-                    <div className="template_item noselect">{newRow.map((subitem, index) =>
+                    <div className="template_item noselect">{newRow.map((subitem) =>
                         <div key={`app__${subitem.date}`} className="template_subitem importantCells">
                             {subitem.date < 10 ? '0' + subitem.date : subitem.date}
                         </div>)}
