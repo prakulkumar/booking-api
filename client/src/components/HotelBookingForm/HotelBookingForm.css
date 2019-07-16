@@ -1,8 +1,3 @@
-.hotelBookingForm {
-    width: 100%;
-    height: 100%;
-}
-
 .form-row>.col, .form-row>.col-md-5 {
     display: flex !important;
 }
@@ -15,107 +10,113 @@
     color: red;
 }
 
-.submitButtonContainer {
-    margin-top: 2%;
-    padding-top: 5%;
-    border-top: 1px solid #dee2e6;
-}
-
-.submitButtonContainer__buttonPair {
-    float: right;
-}
-
-/* .roomDetailsFormContainer {
-    margin-top: 3%;
-    padding-top: 5%;
-    border-top: 1px solid #dee2e6;
-} */
-
-.roomDetailsForm {
-    height: 200px;
+.room-details-form {
+    margin: 20px 0;
+    height: 162px;
     overflow-y: scroll;
     overflow-x: hidden;
-    padding-right: 15px;
 }
 
-.roomDetailsForm::-webkit-scrollbar {
+.room-details-form::-webkit-scrollbar {
     width: 4px;
 }
 
-/* .roomDetailsForm::-webkit-scrollbar-track {
+/* .room-details-form::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
  } */
 
-.roomDetailsForm::-webkit-scrollbar-thumb {
+.room-details-form::-webkit-scrollbar-thumb {
     background-color: darkgrey;
     outline: 1px solid slategrey;
     border-radius: 4px;
 }
 
-.form {
-    width: 100%;
+.amount-details {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
 }
 
-.bookingDetailsForm {
-    width: 45%;
-}
-
-.addRoomForm {
-    width: 35%;
-}
-
-.separator {
-    border-left: 1px solid #ced4da;
-    margin: 0 2%;
-}
-
-.amountDetails {
+.amount-details__detail {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
 }
 
-.icon {
+.amount-details__detail > p {
+    width: 30%;
+}
+
+/* .icon {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-/* .icon:hover {
-    color: #dc3545;
 } */
 
-@media (min-width: 992px) {
-    .abcd .modal-lg {
-        max-width: 1000px;
-    }
-
-    .efgh .modal-lg {
-        max-width: 800px;
-    }
+.icon-medium {
+    font-size: 20px;
 }
 
-.editButton {
-    margin-left: 10px;
+/* .margin-left-10 {
+    margin-left: 25px;
+} */
+
+/* .button-container {
+    text-align: right;
+} */
+
+/* .button {
     box-sizing: border-box;
-    padding: 1%;
+    border-radius: 100%;
+    display: inline-block;
+}
+
+.button:hover {
+    transform: scale(1.1);
+} */
+
+/* .btn-edit {
     color: #007bff;
 }
 
-.editButton i:hover {
+.btn-edit i:hover {
     color: #0069d9;
-    transform: scale(1.1);
+} */
+
+/* .btn-cancel-booking {
+    color: #dc3545;
 }
 
-.formVisibilityNone {
-    display: none;
+.btn-cancel-booking:hover {
+    color: #c82333;
+} */
+
+.btn-no-border {
+    border: none !important;
+    background-color: #fff !important;
 }
 
-.deleteButton {
-    color: black;
+.btn-no-border:hover {
+    transform: scale(1.2);
 }
 
-.deleteButton:hover {
-    color: #dc3545
+.btn-no-border:focus {
+    box-shadow: none !important;
+}
+
+.btn-no-border--primary:hover {
+    color: #0069d9 !important;
+    background-color: #fff !important;
+}
+
+.btn-no-border--danger:hover {
+    color: #c82333 !important;
+    background-color: #fff !important;
+}
+
+.btn-no-border--secondary:hover {
+    color: #5a6268 !important;
+    background-color: #fff !important;
+}
+
+.modal-footer {
+    margin-top: 2%;
 }

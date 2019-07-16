@@ -78,7 +78,7 @@ class Grid extends Component {
 
     finalArray = (tempArray, monthlyBooking) => {
         for (let i = 0; i < tempArray.length; i++) {
-            tempArray[i] = new Array(monthlyBooking.numberOfDays).fill({ roomNumber: this.state.rooms[i].roomNumber, available: true });
+            tempArray[i] = new Array(monthlyBooking.numberOfDays).fill({ roomNumber: this.state.rooms[i].roomNumber, available: true});
             tempArray[i].unshift({ showRoomNumber: this.state.rooms[i].roomNumber });
         }
 
@@ -240,13 +240,14 @@ class Grid extends Component {
                     </div>
                     <div className="template_item__container">{this.renderItems()}</div>
 
-                    {/* {this.state.showModal ? <HotelBookingForm
+                    {this.state.showModal ? <HotelBookingForm
                         detailsForForm={this.state.detailsForForm}
                         showModal={this.state.showModal}
                         onClose={this.closeModalHandler}
                         handleBookings={this.handleBookings}
-                        status={this.modalStatus()}>
-                    </HotelBookingForm> : null} */}
+                        status={this.modalStatus()}
+                        rooms={this.state.rooms}>
+                    </HotelBookingForm> : null}
                 </div> : null}
             </div>
         )
