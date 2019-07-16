@@ -61,7 +61,7 @@ class HotelBookingForm extends Component {
             console.log(this.state);
 
             // when clicked to view the booking details
-            if (!this.props.detailsForForm.available) {
+            if (!this.props.detailsForForm.showBooking) {
                 axios.get(`/getBookingDetails/${this.props.detailsForForm.bookingId}`)
                     .then(res => {
                         let data = res.data;
@@ -234,7 +234,7 @@ class HotelBookingForm extends Component {
                 </Form.Group>
                 <Form.Group as={Col} md="2" className="icon">
                     <Button variant="outline-primary"
-                        className="btn-no-border btn-no-border--primary"
+                        className="btn-no-border btn-no-border--primary addIcon"
                         type="button" onClick={this.addRoom}
                         disabled={!this.state.isEdit && this.state.disable} title="Add Room">
                         <i className="fa fa-plus pointerCursor icon-medium"></i>
@@ -282,7 +282,7 @@ class HotelBookingForm extends Component {
                                 {index === 0 ? null : (
                                     <Form.Group as={Col} md="2" className="icon">
                                         <Button variant="outline-danger"
-                                            className="btn-no-border btn-no-border--danger"
+                                            className="btn-no-border btn-no-border--danger deleteIcon"
                                             type="button" onClick={this.addRoom}
                                             disabled={!this.state.isEdit && this.state.disable}
                                             title="Delete" onClick={() => this.deleteRoom(index)}>
@@ -387,7 +387,6 @@ class HotelBookingForm extends Component {
     }
 
     getAvailableRooms = (checkIn, checkOut) => {
-        console.log('get available rooms')
         // axios.post('/getAvailableRooms', monthDetail)
         //     .then(res => {
         //         let data = res.data;

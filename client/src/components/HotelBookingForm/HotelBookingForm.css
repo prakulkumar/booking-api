@@ -92,9 +92,15 @@
 .btn-no-border {
     border: none !important;
     background-color: #fff !important;
+    transition: all .3s;
+    backface-visibility: hidden;
 }
 
 .btn-no-border:hover {
+    transform: scale(1.5);
+}
+
+.addIcon:hover, .deleteIcon:hover {
     transform: scale(1.2);
 }
 

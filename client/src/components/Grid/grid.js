@@ -154,23 +154,23 @@ class Grid extends Component {
         this.setState({ items });
     }
 
-    // showModalHandler = (subitem, dayOfMonth) => {
-    //     const monthlyBooking = this.state.monthlyBooking;
-    //     subitem.date = new Date(monthlyBooking.year, monthlyBooking.monthNumber, dayOfMonth);
-    //     this.setState({ detailsForForm: subitem, showModal: true });
-    // }
+    showModalHandler = (subitem, dayOfMonth) => {
+        const monthObj = this.state.monthObj;
+        subitem.date = new Date(monthObj.year, monthObj.monthNumber, dayOfMonth);
+        this.setState({ detailsForForm: subitem, showModal: true });
+    }
 
-    // closeModalHandler = () => {
-    //     this.setState({ showModal: false });
-    // }
+    closeModalHandler = () => {
+        this.setState({ showModal: false });
+    }
 
-    // handleBookings = () => {
-    //     this.getRooms(this.state.monthlyBooking);
-    // }
+    handleBookings = () => {
+        this.getRooms(this.state.monthObj);
+    }
 
-    // modalStatus = () => {
-    //     return this.state.detailsForForm.available ? 'newBooking' : 'viewBooking';
-    // }
+    modalStatus = () => {
+        return this.state.detailsForForm.showBooking ? 'viewBooking' : 'newBooking';
+    }
 
     changeMonth = (value) => {
         this.setState({ loading: true });
