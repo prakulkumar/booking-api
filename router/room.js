@@ -5,6 +5,8 @@ const router = new express.Router();
 const dataBaseConnection = require('./dataBaseConnection');
 const collections = require('../constant').collections;
 const findAll = require('./data').findAll;
+const findByObj = require('./data').findByObj;
+const findByMatch = require('./data').findByMatch;
 const dateFNS = require('date-fns');
 
 dataBaseConnection().then(dbs => {
@@ -24,9 +26,43 @@ dataBaseConnection().then(dbs => {
     //     }
     // };
 
-    router.post('/getAvailableRooms', cors(), async (req, res) => {
+    router.post('/rooms/available', cors(), async (req, res) => {
         try {
-           console.log(req.body);
+
+            console.log(454545, req.body);
+            months = dateFNS.differenceInCalendarMonths(req.body.checkOut, req.body.checkIn);
+            console.log(232323, months);
+            // const roomsArray = await roomsArrayPromise(dbs, collections.rooms);
+            // let availableroomArray = [];
+            // let bookingArray = [];
+
+            // const diffrenceInMonth = dateFNS.differenceInCalendarMonths(req.body.departure.date, req.body.arrival.date);
+            // for (let index = 0; index <= diffrenceInMonth; index++) {
+            //     const obj = correctMonthAndYear(dateFNS.getMonth(req.body.arrival.date) + index, dateFNS.getYear(req.body.arrival.date));
+            //     let temp = await monthsDetailPromise(dbs, collections.months, obj);
+            //     bookingArray = temp[0].bookingArray.length > 0 ? bookingArray.concat(temp[0].bookingArray) : bookingArray;
+            // }
+
+            // roomsArray.forEach(room => {
+            //     let filteredArray = bookingArray.filter(bookedRoom => bookedRoom.roomNumber === room.roomNumber);
+            //     if (filteredArray.length === 0) {
+            //         availableroomArray.push(room)
+            //     } else {
+            //         let dateArray = [],
+            //             statusArray = [];
+            //         filteredArray.forEach(value => {
+            //             dateArray = dateArray.concat(value.dates);
+            //         });
+
+            //         dateArray.forEach(date => {
+            //             statusArray.push(dateFNS.isWithinRange(date, req.body.arrival.date, req.body.departure.date));
+            //         });
+
+            //         statusArray.includes(true) ? null : availableroomArray.push(room);
+            //     };
+            // });
+
+            // res.send(availableroomArray);
         } catch (error) {
             console.log(error)
         }

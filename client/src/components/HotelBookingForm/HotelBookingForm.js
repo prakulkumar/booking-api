@@ -58,37 +58,37 @@ class HotelBookingForm extends Component {
             // ------ use this instead--------
             // this.setState({ hotelBookingForm: updatedForm, disable, status: this.props.status });
             // -------------------------------
-            console.log(this.state);
+            // console.log(this.state);
 
             // when clicked to view the booking details
             if (!this.props.detailsForForm.showBooking) {
-                axios.get(`/getBookingDetails/${this.props.detailsForForm.bookingId}`)
-                    .then(res => {
-                        let data = res.data;
-                        console.log('response booking data : ', data);
-                        let form = {
-                            step: 1,
-                            firstName: data.firstName,
-                            lastName: data.lastName,
-                            address: data.address,
-                            checkIn: new Date(data.checkIn),
-                            checkOut: new Date(data.checkOut),
-                            adults: data.adults,
-                            children: data.children,
-                            rooms: data.rooms,
-                            roomRate: data.roomRate,
-                            advance: data.advance
-                        }
-                        this.setState({
-                            hotelBookingForm: form,
-                            bookingId: data.bookingId,
-                            personId: data.personId,
-                            misc: data.misc,
-                            balance: data.balance
-                        });
-                        // this.getAvailableRooms(new Date(data.checkOut));
-                    })
-                    .catch(error => console.log(error))
+                // axios.get(`/getBookingDetails/${this.props.detailsForForm.bookingId}`)
+                //     .then(res => {
+                //         let data = res.data;
+                //         console.log('response booking data : ', data);
+                //         let form = {
+                //             step: 1,
+                //             firstName: data.firstName,
+                //             lastName: data.lastName,
+                //             address: data.address,
+                //             checkIn: new Date(data.checkIn),
+                //             checkOut: new Date(data.checkOut),
+                //             adults: data.adults,
+                //             children: data.children,
+                //             rooms: data.rooms,
+                //             roomRate: data.roomRate,
+                //             advance: data.advance
+                //         }
+                //         this.setState({
+                //             hotelBookingForm: form,
+                //             bookingId: data.bookingId,
+                //             personId: data.personId,
+                //             misc: data.misc,
+                //             balance: data.balance
+                //         });
+                //         // this.getAvailableRooms(new Date(data.checkOut));
+                //     })
+                //     .catch(error => console.log(error))
             }
         }
     }
@@ -202,102 +202,102 @@ class HotelBookingForm extends Component {
     )
 
     getRoomDetailsForm = () => {
-        
+
         return (
-        <React.Fragment>
-            <Form.Row>
-                <Form.Group as={Col} md="5" controlId="formPlainNumber">
-                    <Form.Control
-                        title="Room Rate"
-                        type="number"
-                        placeholder="Room Rate"
-                        value={this.state.hotelBookingForm.roomRate}
-                        name="roomRate"
-                        onChange={(event) => this.inputChangedHandler(event)}
-                        disabled={!this.state.isEdit && this.state.disable}
-                        min="1"
-                        required></Form.Control>
-                    <span className="required">*</span>
-                </Form.Group>
-                <Form.Group as={Col} md="5" controlId="formPlainNumber">
-                    <Form.Control
-                        title="Advance"
-                        type="number"
-                        placeholder="Advance"
-                        value={this.state.hotelBookingForm.advance}
-                        name="advance"
-                        onChange={(event) => this.inputChangedHandler(event)}
-                        disabled={!this.state.isEdit && this.state.disable}
-                        min="0"
-                        required></Form.Control>
-                    <span className="required">*</span>
-                </Form.Group>
-                <Form.Group as={Col} md="2" className="icon">
-                    <Button variant="outline-primary"
-                        className="btn-no-border btn-no-border--primary addIcon"
-                        type="button" onClick={this.addRoom}
-                        disabled={!this.state.isEdit && this.state.disable} title="Add Room">
-                        <i className="fa fa-plus pointerCursor icon-medium"></i>
-                    </Button>
-                </Form.Group>
-            </Form.Row>
-            <div className="room-details-form">
-                {
-                    this.state.hotelBookingForm.rooms.map((room, index) => {
-                        return (
-                            <Form.Row key={index}>
-                                <Form.Group as={Col} md="5" controlId="formPlainSelect">
-                                    <Form.Control
-                                        as="select" title="Room Type"
-                                        value={this.state.hotelBookingForm.rooms[index].roomType}
-                                        name="roomType"
-                                        onChange={(event) => this.roomDetailsChangedHandler(event, "roomType", index)}
-                                        disabled={!this.state.isEdit && this.state.disable}
-                                        required >
-                                        <option value='' hidden>Room Type</option>
-                                        {roomTypes.map((roomType, i) => {
-                                            return <option key={`roomType${i}`}>{roomType}</option>
-                                        })}
-                                    </Form.Control>
-                                    <span className="required">*</span>
-                                </Form.Group>
-                                <Form.Group as={Col} md="5" controlId="formPlainSelect">
-                                    <Form.Control
-                                        as="select" title="Room No"
-                                        value={this.state.hotelBookingForm.rooms[index].roomNumber}
-                                        name="roomNumber"
-                                        onChange={(event) => this.roomDetailsChangedHandler(event, "roomNumber", index)}
-                                        disabled={!this.state.isEdit && this.state.disable}
-                                        required >
-                                        <option value='' hidden>Room No</option>
-                                        {this.state.availableRooms.map((room, i) => {
-                                            if (room.roomType === this.state.hotelBookingForm.rooms[index].roomType) {
-                                                return <option key={`roomNo${i}`}>{room.roomNumber}</option>
-                                            }
-                                            return null;
-                                        })}
-                                    </Form.Control>
-                                    <span className="required">*</span>
-                                </Form.Group>
-                                {index === 0 ? null : (
-                                    <Form.Group as={Col} md="2" className="icon">
-                                        <Button variant="outline-danger"
-                                            className="btn-no-border btn-no-border--danger deleteIcon"
-                                            type="button" onClick={this.addRoom}
+            <React.Fragment>
+                <Form.Row>
+                    <Form.Group as={Col} md="5" controlId="formPlainNumber">
+                        <Form.Control
+                            title="Room Rate"
+                            type="number"
+                            placeholder="Room Rate"
+                            value={this.state.hotelBookingForm.roomRate}
+                            name="roomRate"
+                            onChange={(event) => this.inputChangedHandler(event)}
+                            disabled={!this.state.isEdit && this.state.disable}
+                            min="1"
+                            required></Form.Control>
+                        <span className="required">*</span>
+                    </Form.Group>
+                    <Form.Group as={Col} md="5" controlId="formPlainNumber">
+                        <Form.Control
+                            title="Advance"
+                            type="number"
+                            placeholder="Advance"
+                            value={this.state.hotelBookingForm.advance}
+                            name="advance"
+                            onChange={(event) => this.inputChangedHandler(event)}
+                            disabled={!this.state.isEdit && this.state.disable}
+                            min="0"
+                            required></Form.Control>
+                        <span className="required">*</span>
+                    </Form.Group>
+                    <Form.Group as={Col} md="2" className="icon">
+                        <Button variant="outline-primary"
+                            className="btn-no-border btn-no-border--primary addIcon"
+                            type="button" onClick={this.addRoom}
+                            disabled={!this.state.isEdit && this.state.disable} title="Add Room">
+                            <i className="fa fa-plus pointerCursor icon-medium"></i>
+                        </Button>
+                    </Form.Group>
+                </Form.Row>
+                <div className="room-details-form">
+                    {
+                        this.state.hotelBookingForm.rooms.map((room, index) => {
+                            return (
+                                <Form.Row key={index}>
+                                    <Form.Group as={Col} md="5" controlId="formPlainSelect">
+                                        <Form.Control
+                                            as="select" title="Room Type"
+                                            value={this.state.hotelBookingForm.rooms[index].roomType}
+                                            name="roomType"
+                                            onChange={(event) => this.roomDetailsChangedHandler(event, "roomType", index)}
                                             disabled={!this.state.isEdit && this.state.disable}
-                                            title="Delete" onClick={() => this.deleteRoom(index)}>
-                                            <i className="fa fa-trash-o pointerCursor icon-medium"></i>
-                                        </Button>
+                                            required >
+                                            <option value='' hidden>Room Type</option>
+                                            {roomTypes.map((roomType, i) => {
+                                                return <option key={`roomType${i}`}>{roomType}</option>
+                                            })}
+                                        </Form.Control>
+                                        <span className="required">*</span>
                                     </Form.Group>
-                                )}
-                            </Form.Row>
-                        )
-                    })
-                }
-            </div>
-        </React.Fragment>
-    )
-}
+                                    <Form.Group as={Col} md="5" controlId="formPlainSelect">
+                                        <Form.Control
+                                            as="select" title="Room No"
+                                            value={this.state.hotelBookingForm.rooms[index].roomNumber}
+                                            name="roomNumber"
+                                            onChange={(event) => this.roomDetailsChangedHandler(event, "roomNumber", index)}
+                                            disabled={!this.state.isEdit && this.state.disable}
+                                            required >
+                                            <option value='' hidden>Room No</option>
+                                            {this.state.availableRooms.map((room, i) => {
+                                                if (room.roomType === this.state.hotelBookingForm.rooms[index].roomType) {
+                                                    return <option key={`roomNo${i}`}>{room.roomNumber}</option>
+                                                }
+                                                return null;
+                                            })}
+                                        </Form.Control>
+                                        <span className="required">*</span>
+                                    </Form.Group>
+                                    {index === 0 ? null : (
+                                        <Form.Group as={Col} md="2" className="icon">
+                                            <Button variant="outline-danger"
+                                                className="btn-no-border btn-no-border--danger deleteIcon"
+                                                type="button" onClick={this.addRoom}
+                                                disabled={!this.state.isEdit && this.state.disable}
+                                                title="Delete" onClick={() => this.deleteRoom(index)}>
+                                                <i className="fa fa-trash-o pointerCursor icon-medium"></i>
+                                            </Button>
+                                        </Form.Group>
+                                    )}
+                                </Form.Row>
+                            )
+                        })
+                    }
+                </div>
+            </React.Fragment>
+        )
+    }
 
     getAmountDetails = () => {
         return (
@@ -387,13 +387,14 @@ class HotelBookingForm extends Component {
     }
 
     getAvailableRooms = (checkIn, checkOut) => {
-        // axios.post('/getAvailableRooms', monthDetail)
-        //     .then(res => {
-        //         let data = res.data;
-        //         let rooms = [...this.state.hotelBookingForm.rooms];
-        //         this.setState({ availableRooms: data.concat(rooms) });
-        //         if (this.state.hotelBookingForm.rooms.length === 0) { this.setDefaultRoom(date) };
-        //     }).catch(error => console.log(error));
+        axios.post('/rooms/available', { checkIn, checkOut })
+            .then(res => {
+                console.log(232323, res.data);
+                // let data = res.data;
+                // let rooms = [...this.state.hotelBookingForm.rooms];
+                // this.setState({ availableRooms: data.concat(rooms) });
+                // if (this.state.hotelBookingForm.rooms.length === 0) { this.setDefaultRoom(date) };
+            }).catch(error => console.log(error));
         this.setState({ availableRooms: this.props.rooms });
     }
 
@@ -512,7 +513,7 @@ class HotelBookingForm extends Component {
                         {this.state.hotelBookingForm.step === 1 ?
                             <Button variant="primary" type="submit"
                                 disabled={this.state.hotelBookingForm.checkOut === ''}>Next
-                            </Button>: null}
+                            </Button> : null}
                         {this.state.hotelBookingForm.step === 2 ?
                             (<React.Fragment>
                                 <Button variant="secondary" onClick={this.prevStep}>Previous</Button>

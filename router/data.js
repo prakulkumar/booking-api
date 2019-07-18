@@ -15,6 +15,6 @@ module.exports = {
         return await dbs.collection(collectionName).updateOne(query, newValue);
     },
     findByMatch: async (dbs, collectionName, filterArray) => {
-        return await dbs.collection(collectionName).aggregate(filterArray);
+        return await dbs.collection(collectionName).aggregate(filterArray).toArray();
     }
 }
