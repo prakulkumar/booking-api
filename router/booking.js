@@ -4,8 +4,7 @@ const cors = require('cors');
 const router = new express.Router();
 const dataBaseConnection = require('./dataBaseConnection');
 const collections = require('../constant').collections;
-const findAll = require('./data').findAll;
-const findByObj = require('./data').findByObj;
+const { addData, findAll, findByObj, updateData } = require('./data');
 const dateFNS = require('date-fns');
 const ObjectID = require('mongodb').ObjectID;
 
@@ -29,7 +28,11 @@ dataBaseConnection().then(dbs => {
 
     router.post('/addBookingDetails', cors(), async (req, res) => {
         try {
-            console.log(req.body);
+            let booking = req.body;
+            booking['balance'] = req.body.amount - req.body.advance;
+            booking['months'] = [];
+            booking['misc'] = [];
+            addData(dbs, collections.booking, booking).then(result => res.status(200));
         } catch (error) {
             console.log(error)
         }
@@ -38,6 +41,11 @@ dataBaseConnection().then(dbs => {
     router.post('/updateBookingDetails', cors(), async (req, res) => {
         try {
             console.log(req.body);
+            let booking = req.body;
+            booking['balance'] = req.body.amount - req.body.advance;
+            booking['months'] = [];
+            booking['misc'] = [];
+            updateData(dbs, collections.booking, { _id: bookingId }, { $set: booking })
         } catch (error) {
             console.log(error)
         }

@@ -7,6 +7,7 @@ const collections = require('../constant').collections;
 const findAll = require('./data').findAll;
 const findByObj = require('./data').findByObj;
 const findByMatch = require('./data').findByMatch;
+const getMonths = require('./data').getMonths;
 const dateFNS = require('date-fns');
 
 dataBaseConnection().then(dbs => {
@@ -18,51 +19,48 @@ dataBaseConnection().then(dbs => {
         }
     });
 
-    // correctMonthAndYear = (monthNumber, year) => {
-    //     if (monthNumber > 11) {
-    //         return { monthNumber: monthNumber - 12, year: year + 1 };
-    //     } else {
-    //         return { monthNumber: monthNumber, year: year };
-    //     }
-    // };
+    correctMonthAndYear = (monthNumber, year) => {
+        if (monthNumber > 11) {
+            return {
+                monthNumber: monthNumber - 12,
+                year: year + 1
+            };
+        } else {
+            return {
+                monthNumber: monthNumber,
+                year: year
+            };
+        }
+    };
 
     router.post('/rooms/available', cors(), async (req, res) => {
         try {
+            let checkIn = req.body.checkIn,
+                checkOut = req.body.checkOut;
+            let diffrenceInMonth = dateFNS.differenceInCalendarMonths(checkOut, checkIn);
+            let bookings = [],
+                filteredRooms = [];
 
-            console.log(454545, req.body);
-            months = dateFNS.differenceInCalendarMonths(req.body.checkOut, req.body.checkIn);
-            console.log(232323, months);
-            // const roomsArray = await roomsArrayPromise(dbs, collections.rooms);
-            // let availableroomArray = [];
-            // let bookingArray = [];
+            for (let index = 0; index <= diffrenceInMonth; index++) {
+                let obj = correctMonthAndYear(dateFNS.getMonth(checkIn) + index, dateFNS.getYear(checkIn));
+                const filter = {
+                    "months": {
+                        $elemMatch: obj
+                    }
+                };
+                result = await findByObj(dbs, collections.booking, filter);
+                bookings = result.length > 0 ? bookings.concat(result) : bookings;
+            }
 
-            // const diffrenceInMonth = dateFNS.differenceInCalendarMonths(req.body.departure.date, req.body.arrival.date);
-            // for (let index = 0; index <= diffrenceInMonth; index++) {
-            //     const obj = correctMonthAndYear(dateFNS.getMonth(req.body.arrival.date) + index, dateFNS.getYear(req.body.arrival.date));
-            //     let temp = await monthsDetailPromise(dbs, collections.months, obj);
-            //     bookingArray = temp[0].bookingArray.length > 0 ? bookingArray.concat(temp[0].bookingArray) : bookingArray;
-            // }
+            bookings.forEach(booking => {
+                let checkInCheck = dateFNS.isWithinRange(checkIn, booking.checkIn, booking.checkOut);
+                let checkOutCheck = dateFNS.isWithinRange(checkOut, booking.checkIn, booking.checkOut);
 
-            // roomsArray.forEach(room => {
-            //     let filteredArray = bookingArray.filter(bookedRoom => bookedRoom.roomNumber === room.roomNumber);
-            //     if (filteredArray.length === 0) {
-            //         availableroomArray.push(room)
-            //     } else {
-            //         let dateArray = [],
-            //             statusArray = [];
-            //         filteredArray.forEach(value => {
-            //             dateArray = dateArray.concat(value.dates);
-            //         });
+                if (checkInCheck || checkOutCheck) filteredRooms = filteredRooms.concat([...booking.rooms]);
+            });
 
-            //         dateArray.forEach(date => {
-            //             statusArray.push(dateFNS.isWithinRange(date, req.body.arrival.date, req.body.departure.date));
-            //         });
-
-            //         statusArray.includes(true) ? null : availableroomArray.push(room);
-            //     };
-            // });
-
-            // res.send(availableroomArray);
+            filteredRooms = [...new Set(filteredRooms)];
+            res.send(filteredRooms);
         } catch (error) {
             console.log(error)
         }

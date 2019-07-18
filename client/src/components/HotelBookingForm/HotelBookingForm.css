@@ -1,4 +1,8 @@
-.form-row>.col, .form-row>.col-md-5 {
+/* .form-row>.col, .form-row>.col-md-5, .form-row>.col-md-3, .form-row>.col-md-6 {
+    display: flex !important;
+} */
+
+.display-flex {
     display: flex !important;
 }
 
