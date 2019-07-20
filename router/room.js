@@ -4,10 +4,7 @@ const cors = require('cors');
 const router = new express.Router();
 const dataBaseConnection = require('./dataBaseConnection');
 const collections = require('../constant').collections;
-const findAll = require('./data').findAll;
-const findByObj = require('./data').findByObj;
-const findByMatch = require('./data').findByMatch;
-const getMonths = require('./data').getMonths;
+const { findAll, findByObj, correctMonthAndYear } = require('./data');
 const dateFNS = require('date-fns');
 
 dataBaseConnection().then(dbs => {
@@ -19,21 +16,7 @@ dataBaseConnection().then(dbs => {
         }
     });
 
-    correctMonthAndYear = (monthNumber, year) => {
-        if (monthNumber > 11) {
-            return {
-                monthNumber: monthNumber - 12,
-                year: year + 1
-            };
-        } else {
-            return {
-                monthNumber: monthNumber,
-                year: year
-            };
-        }
-    };
-
-    router.post('/rooms/available', cors(), async (req, res) => {
+    router.post('/rooms/booked', cors(), async (req, res) => {
         try {
             let checkIn = req.body.checkIn,
                 checkOut = req.body.checkOut;

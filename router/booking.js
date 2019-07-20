@@ -4,7 +4,7 @@ const cors = require('cors');
 const router = new express.Router();
 const dataBaseConnection = require('./dataBaseConnection');
 const collections = require('../constant').collections;
-const { addData, findAll, findByObj, updateData } = require('./data');
+const { findAll, findByObj, insertOne, updateOne, correctMonthAndYear } = require('./data');
 const dateFNS = require('date-fns');
 const ObjectID = require('mongodb').ObjectID;
 
@@ -26,38 +26,42 @@ dataBaseConnection().then(dbs => {
         }
     })
 
-    router.post('/addBookingDetails', cors(), async (req, res) => {
+    getMonths = (checkIn, checkOut) => {
+        let months = [];
+        let diffrenceInMonth = dateFNS.differenceInCalendarMonths(checkOut, checkIn);
+
+        for (let index = 0; index <= diffrenceInMonth; index++) {
+            let obj = correctMonthAndYear(dateFNS.getMonth(checkIn) + index, dateFNS.getYear(checkIn));
+            months.push(obj);
+        }
+
+        return months;
+    }
+
+    router.post('/bookings/insert', cors(), async (req, res) => {
         try {
             let booking = req.body;
             booking['balance'] = req.body.amount - req.body.advance;
-            booking['months'] = [];
+            booking['months'] = getMonths(req.body.checkIn, req.body.checkOut);
             booking['misc'] = [];
-            addData(dbs, collections.booking, booking).then(result => res.status(200));
+            insertOne(dbs, collections.booking, booking).then(result => res.status(200).send(result));
         } catch (error) {
             console.log(error)
         }
     })
 
-    router.post('/updateBookingDetails', cors(), async (req, res) => {
+    router.post('/bookings/update', cors(), async (req, res) => {
         try {
             console.log(req.body);
             let booking = req.body;
             booking['balance'] = req.body.amount - req.body.advance;
-            booking['months'] = [];
+            booking['months'] = getMonths(req.body.checkIn, req.body.checkOut);
             booking['misc'] = [];
-            updateData(dbs, collections.booking, { _id: bookingId }, { $set: booking })
+            updateOne(dbs, collections.booking, { _id: bookingId }, { $set: booking })
         } catch (error) {
             console.log(error)
         }
     })
-
-    // correctMonthAndYear = (monthNumber, year) => {
-    //     if (monthNumber > 11) {
-    //         return { monthNumber: monthNumber - 12, year: year + 1 };
-    //     } else {
-    //         return { monthNumber: monthNumber, year: year };
-    //     }
-    // };
 
     // router.get('/getBookingDetails/:id', cors(), async (req, res) => {
     //     try {

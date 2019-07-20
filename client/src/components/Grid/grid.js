@@ -165,7 +165,8 @@ class Grid extends Component {
     }
 
     handleBookings = () => {
-        this.getRooms(this.state.monthObj);
+        console.log('handle booking');
+        this.setBookingsForMonth(this.state.monthObj);
     }
 
     modalStatus = () => {
