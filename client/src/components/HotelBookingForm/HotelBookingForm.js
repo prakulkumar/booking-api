@@ -61,7 +61,7 @@ class HotelBookingForm extends Component {
             // ------ use this instead--------
             // this.setState({ hotelBookingForm: updatedForm, disable, status: this.props.status });
             // -------------------------------
-            console.log(this.state);
+            // console.log(this.state);
 
             // when clicked to view the booking details
             if (this.props.status === 'viewBooking') {
@@ -294,7 +294,7 @@ class HotelBookingForm extends Component {
                                         <span className="required">*</span>
                                     </Form.Group>
                                     {index === 0 ? null : (
-                                        <Form.Group as={Col} md="2" className="icon" className="display-flex">
+                                        <Form.Group as={Col} md="2" className="icon">
                                             <Button variant="outline-danger"
                                                 className="btn-no-border btn-no-border--danger deleteIcon"
                                                 type="button" onClick={this.addRoom}
@@ -381,13 +381,13 @@ class HotelBookingForm extends Component {
             let url = '';
             if (this.state.isEdit && this.state.disable) {
                 console.log('update');
-                url = '/updateBookingDetails';
+                url = '/bookings/update';
                 bookingData['personId'] = this.state.personId;
                 bookingData['bookingId'] = this.state.bookingId;
                 bookingData['previousDepartureDate'] = this.state.previousDepartureDate;
                 bookingData['previousArrivalDate'] = this.state.previousArrivalDate;
             }
-            else { console.log('newbooking'); url = '/addBookingDetails' }
+            else { console.log('newbooking'); url = '/bookings/insert' }
 
             console.log('booking data : ', bookingData);
 
@@ -415,14 +415,13 @@ class HotelBookingForm extends Component {
     }
 
     getAvailableRooms = (checkIn, checkOut) => {
-        // axios.post('/getAvailableRooms', monthDetail)
-        //     .then(res => {
-        //         let data = res.data;
-        //         let rooms = [...this.state.hotelBookingForm.rooms];
-        //         this.setState({ availableRooms: data.concat(rooms) });
-        //         if (this.state.hotelBookingForm.rooms.length === 0) { this.setDefaultRoom(date) };
-        //     }).catch(error => console.log(error));
-        this.setState({ availableRooms: this.props.rooms });
+        axios.post('/rooms/booked', { checkIn, checkOut })
+            .then(res => {
+                const availableRooms = this.props.rooms.filter((room) => {
+                    return res.data.indexOf(room._id) < 0;
+                });
+                this.setState({ availableRooms });
+            }).catch(error => console.log(error));
     }
 
     setDefaultRoom = () => {
