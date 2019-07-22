@@ -9,7 +9,7 @@ const monthObj = {
 const dataBaseName = "hotel-booking";
 
 const collections = {
-    rooms: "rooms",
+    room: "room",
     booking: "booking"
 }
 

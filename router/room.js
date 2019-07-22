@@ -10,7 +10,7 @@ const dateFNS = require('date-fns');
 dataBaseConnection().then(dbs => {
     router.get('/rooms', cors(), (req, res) => {
         try {
-            findAll(dbs, collections.rooms).then(result => res.send(result));
+            findAll(dbs, collections.room).then(result => res.send(result));
         } catch (error) {
             console.log(error)
         }
@@ -33,6 +33,10 @@ dataBaseConnection().then(dbs => {
                 };
                 result = await findByObj(dbs, collections.booking, filter);
                 bookings = result.length > 0 ? bookings.concat(result) : bookings;
+            }
+
+            if (req.body.bookingId !== null) {
+                bookings = bookings.filter(booking => booking._id.toString() !== req.body.bookingId.toString());
             }
 
             bookings.forEach(booking => {

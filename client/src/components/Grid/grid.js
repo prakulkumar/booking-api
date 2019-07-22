@@ -90,6 +90,7 @@ class Grid extends Component {
     setBookingsForMonth = (monthObj) => {
         this.getBookings(monthObj).then(result => {
             if (result.status === 200) {
+                console.log(2323223223, result.data);
                 result.data.forEach(booking => {
                     if (booking.months.length === 1) this.setBookingForMonth(booking);
                     else if (booking.months.length > 1) this.setBookingForMonths(booking);
@@ -165,7 +166,8 @@ class Grid extends Component {
     }
 
     handleBookings = () => {
-        console.log('handle booking');
+        const tempArray = new Array(this.state.rooms.length);
+        this.finalArray(tempArray, this.state.monthObj);
         this.setBookingsForMonth(this.state.monthObj);
     }
 
@@ -228,7 +230,7 @@ class Grid extends Component {
                 {item.map((subitem, subitemIndex) =>
                     subitem.showBooking ?
                         <OverlayTrigger placement={this.tooltipPlacement(itemIndex)} key={'subitem' + subitemIndex}
-                            overlay={<Tooltip id={`tooltip-${this.tooltipPlacement(itemIndex)}`}>{subitem.name}</Tooltip>}>
+                            overlay={<Tooltip id={`tooltip-${this.tooltipPlacement(itemIndex)}`}>{subitem.name} {subitem.booking.checkedIn ? `- ${subitem.roomNumber}` : null}</Tooltip>}>
                             <div className={this.setClassForCell(subitemIndex)} style={{ color: subitem.color, background: 'rgb(240,255,255)', fontWeight: 'bold' }} onClick={() => this.showModalHandler(subitem, subitemIndex)}>{this.renderShortName(subitem.name)}</div>
                         </OverlayTrigger> :
                         subitem.showRoomNumber ?
@@ -272,7 +274,8 @@ class Grid extends Component {
                         onClose={this.closeModalHandler}
                         handleBookings={this.handleBookings}
                         status={this.modalStatus()}
-                        rooms={this.state.rooms}>
+                        rooms={this.state.rooms}
+                        notify={(notification, message) => this.props.notify(notification, message)}>
                     </HotelBookingForm> : null}
                 </div> : null}
             </div>

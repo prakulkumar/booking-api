@@ -19,7 +19,13 @@ dataBaseConnection().then(dbs => {
 
     router.post('/bookings/filterByMonth', cors(), async (req, res) => {
         try {
-            const filter = { "months": { $elemMatch: { "monthNumber": req.body.monthNumber, "year": req.body.year } } };
+            const filter = {
+                "months": {
+                    $elemMatch: { "monthNumber": req.body.monthNumber, "year": req.body.year }
+                },
+                "checkedOut": false,
+                "cancel": false
+            };
             findByObj(dbs, collections.booking, filter).then(result => res.send(result));
         } catch (error) {
             console.log(error);
@@ -52,12 +58,15 @@ dataBaseConnection().then(dbs => {
 
     router.post('/bookings/update', cors(), async (req, res) => {
         try {
-            console.log(req.body);
             let booking = req.body;
-            booking['balance'] = req.body.amount - req.body.advance;
-            booking['months'] = getMonths(req.body.checkIn, req.body.checkOut);
-            booking['misc'] = [];
-            updateOne(dbs, collections.booking, { _id: bookingId }, { $set: booking })
+            if (!(req.body.cancel || req.body.checkedIn || req.body.checkedOut)) {
+                booking['balance'] = req.body.amount - req.body.advance;
+                booking['months'] = getMonths(req.body.checkIn, req.body.checkOut);
+                booking['misc'] = [];
+            }
+            booking['_id'] = new ObjectID(booking._id);
+            updateOne(dbs, collections.booking, { _id: booking._id }, { $set: booking })
+                .then(result => res.status(200).send(result));
         } catch (error) {
             console.log(error)
         }
