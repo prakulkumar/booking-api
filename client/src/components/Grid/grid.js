@@ -87,6 +87,7 @@ class Grid extends Component {
     //     return newValues;
     // }
 
+
     setBookingsForMonth = (monthObj) => {
         this.getBookings(monthObj).then(result => {
             if (result.status === 200) {
