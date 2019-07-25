@@ -4,7 +4,11 @@ const cors = require('cors');
 const router = new express.Router();
 const dataBaseConnection = require('./dataBaseConnection');
 const collections = require('../constant').collections;
-const { findAll, findByObj, correctMonthAndYear } = require('./data');
+const {
+    findAll,
+    findByObj,
+    correctMonthAndYear
+} = require('./data');
 const dateFNS = require('date-fns');
 
 dataBaseConnection().then(dbs => {
@@ -29,7 +33,9 @@ dataBaseConnection().then(dbs => {
                 const filter = {
                     "months": {
                         $elemMatch: obj
-                    }
+                    },
+                    "checkedOut": false,
+                    "cancel": false
                 };
                 result = await findByObj(dbs, collections.booking, filter);
                 bookings = result.length > 0 ? bookings.concat(result) : bookings;
