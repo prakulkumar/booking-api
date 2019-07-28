@@ -154,7 +154,7 @@ class HotelBookingForm extends Component {
                         minDate={new Date()}
                         key="checkIn"
                         className="form-control"
-                        disabled={!this.state.isEdit && this.state.disable}
+                        disabled={!this.state.isEdit && this.state.disable || this.state.checkedIn}
                         required
                     />
                     <span className="required">*</span>
@@ -259,7 +259,6 @@ class HotelBookingForm extends Component {
             <div className="room-details-form">
                 {
                     this.state.hotelBookingForm.rooms.map((room, index) => {
-                        console.log(34343443, room);
                         return (
                             <Form.Row key={index}>
                                 <Form.Group as={Col} md="5" controlId="formPlainSelect" className="display-flex">
@@ -596,7 +595,7 @@ class HotelBookingForm extends Component {
                             title="Edit" onClick={this.edit}>
                             <i className="fa fa-pencil pointerCursor icon-medium" style={{ fontSize: "18px" }}></i>
                         </Button>
-                        {this.state.checkedIn ? (
+                        {this.state.checkedIn && dateFNS.format(new Date(), 'MM/DD/YYYY') === dateFNS.format(new Date(this.props.detailsForForm.booking.checkOut), 'MM/DD/YYYY') ? (
                             <Button variant="outline-secondary"
                                 className="btn-no-border btn-no-border--secondary"
                                 title="Check Out" onClick={this.onCheckedOut}>
@@ -609,7 +608,7 @@ class HotelBookingForm extends Component {
                                         title="Cancel" onClick={this.cancelBooking}>
                                         <i className="fa fa-close pointerCursor icon-medium" style={{ fontSize: "18px" }}></i>
                                     </Button>
-                                    {dateFNS.format(new Date(), 'MM/DD/YYYY') === dateFNS.format(new Date(this.props.detailsForForm.booking.checkIn), 'MM/DD/YYYY') ?
+                                    {!this.state.checkedIn && dateFNS.format(new Date(), 'MM/DD/YYYY') === dateFNS.format(new Date(this.props.detailsForForm.booking.checkIn), 'MM/DD/YYYY') ?
                                         <Button variant="outline-secondary"
                                             className="btn-no-border btn-no-border--secondary"
                                             title="Check In" onClick={this.onCheckedIn}>
