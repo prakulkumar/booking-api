@@ -284,7 +284,12 @@ class Grid extends Component {
                     {this.state.showModal ? <Modal
                         showModal={this.state.showModal}
                         onClose={this.closeModalHandler}>
-                            <Booking></Booking>
+                            <Booking
+                             detailsForForm={this.state.detailsForForm}
+                             handleBookings={this.handleBookings}
+                             status={this.modalStatus()}
+                             rooms={this.state.rooms}
+                             notify={(notification, message) => this.props.notify(notification, message)}/>
                     </Modal> : null}
                 </div> : null}
             </div>
