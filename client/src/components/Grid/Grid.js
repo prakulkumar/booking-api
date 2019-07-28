@@ -14,7 +14,8 @@ class Grid extends Component {
         monthObj: {},
         bookingArray: [],
         loading: true,
-        detailsForForm: {}
+        detailsForForm: {},
+        modalTile: ''
     }
 
     getRandomColor = () => {
@@ -46,6 +47,8 @@ class Grid extends Component {
         const tempArray = new Array(this.state.rooms.length);
         this.finalArray(tempArray, this.state.monthObj);
         this.setBookingsForMonth(this.state.monthObj);
+
+        this.setState({ modalTitle: 'Balance Details' });
     }
 
     getBookings = async (monthObj) => {
@@ -282,6 +285,7 @@ class Grid extends Component {
 
 
                     {this.state.showModal ? <Modal
+                        modalTitle={this.state.modalTitle}
                         showModal={this.state.showModal}
                         onClose={this.closeModalHandler}>
                             <Booking

@@ -1,6 +1,4 @@
-import React, {
-    Component
-} from 'react';
+import React, { Component } from 'react';
 
 class Booking extends Component {
 
@@ -84,7 +82,7 @@ class Booking extends Component {
 
     render() {
         return <React.Fragment >
-    
+
         </React.Fragment>
     }
 }

@@ -1,0 +1,9 @@
+.modalTitle {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 18px;
+}
+
+.modal__body{
+    padding:16px 0 0 0;
+}
