@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import './grid.css';
+import Modal from '../Modal/Modal';
 import dateFNS from 'date-fns';
 import { Tooltip, OverlayTrigger, Navbar } from 'react-bootstrap';
-import HotelBookingForm from '../HotelBookingForm/HotelBookingForm';
 import axios from 'axios';
+import './Grid.css';
 
 class Grid extends Component {
     state = {
@@ -269,7 +269,7 @@ class Grid extends Component {
                     </div>
                     <div className="template_item__container">{this.renderItems()}</div>
 
-                    {this.state.showModal ? <HotelBookingForm
+                    {/* {this.state.showModal ? <HotelBookingForm
                         detailsForForm={this.state.detailsForForm}
                         showModal={this.state.showModal}
                         onClose={this.closeModalHandler}
@@ -277,7 +277,20 @@ class Grid extends Component {
                         status={this.modalStatus()}
                         rooms={this.state.rooms}
                         notify={(notification, message) => this.props.notify(notification, message)}>
-                    </HotelBookingForm> : null}
+                    </HotelBookingForm> : null} */}
+
+
+                    {this.state.showModal ? <Modal
+                        detailsForForm={this.state.detailsForForm}
+                        showModal={this.state.showModal}
+                        onClose={this.closeModalHandler}
+                        handleBookings={this.handleBookings}
+                        status={this.modalStatus()}
+                        rooms={this.state.rooms}
+                        notify={(notification, message) => this.props.notify(notification, message)}>
+                    </Modal> : null}
+
+
                 </div> : null}
             </div>
         )

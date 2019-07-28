@@ -1,7 +1,7 @@
 import React from 'react';
-import './mainContainer.css';
-import HeaderNavbar from '../Navbar/navbar';
-import Grid from '../Grid/grid';
+import HeaderNavbar from '../Navbar/Navbar';
+import Grid from '../Grid/Grid';
+import './MainContainer.css';
 import { notifications, notificationTimeOut } from '../../constants/notification';
 
 import 'react-notifications/lib/notifications.css';
