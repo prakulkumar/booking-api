@@ -39,45 +39,43 @@ class Booking extends Component {
 
     componentDidMount() {
         console.log(this.props);
-        if (this.props.showModal) {
-            let disable = false;
-            if (this.props.status === 'viewBooking') {
-                let data = this.props.detailsForForm.booking;
-                let form = {
-                    firstName: data.firstName,
-                    lastName: data.lastName,
-                    address: data.address,
-                    checkIn: new Date(data.checkIn),
-                    checkOut: new Date(data.checkOut),
-                    adults: data.adults,
-                    children: data.children,
-                    contactNumber: data.contactNumber,
-                    rooms: data.rooms,
-                    amount: data.amount,
-                    advance: data.advance
-                }
-
-                this.setState({
-                    hotelBookingForm: form,
-                    disable: true,
-                    bookingId: data._id,
-                    misc: data.misc,
-                    balance: data.balance,
-                    cancel: data.cancel,
-                    checkedIn: data.checkedIn,
-                    checkedOut: data.checkedOut,
-                    status: this.props.status
-                });
-
-                // this.getAvailableRooms(new Date(data.checkIn), new Date(data.checkOut));
-            } else {
-                let updatedForm = { ...this.state.hotelBookingForm };
-                updatedForm['checkIn'] = new Date();
-                this.setState({
-                    hotelBookingForm: updatedForm,
-                    status: this.props.status
-                });
+        let disable = false;
+        if (this.props.status === 'viewBooking') {
+            let data = this.props.detailsForForm.booking;
+            let form = {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                address: data.address,
+                checkIn: new Date(data.checkIn),
+                checkOut: new Date(data.checkOut),
+                adults: data.adults,
+                children: data.children,
+                contactNumber: data.contactNumber,
+                rooms: data.rooms,
+                amount: data.amount,
+                advance: data.advance
             }
+
+            this.setState({
+                hotelBookingForm: form,
+                disable: true,
+                bookingId: data._id,
+                misc: data.misc,
+                balance: data.balance,
+                cancel: data.cancel,
+                checkedIn: data.checkedIn,
+                checkedOut: data.checkedOut,
+                status: this.props.status
+            });
+
+            this.getAvailableRooms(new Date(data.checkIn), new Date(data.checkOut));
+        } else {
+            let updatedForm = { ...this.state.hotelBookingForm };
+            updatedForm['checkIn'] = new Date();
+            this.setState({
+                hotelBookingForm: updatedForm,
+                status: this.props.status
+            });
         }
     }
 
@@ -88,6 +86,7 @@ class Booking extends Component {
             this.setState({ hotelBookingForm: updatedForm });
             if (event.name === 'checkIn') {
                 updatedForm['checkOut'] = '';
+                updatedForm.rooms = [];
                 this.setState({ hotelBookingForm: updatedForm });
             }
             if (event.name === 'checkOut') {
@@ -146,7 +145,7 @@ class Booking extends Component {
 
     addRoom = () => {
         let updatedForm = { ...this.state.hotelBookingForm };
-        let updatedRooms = [...updatedForm.rooms]
+        let updatedRooms = [...updatedForm.rooms];
         updatedRooms.push({});
         updatedForm.rooms = updatedRooms;
         this.setState({ hotelBookingForm: updatedForm });
@@ -182,7 +181,6 @@ class Booking extends Component {
 
     hotelBookedHandler = (event) => {
         event.preventDefault();
-        console.log(event)
         const form = event.currentTarget;
         if (form.checkValidity()) {
             console.log('valid')
@@ -190,33 +188,24 @@ class Booking extends Component {
         this.setState({ validated: true });
     }
 
-    checkValidity = (event) => {
-        event.preventDefault();
-        const form = event.currentTarget;
-        let formIsValid = this.state.formIsValid && form.checkValidity();
-        if (form.checkValidity()) {
-            console.log('valid')
-        }
-        // else this.setState({ validated: true });
-        this.setState({ validated: true, formIsValid });
-
-    }
-
     render() {
-        console.log(this.state);
-        return <React.Fragment>
-            <BookingForm
-                hotelBookingForm={this.state.hotelBookingForm}
-                onChanged={(event) => this.inputChangedHandler(event)}
-                onRoomChanged={(event) => {this.roomDetailsChangedHandler(event, name, index)}}
-                roomTypes={roomTypes}
-                availableRooms={this.state.availableRooms}
-                addRoom={this.addRoom}
-                deleteRoom={this.deleteRoom}
-                onBooked={(event) => this.hotelBookedHandler(event)}
-                validated={this.state.validated}
-                />
-        </React.Fragment>
+        return (
+            <React.Fragment>
+                {this.state.hotelBookingForm.checkIn !== '' ? (
+                    <BookingForm
+                        hotelBookingForm={this.state.hotelBookingForm}
+                        onChanged={(event) => this.inputChangedHandler(event)}
+                        onRoomChanged={(event) => { this.roomDetailsChangedHandler(event, name, index) }}
+                        roomTypes={roomTypes}
+                        availableRooms={this.state.availableRooms}
+                        addRoom={this.addRoom}
+                        deleteRoom={this.deleteRoom}
+                        onBooked={(event) => this.hotelBookedHandler(event)}
+                        validated={this.state.validated}
+                    />
+                ) : null}
+            </React.Fragment>
+        );
     }
 }
 

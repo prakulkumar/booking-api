@@ -6,14 +6,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import './BookingForm.css';
 
 const bookingForm = (props) => {
-    console.log(props);
 
     const bookingDetailsForm = (
         <React.Fragment>
             <Form.Row>
                 <Form.Group as={Col} md="5" controlId="formPlaintext" className="display-flex">
                     <Form.Control
-                        // size="sm"
                         title="First Name"
                         type="text"
                         placeholder="First Name"
@@ -27,7 +25,6 @@ const bookingForm = (props) => {
                 </Form.Group>
                 <Form.Group as={Col} md="5" controlId="formPlaintext" className="display-flex">
                     <Form.Control
-                        // size="sm"
                         title="Last Name"
                         type="text"
                         placeholder="Last Name"
@@ -43,7 +40,6 @@ const bookingForm = (props) => {
             <Form.Row>
                 <Form.Group as={Col} md="10" controlId="formPlaintextarea" className="display-flex">
                     <Form.Control
-                        // size="sm"
                         title="Address"
                         as="textarea"
                         rows="1"
@@ -91,7 +87,6 @@ const bookingForm = (props) => {
             <Form.Row>
                 <Form.Group as={Col} md="3" controlId="formPlainNumber" className="display-flex">
                     <Form.Control
-                        // size="sm"
                         title="Adults"
                         type="number"
                         placeholder="Adults"
@@ -105,7 +100,6 @@ const bookingForm = (props) => {
                 </Form.Group>
                 <Form.Group as={Col} md="2" controlId="formPlainNumber" className="display-flex">
                     <Form.Control
-                        // size="sm"
                         title="Children"
                         type="number"
                         placeholder="Children"
@@ -119,7 +113,6 @@ const bookingForm = (props) => {
                 </Form.Group>
                 <Form.Group as={Col} md="5" controlId="formPlainNumber" className="display-flex">
                     <Form.Control
-                        // size="sm"
                         title="Contact Number"
                         type="number"
                         placeholder="Contact Number"
@@ -134,7 +127,6 @@ const bookingForm = (props) => {
             <Form.Row>
                 <Form.Group as={Col} md="5" controlId="formPlainNumber" className="display-flex">
                     <Form.Control
-                        // size="sm"
                         title="Room Charges"
                         type="number"
                         placeholder="Room Charges"
@@ -148,7 +140,6 @@ const bookingForm = (props) => {
                 </Form.Group>
                 <Form.Group as={Col} md="5" controlId="formPlainNumber" className="display-flex">
                     <Form.Control
-                        // size="sm"
                         title="Advance"
                         type="number"
                         placeholder="Advance"
@@ -172,7 +163,6 @@ const bookingForm = (props) => {
                         <Form.Row key={index}>
                             <Form.Group as={Col} md="4" controlId="formPlainSelect" className="display-flex">
                                 <Form.Control
-                                    // size="sm"
                                     as="select" title="Room Type"
                                     value={props.hotelBookingForm.rooms[index].roomType}
                                     name="roomType"
@@ -188,7 +178,6 @@ const bookingForm = (props) => {
                             </Form.Group>
                             <Form.Group as={Col} md="4" controlId="formPlainSelect" className="display-flex">
                                 <Form.Control
-                                    // size="sm"
                                     as="select" title="Room No"
                                     value={props.hotelBookingForm.rooms[index].roomNumber}
                                     name="roomNumber"
