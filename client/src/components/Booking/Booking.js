@@ -34,7 +34,9 @@ class Booking extends Component {
     }
 
     render() {
-        return <React.Fragment></React.Fragment>
+        return <React.Fragment>
+            Hello I can Book your room
+        </React.Fragment>
     }
 }
 

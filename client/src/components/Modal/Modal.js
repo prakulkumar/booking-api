@@ -7,7 +7,7 @@ const modal = (props) => {
         <Modal show={props.showModal} onHide={props.onClose} centered>
             <Modal.Header>Modal Title</Modal.Header>
             <Modal.Body>
-                Modal Body
+                {props.children}
             </Modal.Body>
         </Modal>
     )

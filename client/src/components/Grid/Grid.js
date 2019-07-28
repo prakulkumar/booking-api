@@ -4,6 +4,7 @@ import dateFNS from 'date-fns';
 import { Tooltip, OverlayTrigger, Navbar } from 'react-bootstrap';
 import axios from 'axios';
 import './Grid.css';
+import Booking from '../Booking/Booking';
 
 class Grid extends Component {
     state = {
@@ -281,16 +282,10 @@ class Grid extends Component {
 
 
                     {this.state.showModal ? <Modal
-                        detailsForForm={this.state.detailsForForm}
                         showModal={this.state.showModal}
-                        onClose={this.closeModalHandler}
-                        handleBookings={this.handleBookings}
-                        status={this.modalStatus()}
-                        rooms={this.state.rooms}
-                        notify={(notification, message) => this.props.notify(notification, message)}>
+                        onClose={this.closeModalHandler}>
+                            <Booking></Booking>
                     </Modal> : null}
-
-
                 </div> : null}
             </div>
         )
