@@ -1,0 +1,165 @@
+.display-flex {
+    display: flex !important;
+}
+
+.form-row {
+    width: 495px;
+}
+
+.form-row>.col, .form-row>.col-md-5, .form-row>.col-md-3, .form-row>.col-md-6 {
+    display: flex !important;
+}
+
+.booking-details-form {
+    width: 50%;
+}
+
+.room-details-form {
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+}
+
+.room-details-form h4 {
+    color: #ced4da;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.separator {
+    border-left: 1px solid #ced4da;
+    margin: 0 4% 0 0;
+}
+
+.react-datepicker-wrapper, .react-datepicker__input-container, .react-datepicker__input-container input {
+    width: 100%;
+}
+
+.required {
+    color: red;
+}
+
+.add-room-form {
+    /* margin: 20px 0; */
+    height: 256px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.add-room-form::-webkit-scrollbar {
+    width: 4px;
+}
+
+.add-room-form::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    outline: 1px solid slategrey;
+    border-radius: 4px;
+}
+
+.icon-medium {
+    font-size: 20px !important;
+}
+
+.btn-no-border {
+    border: none !important;
+    background-color: #fff !important;
+    transition: all .3s;
+    backface-visibility: hidden;
+}
+
+.btn-no-border:hover {
+    transform: scale(1.5);
+}
+
+.addIcon:hover, .deleteIcon:hover {
+    transform: scale(1.2);
+}
+
+.btn-no-border:focus {
+    box-shadow: none !important;
+}
+
+.btn-no-border--primary:hover {
+    color: #0069d9 !important;
+    background-color: #fff !important;
+}
+
+.btn-no-border--danger:hover {
+    color: #c82333 !important;
+    background-color: #fff !important;
+}
+
+.btn-no-border--secondary:hover {
+    color: #5a6268 !important;
+    background-color: #fff !important;
+}
+
+.modal-lg {
+    max-width: 900px;
+}
+
+.modal-footer {
+    margin-top: 2%;
+}
+
+
+
+
+
+
+
+
+/* ---------------  */
+
+
+
+
+
+/* .room-details-form::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+ } */
+
+/* .icon {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+} */
+
+
+/* .margin-left-10 {
+    margin-left: 25px;
+} */
+
+/* .button-container {
+    text-align: right;
+} */
+
+/* .button {
+    box-sizing: border-box;
+    border-radius: 100%;
+    display: inline-block;
+}
+
+.button:hover {
+    transform: scale(1.1);
+} */
+
+/* .btn-edit {
+    color: #007bff;
+}
+
+.btn-edit i:hover {
+    color: #0069d9;
+} */
+
+/* .btn-cancel-booking {
+    color: #dc3545;
+}
+
+.btn-cancel-booking:hover {
+    color: #c82333;
+} */
+
+

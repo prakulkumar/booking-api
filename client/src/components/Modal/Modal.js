@@ -1,10 +1,10 @@
 import React from 'react';
-import { Modal } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 
 const modal = (props) => {
     console.log(props);
     return (
-        <Modal show={props.showModal} onHide={props.onClose} centered>
+        <Modal show={props.showModal} onHide={props.onClose} centered size="lg">
             <Modal.Header closeButton>Modal Title</Modal.Header>
             <Modal.Body>
                 {props.children}
