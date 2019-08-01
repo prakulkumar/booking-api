@@ -48,7 +48,7 @@ class Grid extends Component {
         this.finalArray(tempArray, this.state.monthObj);
         this.setBookingsForMonth(this.state.monthObj);
 
-        this.setState({ modalTitle: 'Balance Details' });
+        this.setState({ modalTitle: 'Booking Details' });
     }
 
     getBookings = async (monthObj) => {
@@ -293,6 +293,7 @@ class Grid extends Component {
                              handleBookings={this.handleBookings}
                              status={this.modalStatus()}
                              rooms={this.state.rooms}
+                             onClose={this.closeModalHandler}
                              notify={(notification, message) => this.props.notify(notification, message)}/>
                     </Modal> : null}
                 </div> : null}

@@ -195,13 +195,14 @@ class Booking extends Component {
                     <BookingForm
                         hotelBookingForm={this.state.hotelBookingForm}
                         onChanged={(event) => this.inputChangedHandler(event)}
-                        onRoomChanged={(event) => { this.roomDetailsChangedHandler(event, name, index) }}
+                        onRoomChanged={(event, name, index) => { this.roomDetailsChangedHandler(event, name, index) }}
                         roomTypes={roomTypes}
                         availableRooms={this.state.availableRooms}
                         addRoom={this.addRoom}
                         deleteRoom={this.deleteRoom}
                         onBooked={(event) => this.hotelBookedHandler(event)}
                         validated={this.state.validated}
+                        onClose={this.props.onClose}
                     />
                 ) : null}
             </React.Fragment>

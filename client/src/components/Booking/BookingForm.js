@@ -238,7 +238,7 @@ const bookingForm = (props) => {
                     roomDetailsForm}
             </div>
             <Modal.Footer className="modal-footer">
-                <Button variant="secondary">Close</Button>
+                <Button variant="secondary" onClick={props.onClose}>Close</Button>
                 <Button variant="primary" type="submit">Submit</Button>
             </Modal.Footer>
         </Form>
