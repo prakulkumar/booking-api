@@ -111,6 +111,8 @@ dataBaseConnection().then(dbs => {
                 }
 
                 if (checkInCheck || checkOutCheck || isCheckInInclude || isCheckOutInclude) filteredRooms = filteredRooms.concat([...booking.rooms]);
+
+                console.log({ mychekIn: dateFNS.format(checkIn, "DD.MM.YYYY"), checkIn: dateFNS.format(booking.checkIn, "DD.MM.YYYY"), checkOut: dateFNS.format(booking.checkOut, "DD.MM.YYYY") });
             });
 
             filteredRooms = [...new Set(filteredRooms)];

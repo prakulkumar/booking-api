@@ -118,6 +118,7 @@ class Booking extends Component {
     getAvailableRooms = (checkIn, checkOut) => {
         axios.post('/rooms/available', { checkIn, checkOut, bookingId: this.state.bookingId })
             .then(res => {
+                console.log('new api', res.data);
                 let availableRooms = res.data;
                 let rooms = this.props.rooms.filter((room) => {
                     return this.state.hotelBookingForm.rooms.indexOf(room._id) >= 0;
