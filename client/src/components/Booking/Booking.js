@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import BookingForm from './BookingForm';
+import Header from './Header';
 
 import axios from 'axios';
 
@@ -182,15 +183,110 @@ class Booking extends Component {
     hotelBookedHandler = (event) => {
         event.preventDefault();
         const form = event.currentTarget;
+        let bookingData = {};
+        let url = '';
         if (form.checkValidity()) {
-            console.log('valid')
+            for (let element in this.state.hotelBookingForm) {
+                if (element === 'rooms') {
+                    let rooms = this.state.hotelBookingForm[element].map(room => room._id);
+                    bookingData[element] = rooms;
+                }
+                else bookingData[element] = this.state.hotelBookingForm[element];
+            }
+            bookingData['cancel'] = this.state.cancel;
+            bookingData['checkedIn'] = this.state.checkedIn;
+            bookingData['checkedOut'] = this.state.checkedOut;
+            delete bookingData.step;
+            if (this.state.isEdit && this.state.disable) {
+                console.log('update');
+                url = '/bookings/update';
+                bookingData['_id'] = this.state.bookingId;
+            } else {
+                url = '/bookings/insert';
+                notification = notifications.SUCCESS;
+                message = messages.BOOKING_SUCCESS
+            }
+            console.log('booking data : ', bookingData);
+            axios.post(url, bookingData)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.status === 200) {
+                        this.props.notify(notification, message);
+                        this.props.handleBookings();
+                    }
+                }).catch(error => {
+                    this.props.notify(notifications.ERROR, messages.BOOKING_ERROR);
+                    console.log(error);
+                });
+            this.props.onClose();
         }
         this.setState({ validated: true });
+    }
+
+    edit = () => {
+        this.setState({ isEdit: true, status: 'editBooking' });
+    }
+
+    cancel = () => {
+        this.setState({ cancel: true });
+        let data = {
+            'cancel': true,
+            '_id': this.state.bookingId
+        }
+        axios.post('/bookings/update', data)
+            .then(res => {
+                console.log(res.data);
+                if (res.status === 200) this.props.handleBookings();
+            }).catch(error => {
+                this.props.notify(notifications.ERROR, messages.BOOKING_ERROR);
+                console.log(error);
+            });
+        this.props.onClose();
+    }
+
+    checkIn = () => {
+        this.setState({ checkedIn: true });
+        let data = {
+            'checkedIn': true,
+            '_id': this.state.bookingId
+        }
+        axios.post('/bookings/update', data)
+            .then(res => {
+                if (res.status === 200) this.props.handleBookings();
+            }).catch(error => {
+                this.props.notify(notifications.ERROR, messages.BOOKING_ERROR);
+                console.log(error);
+            });
+        this.props.onClose();
+    }
+
+    checkOut = () => {
+        this.setState({ checkedOut: true });
+        let data = {
+            'checkedOut': true,
+            '_id': this.state.bookingId
+        }
+        axios.post('/bookings/update', data)
+            .then(res => {
+                if (res.status === 200) this.props.handleBookings();
+            }).catch(error => {
+                this.props.notify(notifications.ERROR, messages.BOOKING_ERROR);
+                console.log(error);
+            });
+        this.props.onClose();
     }
 
     render() {
         return (
             <React.Fragment>
+                <Header 
+                    edit={this.edit}
+                    cancel={this.cancel}
+                    checkIn={this.checkIn}
+                    checkOut={this.checkOut}
+                    checkedIn={this.state.checkedIn}
+                    checkOutDate={this.state.hotelBookingForm.checkOut}
+                />
                 {this.state.hotelBookingForm.checkIn !== '' ? (
                     <BookingForm
                         hotelBookingForm={this.state.hotelBookingForm}

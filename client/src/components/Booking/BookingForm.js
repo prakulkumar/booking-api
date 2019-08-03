@@ -10,145 +10,192 @@ const bookingForm = (props) => {
     const bookingDetailsForm = (
         <React.Fragment>
             <Form.Row>
-                <Form.Group as={Col} md="5" controlId="formPlaintext" className="display-flex">
-                    <Form.Control
-                        title="First Name"
-                        type="text"
-                        placeholder="First Name"
-                        value={props.hotelBookingForm.firstName}
-                        name="firstName"
-                        onChange={props.onChanged}
-                        disabled={!props.isEdit && props.disable}
-                        className="valueCapitalize"
-                        required />
+                <Form.Group as={Col} md="5" controlId="firstName"
+                    className="form__group display-flex">
+                    <div>
+                        <Form.Control
+                            title="First Name"
+                            type="text"
+                            placeholder="First Name"
+                            value={props.hotelBookingForm.firstName}
+                            name="firstName"
+                            onChange={props.onChanged}
+                            disabled={!props.isEdit && props.disable}
+                            className="form__input valueCapitalize"
+                            required />
+                        <Form.Label className="form__label" for="firstName">First Name</Form.Label>
+                    </div>
                     <span className="required">*</span>
                 </Form.Group>
-                <Form.Group as={Col} md="5" controlId="formPlaintext" className="display-flex">
-                    <Form.Control
-                        title="Last Name"
-                        type="text"
-                        placeholder="Last Name"
-                        value={props.hotelBookingForm.lastName}
-                        name="lastName"
-                        className="valueCapitalize"
-                        onChange={props.onChanged}
-                        disabled={!props.isEdit && props.disable}
-                        required />
-                    <span className="required">*</span>
-                </Form.Group>
-            </Form.Row>
-            <Form.Row>
-                <Form.Group as={Col} md="10" controlId="formPlaintextarea" className="display-flex">
-                    <Form.Control
-                        title="Address"
-                        as="textarea"
-                        rows="1"
-                        placeholder="Address"
-                        value={props.hotelBookingForm.address}
-                        name="address"
-                        onChange={props.onChanged}
-                        disabled={!props.isEdit && props.disable}
-                        required />
+                <Form.Group as={Col} md="5" controlId="lastName"
+                    className="form__group display-flex">
+                    <div>
+                        <Form.Control
+                            title="Last Name"
+                            type="text"
+                            placeholder="Last Name"
+                            value={props.hotelBookingForm.lastName}
+                            name="lastName"
+                            className="form__input valueCapitalize"
+                            onChange={props.onChanged}
+                            disabled={!props.isEdit && props.disable}
+                            required />
+                        <Form.Label className="form__label" for="lastName">Last Name</Form.Label>
+                    </div>
                     <span className="required">*</span>
                 </Form.Group>
             </Form.Row>
             <Form.Row>
-                <Form.Group as={Col} md="5" controlId="formPlainCalendar" className="display-flex">
-                    <DatePicker
-                        title="Check In"
-                        selected={props.hotelBookingForm.checkIn}
-                        onSelect={(event) => props.onChanged({ event, name: "checkIn", isDate: true })}
-                        dateFormat="MMMM d, yyyy"
-                        placeholderText="Check In"
-                        minDate={new Date()}
-                        key="checkIn"
-                        className="form-control"
-                        disabled={!props.isEdit && props.disable || props.checkedIn}
-                        required
-                    />
-                    <span className="required">*</span>
-                </Form.Group>
-                <Form.Group as={Col} md="5" controlId="formPlaintCalendar" className="display-flex">
-                    <DatePicker
-                        title="Check Out"
-                        selected={props.hotelBookingForm.checkOut}
-                        onSelect={(event) => props.onChanged({ event, name: "checkOut", isDate: true })}
-                        dateFormat="MMMM d, yyyy"
-                        placeholderText="Check Out"
-                        minDate={props.hotelBookingForm.checkIn}
-                        key="checkOut"
-                        className="form-control"
-                        disabled={!props.isEdit && props.disable}
-                        required
-                    />
+                <Form.Group as={Col} md="10" controlId="address"
+                    className="form__group display-flex">
+                    <div>
+                        <Form.Control
+                            title="Address"
+                            as="textarea"
+                            rows="1"
+                            placeholder="Address"
+                            value={props.hotelBookingForm.address}
+                            name="address"
+                            onChange={props.onChanged}
+                            disabled={!props.isEdit && props.disable}
+                            className="form__input"
+                            required />
+                        <Form.Label className="form__label" for="address">Address</Form.Label>
+                    </div>
                     <span className="required">*</span>
                 </Form.Group>
             </Form.Row>
             <Form.Row>
-                <Form.Group as={Col} md="3" controlId="formPlainNumber" className="display-flex">
-                    <Form.Control
-                        title="Adults"
-                        type="number"
-                        placeholder="Adults"
-                        value={props.hotelBookingForm.adults}
-                        name="adults"
-                        onChange={props.onChanged}
-                        disabled={!props.isEdit && props.disable}
-                        min="1"
-                        required />
+                <Form.Group as={Col} md="5"
+                    className="form__group display-flex">
+                    <div>
+                        <DatePicker
+                            id="checkIn"
+                            title="Check In"
+                            selected={props.hotelBookingForm.checkIn}
+                            onSelect={(event) => props.onChanged({ event, name: "checkIn", isDate: true })}
+                            dateFormat="MMMM d, yyyy"
+                            placeholderText="Check In"
+                            minDate={new Date()}
+                            key="checkIn"
+                            className="form__input form-control"
+                            disabled={!props.isEdit && props.disable || props.checkedIn}
+                            required
+                        />
+                        <Form.Label className="form__label" for="checkIn">Check In</Form.Label>
+                    </div>
                     <span className="required">*</span>
                 </Form.Group>
-                <Form.Group as={Col} md="2" controlId="formPlainNumber" className="display-flex">
-                    <Form.Control
-                        title="Children"
-                        type="number"
-                        placeholder="Children"
-                        value={props.hotelBookingForm.children}
-                        name="children"
-                        onChange={props.onChanged}
-                        disabled={!props.isEdit && props.disable}
-                        min="0"
-                        required />
-                    <span className="required">*</span>
-                </Form.Group>
-                <Form.Group as={Col} md="5" controlId="formPlainNumber" className="display-flex">
-                    <Form.Control
-                        title="Contact Number"
-                        type="number"
-                        placeholder="Contact Number"
-                        value={props.hotelBookingForm.contactNumber}
-                        name="contactNumber"
-                        onChange={props.onChanged}
-                        disabled={!props.isEdit && props.disable}
-                        required />
+                <Form.Group as={Col} md="5" controlId="checkOut"
+                    className="form__group display-flex">
+                    <div>
+                        <DatePicker
+                            title="Check Out"
+                            selected={props.hotelBookingForm.checkOut}
+                            onSelect={(event) => props.onChanged({ event, name: "checkOut", isDate: true })}
+                            dateFormat="MMMM d, yyyy"
+                            placeholderText="Check Out"
+                            minDate={props.hotelBookingForm.checkIn}
+                            key="checkOut"
+                            className="form-control form__input"
+                            disabled={!props.isEdit && props.disable}
+                            required
+                        />
+                        <Form.Label className="form__label" for="checkOut">CheckOut</Form.Label>
+                    </div>
                     <span className="required">*</span>
                 </Form.Group>
             </Form.Row>
             <Form.Row>
-                <Form.Group as={Col} md="5" controlId="formPlainNumber" className="display-flex">
-                    <Form.Control
-                        title="Room Charges"
-                        type="number"
-                        placeholder="Room Charges"
-                        value={props.hotelBookingForm.amount}
-                        name="amount"
-                        onChange={props.onChanged}
-                        disabled={!props.isEdit && props.disable}
-                        min="1"
-                        required></Form.Control>
+                <Form.Group as={Col} md="3" controlId="adults"
+                    className="form__group display-flex">
+                    <div>
+                        <Form.Control
+                            title="Adults"
+                            type="number"
+                            placeholder="Adults"
+                            value={props.hotelBookingForm.adults}
+                            name="adults"
+                            onChange={props.onChanged}
+                            disabled={!props.isEdit && props.disable}
+                            min="1"
+                            className="form__input"
+                            required />
+                        <Form.Label className="form__label" for="adults">Adults</Form.Label>
+                    </div>
                     <span className="required">*</span>
                 </Form.Group>
-                <Form.Group as={Col} md="5" controlId="formPlainNumber" className="display-flex">
-                    <Form.Control
-                        title="Advance"
-                        type="number"
-                        placeholder="Advance"
-                        value={props.hotelBookingForm.advance}
-                        name="advance"
-                        onChange={props.onChanged}
-                        disabled={!props.isEdit && props.disable}
-                        min="0"
-                        required></Form.Control>
+                <Form.Group as={Col} md="2" controlId="children"
+                    className="form__group display-flex">
+                    <div>
+                        <Form.Control
+                            title="Children"
+                            type="number"
+                            placeholder="Children"
+                            value={props.hotelBookingForm.children}
+                            name="children"
+                            onChange={props.onChanged}
+                            disabled={!props.isEdit && props.disable}
+                            min="0"
+                            className="form__input"
+                            required />
+                        <Form.Label className="form__label" for="children">Children</Form.Label>
+                    </div>
+                    <span className="required">*</span>
+                </Form.Group>
+                <Form.Group as={Col} md="5" controlId="contactNumber"
+                    className="form__group display-flex">
+                    <div>
+                        <Form.Control
+                            title="Contact Number"
+                            type="number"
+                            placeholder="Contact Number"
+                            value={props.hotelBookingForm.contactNumber}
+                            name="contactNumber"
+                            onChange={props.onChanged}
+                            disabled={!props.isEdit && props.disable}
+                            className="form__input"
+                            required />
+                        <Form.Label className="form__label" for="contactNumber">Contact Number</Form.Label>
+                    </div>
+                    <span className="required">*</span>
+                </Form.Group>
+            </Form.Row>
+            <Form.Row>
+                <Form.Group as={Col} md="5" controlId="amount"
+                    className="form__group display-flex">
+                    <div>
+                        <Form.Control
+                            title="Room Charges"
+                            type="number"
+                            placeholder="Room Charges"
+                            value={props.hotelBookingForm.amount}
+                            name="amount"
+                            onChange={props.onChanged}
+                            disabled={!props.isEdit && props.disable}
+                            min="1"
+                            className="form__input"
+                            required></Form.Control>
+                        <Form.Label className="form__label" for="amount">Room Charges</Form.Label>
+                    </div>
+                    <span className="required">*</span>
+                </Form.Group>
+                <Form.Group as={Col} md="5" controlId="advance"
+                    className="form__group display-flex">
+                    <div>
+                        <Form.Control
+                            title="Advance"
+                            type="number"
+                            placeholder="Advance"
+                            value={props.hotelBookingForm.advance}
+                            name="advance"
+                            onChange={props.onChanged}
+                            disabled={!props.isEdit && props.disable}
+                            min="0"
+                            className="form__input"
+                            required></Form.Control>
+                        <Form.Label className="form__label" for="advance">Advance</Form.Label>
+                    </div>
                     <span className="required">*</span>
                 </Form.Group>
             </Form.Row>
@@ -161,28 +208,36 @@ const bookingForm = (props) => {
                 props.hotelBookingForm.rooms.map((room, index) => {
                     return (
                         <Form.Row key={index}>
-                            <Form.Group as={Col} md="4" controlId="formPlainSelect" className="display-flex">
+                            <Form.Group as={Col} md="4" controlId="roomType"
+                                className="form__group display-flex">
+                                <div>
                                 <Form.Control
                                     as="select" title="Room Type"
                                     value={props.hotelBookingForm.rooms[index].roomType}
                                     name="roomType"
                                     onChange={(event) => props.onRoomChanged(event, "roomType", index)}
                                     disabled={!props.isEdit && props.disable}
+                                    className="form__input"
                                     required >
                                     <option value='' hidden>Room Type</option>
                                     {props.roomTypes.map((roomType, i) => {
                                         return <option key={`roomType${i}`}>{roomType}</option>
                                     })}
                                 </Form.Control>
+                                { index === 0 ? <Form.Label className="form__label" for="roomType">Room Type</Form.Label> : null }
+                                </div>
                                 <span className="required">*</span>
                             </Form.Group>
-                            <Form.Group as={Col} md="4" controlId="formPlainSelect" className="display-flex">
+                            <Form.Group as={Col} md="4" controlId="roomNumber"
+                                className="form__group display-flex">
+                                <div>
                                 <Form.Control
                                     as="select" title="Room No"
                                     value={props.hotelBookingForm.rooms[index].roomNumber}
                                     name="roomNumber"
                                     onChange={(event) => props.onRoomChanged(event, "roomNumber", index)}
                                     disabled={!props.isEdit && props.disable}
+                                    className="form__input"
                                     required >
                                     <option value='' hidden>Room No  {room.roomNumber}</option>
                                     {props.availableRooms.map((r, i) => {
@@ -192,6 +247,8 @@ const bookingForm = (props) => {
                                         return null;
                                     })}
                                 </Form.Control>
+                                { index === 0 ? <Form.Label className="form__label" for="roomNumber">Room Number</Form.Label> : null }
+                                </div>
                                 <span className="required">*</span>
                             </Form.Group>
                             {index === 0 ? (
@@ -226,8 +283,9 @@ const bookingForm = (props) => {
 
     let form = (
         <Form noValidate validated={props.validated}
-            onSubmit={props.onBooked}>
-            <div className="display-flex">
+            onSubmit={props.onBooked}
+            className="form">
+            <div className="form__container display-flex">
                 <div className="booking-details-form">{bookingDetailsForm}</div>
                 <div className="separator"></div>
                 {props.hotelBookingForm.rooms.length === 0 ? (
@@ -238,7 +296,7 @@ const bookingForm = (props) => {
                     roomDetailsForm}
             </div>
             <Modal.Footer className="modal-footer">
-                <Button variant="secondary" onClick={props.onClose}>Close</Button>
+                <Button variant="outline-secondary" onClick={props.onClose}>Close</Button>
                 <Button variant="primary" type="submit">Submit</Button>
             </Modal.Footer>
         </Form>
