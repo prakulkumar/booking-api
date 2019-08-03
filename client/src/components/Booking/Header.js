@@ -1,6 +1,7 @@
 import React from 'react';
 
 import './Header.css';
+import dateFNS from 'date-fns';
 
 const header = (props) => (
     <nav className="navigation">
