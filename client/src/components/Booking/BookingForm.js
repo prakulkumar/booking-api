@@ -1,4 +1,6 @@
 import React from 'react';
+import Svg from '../../icons/open-exit-door';
+
 import { Button, Modal, Form, Col } from 'react-bootstrap';
 import DatePicker from "react-datepicker";
 
@@ -23,7 +25,7 @@ const bookingForm = (props) => {
                             disabled={!props.isEdit && props.disable}
                             className="form__input valueCapitalize"
                             required />
-                        <Form.Label className="form__label" for="firstName">First Name</Form.Label>
+                        <Form.Label className="form__label">First Name</Form.Label>
                     </div>
                     <span className="required">*</span>
                 </Form.Group>
@@ -40,7 +42,7 @@ const bookingForm = (props) => {
                             onChange={props.onChanged}
                             disabled={!props.isEdit && props.disable}
                             required />
-                        <Form.Label className="form__label" for="lastName">Last Name</Form.Label>
+                        <Form.Label className="form__label">Last Name</Form.Label>
                     </div>
                     <span className="required">*</span>
                 </Form.Group>
@@ -60,7 +62,7 @@ const bookingForm = (props) => {
                             disabled={!props.isEdit && props.disable}
                             className="form__input"
                             required />
-                        <Form.Label className="form__label" for="address">Address</Form.Label>
+                        <Form.Label className="form__label">Address</Form.Label>
                     </div>
                     <span className="required">*</span>
                 </Form.Group>
@@ -82,7 +84,7 @@ const bookingForm = (props) => {
                             disabled={!props.isEdit && props.disable || props.checkedIn}
                             required
                         />
-                        <Form.Label className="form__label" for="checkIn">Check In</Form.Label>
+                        <Form.Label className="form__label">Check In</Form.Label>
                     </div>
                     <span className="required">*</span>
                 </Form.Group>
@@ -101,7 +103,7 @@ const bookingForm = (props) => {
                             disabled={!props.isEdit && props.disable}
                             required
                         />
-                        <Form.Label className="form__label" for="checkOut">CheckOut</Form.Label>
+                        <Form.Label className="form__label">CheckOut</Form.Label>
                     </div>
                     <span className="required">*</span>
                 </Form.Group>
@@ -121,7 +123,7 @@ const bookingForm = (props) => {
                             min="1"
                             className="form__input"
                             required />
-                        <Form.Label className="form__label" for="adults">Adults</Form.Label>
+                        <Form.Label className="form__label">Adults</Form.Label>
                     </div>
                     <span className="required">*</span>
                 </Form.Group>
@@ -139,7 +141,7 @@ const bookingForm = (props) => {
                             min="0"
                             className="form__input"
                             required />
-                        <Form.Label className="form__label" for="children">Children</Form.Label>
+                        <Form.Label className="form__label">Children</Form.Label>
                     </div>
                     <span className="required">*</span>
                 </Form.Group>
@@ -156,7 +158,7 @@ const bookingForm = (props) => {
                             disabled={!props.isEdit && props.disable}
                             className="form__input"
                             required />
-                        <Form.Label className="form__label" for="contactNumber">Contact Number</Form.Label>
+                        <Form.Label className="form__label">Contact Number</Form.Label>
                     </div>
                     <span className="required">*</span>
                 </Form.Group>
@@ -176,7 +178,7 @@ const bookingForm = (props) => {
                             min="1"
                             className="form__input"
                             required></Form.Control>
-                        <Form.Label className="form__label" for="amount">Room Charges</Form.Label>
+                        <Form.Label className="form__label">Room Charges</Form.Label>
                     </div>
                     <span className="required">*</span>
                 </Form.Group>
@@ -194,7 +196,7 @@ const bookingForm = (props) => {
                             min="0"
                             className="form__input"
                             required></Form.Control>
-                        <Form.Label className="form__label" for="advance">Advance</Form.Label>
+                        <Form.Label className="form__label">Advance</Form.Label>
                     </div>
                     <span className="required">*</span>
                 </Form.Group>
@@ -210,7 +212,7 @@ const bookingForm = (props) => {
                         <Form.Row key={index}>
                             <Form.Group as={Col} md="4" controlId="roomType"
                                 className="form__group display-flex">
-                                <div>
+                                {/* <div> */}
                                 <Form.Control
                                     as="select" title="Room Type"
                                     value={props.hotelBookingForm.rooms[index].roomType}
@@ -224,13 +226,13 @@ const bookingForm = (props) => {
                                         return <option key={`roomType${i}`}>{roomType}</option>
                                     })}
                                 </Form.Control>
-                                { index === 0 ? <Form.Label className="form__label" for="roomType">Room Type</Form.Label> : null }
-                                </div>
+                                {/* { index === 0 ? <Form.Label className="form__label" for="roomType">Room Type</Form.Label> : null } */}
+                                {/* </div> */}
                                 <span className="required">*</span>
                             </Form.Group>
                             <Form.Group as={Col} md="4" controlId="roomNumber"
                                 className="form__group display-flex">
-                                <div>
+                                {/* <div> */}
                                 <Form.Control
                                     as="select" title="Room No"
                                     value={props.hotelBookingForm.rooms[index].roomNumber}
@@ -247,8 +249,8 @@ const bookingForm = (props) => {
                                         return null;
                                     })}
                                 </Form.Control>
-                                { index === 0 ? <Form.Label className="form__label" for="roomNumber">Room Number</Form.Label> : null }
-                                </div>
+                                {/* { index === 0 ? <Form.Label className="form__label" for="roomNumber">Room Number</Form.Label> : null } */}
+                                {/* </div> */}
                                 <span className="required">*</span>
                             </Form.Group>
                             {index === 0 ? (
@@ -291,6 +293,7 @@ const bookingForm = (props) => {
                 {props.hotelBookingForm.rooms.length === 0 ? (
                     <div className="room-details-form">
                         <h4>Choose Room to Book</h4>
+                        <Svg width="150px" height="100px" fill="#ced4da !important" className="svg-icon" />
                     </div>
                 ) :
                     roomDetailsForm}

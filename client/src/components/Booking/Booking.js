@@ -3,6 +3,7 @@ import BookingForm from './BookingForm';
 import Header from './Header';
 
 import axios from 'axios';
+import { types, messages } from '../../constants/notification';
 
 const roomTypes = ['AC', 'Non AC', 'Deluxe', 'Suite', 'Dormitory'];
 
@@ -117,7 +118,8 @@ class Booking extends Component {
 
     // get the available rooms between checkin date and checkout date
     getAvailableRooms = (checkIn, checkOut) => {
-        axios.post('/rooms/available', { checkIn, checkOut, bookingId: this.state.bookingId })
+        if(checkOut !== '' && checkOut !== null) {
+            axios.post('/rooms/available', { checkIn, checkOut, bookingId: this.state.bookingId })
             .then(res => {
                 console.log('new api', res.data);
                 let availableRooms = res.data;
@@ -130,6 +132,7 @@ class Booking extends Component {
                 this.setState({ availableRooms, hotelBookingForm: updatedForm });
                 if (this.state.hotelBookingForm.rooms.length === 0) { this.setDefaultRoom() };
             }).catch(error => console.log(error));
+        }
     }
 
     setDefaultRoom = () => {
@@ -184,6 +187,8 @@ class Booking extends Component {
         const form = event.currentTarget;
         let bookingData = {};
         let url = '';
+        let notification = '';
+        let message = '';
         if (form.checkValidity()) {
             for (let element in this.state.hotelBookingForm) {
                 if (element === 'rooms') {
@@ -200,9 +205,11 @@ class Booking extends Component {
                 console.log('update');
                 url = '/bookings/update';
                 bookingData['_id'] = this.state.bookingId;
+                notification = types.SUCCESS;
+                message = messages.BOOKING_UPDATE_SUCCESS;
             } else {
                 url = '/bookings/insert';
-                notification = notifications.SUCCESS;
+                notification = types.SUCCESS;
                 message = messages.BOOKING_SUCCESS
             }
             console.log('booking data : ', bookingData);
@@ -214,7 +221,7 @@ class Booking extends Component {
                         this.props.handleBookings();
                     }
                 }).catch(error => {
-                    this.props.notify(notifications.ERROR, messages.BOOKING_ERROR);
+                    this.props.notify(types.ERROR, messages.BOOKING_ERROR);
                     console.log(error);
                 });
             this.props.onClose();
@@ -234,10 +241,12 @@ class Booking extends Component {
         }
         axios.post('/bookings/update', data)
             .then(res => {
-                console.log(res.data);
-                if (res.status === 200) this.props.handleBookings();
+                if (res.status === 200) {
+                    this.props.handleBookings();
+                    this.props.notify(types.SUCCESS, messages.BOOKING_CANCEL_SUCCESS);
+                }
             }).catch(error => {
-                this.props.notify(notifications.ERROR, messages.BOOKING_ERROR);
+                this.props.notify(types.ERROR, messages.BOOKING_ERROR);
                 console.log(error);
             });
         this.props.onClose();
@@ -251,9 +260,12 @@ class Booking extends Component {
         }
         axios.post('/bookings/update', data)
             .then(res => {
-                if (res.status === 200) this.props.handleBookings();
+                if (res.status === 200) {
+                    this.props.handleBookings();
+                    this.props.notify(types.SUCCESS, messages.BOOKING_CHECKIN_SUCCESS);
+                }
             }).catch(error => {
-                this.props.notify(notifications.ERROR, messages.BOOKING_ERROR);
+                this.props.notify(types.ERROR, messages.BOOKING_ERROR);
                 console.log(error);
             });
         this.props.onClose();
@@ -267,9 +279,12 @@ class Booking extends Component {
         }
         axios.post('/bookings/update', data)
             .then(res => {
-                if (res.status === 200) this.props.handleBookings();
+                if (res.status === 200) {
+                    this.props.handleBookings();
+                    this.props.notify(types.SUCCESS, messages.BOOKING_CHECKOUT_SUCCESS);
+                }
             }).catch(error => {
-                this.props.notify(notifications.ERROR, messages.BOOKING_ERROR);
+                this.props.notify(types.ERROR, messages.BOOKING_ERROR);
                 console.log(error);
             });
         this.props.onClose();
@@ -298,6 +313,8 @@ class Booking extends Component {
                         onBooked={(event) => this.hotelBookedHandler(event)}
                         validated={this.state.validated}
                         onClose={this.props.onClose}
+                        isEdit={this.state.isEdit}
+                        disable={this.state.disable}
                     />
                 ) : null}
             </React.Fragment>

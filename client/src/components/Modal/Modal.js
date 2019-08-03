@@ -5,10 +5,10 @@ import './Modal.css';
 
 const modal = (props) => {
     return (
-        <Modal show={props.showModal} onHide={props.onClose} centered size='lg'>
-            <Modal.Header closeButton className="modalTitle modal-header">{props.modalTitle}</Modal.Header>
+        <Modal show={ props.showModal } onHide={ props.onClose } centered size='lg'>
+            <Modal.Header closeButton className="modalTitle modal-header">{ props.modalTitle }</Modal.Header>
             <Modal.Body className="modal__body">
-                {props.children}
+                { props.children }
             </Modal.Body>
         </Modal>
     )
