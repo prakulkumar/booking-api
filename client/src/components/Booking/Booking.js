@@ -116,11 +116,9 @@ class Booking extends Component {
 
     // get the available rooms between checkin date and checkout date
     getAvailableRooms = (checkIn, checkOut) => {
-        axios.post('/rooms/booked', { checkIn, checkOut, bookingId: this.state.bookingId })
+        axios.post('/rooms/available', { checkIn, checkOut, bookingId: this.state.bookingId })
             .then(res => {
-                let availableRooms = this.props.rooms.filter((room) => {
-                    return res.data.indexOf(room._id) < 0;
-                });
+                let availableRooms = res.data;
                 let rooms = this.props.rooms.filter((room) => {
                     return this.state.hotelBookingForm.rooms.indexOf(room._id) >= 0;
                 });
