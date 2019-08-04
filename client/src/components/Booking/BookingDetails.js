@@ -9,16 +9,16 @@ class BookingDetails extends Component {
             balance: 0,
             misc: 0
         },
-        cardDisable: "true",
-        cashDisable: "true",
-        walletDisable: "true"
+        cardDisable: true,
+        cashDisable: true,
+        walletDisable: true
     }
 
     getPayment = () => {
         const payment = {
-            cashPayment: this.state.cashDisable === 'true' ? Number(document.getElementById('cash_input').value) : 0,
-            cardPayment: this.state.cardDisable === 'true' ? Number(document.getElementById('card_input').value) : 0,
-            walletPayment: this.state.walletDisable === 'true' ? Number(document.getElementById('wallet_input').value) : 0
+            cashPayment: this.state.cashDisable ? Number(document.getElementById('cash_input').value) : 0,
+            cardPayment: this.state.cardDisable ? Number(document.getElementById('card_input').value) : 0,
+            walletPayment: this.state.walletDisable ? Number(document.getElementById('wallet_input').value) : 0
         }
 
         this.props.generateReport({ ...this.state.payment, payment });
