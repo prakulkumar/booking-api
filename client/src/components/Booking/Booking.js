@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import BookingForm from './BookingForm';
 import Header from './Header';
+import CancelAlert from '../CancelAlert/CancelAlert';
 
 import axios from 'axios';
 import { types, messages } from '../../constants/notification';
@@ -36,7 +37,8 @@ class Booking extends Component {
         misc: '',
         total: '',
         balance: '',
-        status: ''
+        status: '',
+        showCancelAlert: false
     }
 
     componentDidMount() {
@@ -233,6 +235,10 @@ class Booking extends Component {
         this.setState({ isEdit: true, status: 'editBooking' });
     }
 
+    toggleCancelAlert = () => {
+        this.setState({ showCancelAlert: !this.state.showCancelAlert });
+    }
+
     cancel = () => {
         this.setState({ cancel: true });
         let data = {
@@ -249,6 +255,7 @@ class Booking extends Component {
                 this.props.notify(types.ERROR, messages.BOOKING_ERROR);
                 console.log(error);
             });
+        this.setState({ showCancelAlert: false });
         this.props.onClose();
     }
 
@@ -295,7 +302,7 @@ class Booking extends Component {
             <React.Fragment>
                 <Header 
                     edit={this.edit}
-                    cancel={this.cancel}
+                    toggleCancelAlert={this.toggleCancelAlert}
                     checkIn={this.checkIn}
                     checkOut={this.checkOut}
                     checkedIn={this.state.checkedIn}
@@ -317,6 +324,10 @@ class Booking extends Component {
                         disable={this.state.disable}
                     />
                 ) : null}
+                { this.state.showCancelAlert ? <CancelAlert 
+                    cancel={this.cancel}
+                    showCancelAlert={this.state.showCancelAlert} 
+                    toggleCancelAlert={this.toggleCancelAlert} /> : null }
             </React.Fragment>
         );
     }

@@ -5,6 +5,7 @@ import { Tooltip, OverlayTrigger, Navbar } from 'react-bootstrap';
 import axios from 'axios';
 import './Grid.css';
 import Booking from '../Booking/Booking';
+import CancelAlert from '../CancelAlert/CancelAlert';
 
 class Grid extends Component {
     state = {
