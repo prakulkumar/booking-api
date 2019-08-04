@@ -77,8 +77,6 @@ class Booking extends Component {
                 status: this.props.status
             });
         }
-
-        this.setState({ checkedOut: true });
     }
 
     inputChangedHandler = (event) => {
