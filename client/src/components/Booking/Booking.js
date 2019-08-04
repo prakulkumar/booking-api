@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import BookingForm from './BookingForm';
+import BookingDetails from './BookingDetails';
 import Header from './Header';
 import CancelAlert from '../CancelAlert/CancelAlert';
 
@@ -7,9 +8,7 @@ import axios from 'axios';
 import { types, messages } from '../../constants/notification';
 
 const roomTypes = ['AC', 'Non AC', 'Deluxe', 'Suite', 'Dormitory'];
-
 class Booking extends Component {
-
     state = {
         validated: false,
         hotelBookingForm: {
@@ -35,7 +34,6 @@ class Booking extends Component {
         personId: null,
         disable: false,
         misc: '',
-        total: '',
         balance: '',
         status: '',
         showCancelAlert: false
@@ -120,20 +118,20 @@ class Booking extends Component {
 
     // get the available rooms between checkin date and checkout date
     getAvailableRooms = (checkIn, checkOut) => {
-        if(checkOut !== '' && checkOut !== null) {
+        if (checkOut !== '' && checkOut !== null) {
             axios.post('/rooms/available', { checkIn, checkOut, bookingId: this.state.bookingId })
-            .then(res => {
-                console.log('new api', res.data);
-                let availableRooms = res.data;
-                let rooms = this.props.rooms.filter((room) => {
-                    return this.state.hotelBookingForm.rooms.indexOf(room._id) >= 0;
-                });
-                let updatedForm = { ...this.state.hotelBookingForm };
-                updatedForm.rooms = rooms;
-                availableRooms = availableRooms.concat(rooms);
-                this.setState({ availableRooms, hotelBookingForm: updatedForm });
-                if (this.state.hotelBookingForm.rooms.length === 0) { this.setDefaultRoom() };
-            }).catch(error => console.log(error));
+                .then(res => {
+                    console.log('new api', res.data);
+                    let availableRooms = res.data;
+                    let rooms = this.props.rooms.filter((room) => {
+                        return this.state.hotelBookingForm.rooms.indexOf(room._id) >= 0;
+                    });
+                    let updatedForm = { ...this.state.hotelBookingForm };
+                    updatedForm.rooms = rooms;
+                    availableRooms = availableRooms.concat(rooms);
+                    this.setState({ availableRooms, hotelBookingForm: updatedForm });
+                    if (this.state.hotelBookingForm.rooms.length === 0) { this.setDefaultRoom() };
+                }).catch(error => console.log(error));
         }
     }
 
@@ -297,37 +295,45 @@ class Booking extends Component {
         this.props.onClose();
     }
 
+    generateReport = (payment) => {
+        this.setState({ hotelBookingForm: { ...this.state.hotelBookingForm, ...payment } });
+
+        setTimeout(() => {
+            console.log(this.state.hotelBookingForm);
+        }, 2000);
+    }
+
     render() {
         return (
             <React.Fragment>
-                <Header 
-                    edit={this.edit}
-                    toggleCancelAlert={this.toggleCancelAlert}
-                    checkIn={this.checkIn}
-                    checkOut={this.checkOut}
-                    checkedIn={this.state.checkedIn}
-                    checkOutDate={this.state.hotelBookingForm.checkOut}
-                />
-                {this.state.hotelBookingForm.checkIn !== '' ? (
-                    <BookingForm
-                        hotelBookingForm={this.state.hotelBookingForm}
-                        onChanged={(event) => this.inputChangedHandler(event)}
-                        onRoomChanged={(event, name, index) => { this.roomDetailsChangedHandler(event, name, index) }}
-                        roomTypes={roomTypes}
-                        availableRooms={this.state.availableRooms}
-                        addRoom={this.addRoom}
-                        deleteRoom={this.deleteRoom}
-                        onBooked={(event) => this.hotelBookedHandler(event)}
-                        validated={this.state.validated}
-                        onClose={this.props.onClose}
-                        isEdit={this.state.isEdit}
-                        disable={this.state.disable}
-                    />
-                ) : null}
-                { this.state.showCancelAlert ? <CancelAlert 
+                {this.state.hotelBookingForm.checkIn !== '' && !this.state.checkedOut ? (
+                    <div>
+                        <Header
+                            edit={this.edit}
+                            cancel={this.cancel}
+                            checkIn={this.checkIn}
+                            checkOut={this.checkOut}
+                            checkedIn={this.state.checkedIn}
+                            checkOutDate={this.state.hotelBookingForm.checkOut}
+                        />
+                        <BookingForm
+                            hotelBookingForm={this.state.hotelBookingForm}
+                            onChanged={(event) => this.inputChangedHandler(event)}
+                            onRoomChanged={(event, name, index) => { this.roomDetailsChangedHandler(event, name, index) }}
+                            roomTypes={roomTypes}
+                            availableRooms={this.state.availableRooms}
+                            addRoom={this.addRoom}
+                            deleteRoom={this.deleteRoom}
+                            onBooked={(event) => this.hotelBookedHandler(event)}
+                            validated={this.state.validated}
+                            onClose={this.props.onClose}
+                        />
+                    </div>
+                ) : <BookingDetails booking={this.state.hotelBookingForm} generateReport={this.generateReport}></BookingDetails>}
+                {this.state.showCancelAlert ? <CancelAlert
                     cancel={this.cancel}
-                    showCancelAlert={this.state.showCancelAlert} 
-                    toggleCancelAlert={this.toggleCancelAlert} /> : null }
+                    showCancelAlert={this.state.showCancelAlert}
+                    toggleCancelAlert={this.toggleCancelAlert} /> : null}
             </React.Fragment>
         );
     }
