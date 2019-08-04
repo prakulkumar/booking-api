@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import BookingForm from './BookingForm';
+import BookingDetails from './BookingDetails';
 import Header from './Header';
 
 import axios from 'axios';
-
 const roomTypes = ['AC', 'Non AC', 'Deluxe', 'Suite', 'Dormitory'];
-
 class Booking extends Component {
-
     state = {
         validated: false,
         hotelBookingForm: {
@@ -33,7 +31,6 @@ class Booking extends Component {
         personId: null,
         disable: false,
         misc: '',
-        total: '',
         balance: '',
         status: ''
     }
@@ -78,6 +75,8 @@ class Booking extends Component {
                 status: this.props.status
             });
         }
+
+        this.setState({ checkedOut: true });
     }
 
     inputChangedHandler = (event) => {
@@ -275,31 +274,42 @@ class Booking extends Component {
         this.props.onClose();
     }
 
+    generateReport = (payment) => {
+        this.setState({ hotelBookingForm: { ...this.state.hotelBookingForm, ...payment } });
+
+        setTimeout(() => {
+            console.log(this.state.hotelBookingForm);
+        }, 2000);
+    }
+
     render() {
         return (
             <React.Fragment>
-                <Header 
-                    edit={this.edit}
-                    cancel={this.cancel}
-                    checkIn={this.checkIn}
-                    checkOut={this.checkOut}
-                    checkedIn={this.state.checkedIn}
-                    checkOutDate={this.state.hotelBookingForm.checkOut}
-                />
-                {this.state.hotelBookingForm.checkIn !== '' ? (
-                    <BookingForm
-                        hotelBookingForm={this.state.hotelBookingForm}
-                        onChanged={(event) => this.inputChangedHandler(event)}
-                        onRoomChanged={(event, name, index) => { this.roomDetailsChangedHandler(event, name, index) }}
-                        roomTypes={roomTypes}
-                        availableRooms={this.state.availableRooms}
-                        addRoom={this.addRoom}
-                        deleteRoom={this.deleteRoom}
-                        onBooked={(event) => this.hotelBookedHandler(event)}
-                        validated={this.state.validated}
-                        onClose={this.props.onClose}
-                    />
-                ) : null}
+                {this.state.hotelBookingForm.checkIn !== '' && !this.state.checkedOut ? (
+                    <div>
+                        <Header
+                            edit={this.edit}
+                            cancel={this.cancel}
+                            checkIn={this.checkIn}
+                            checkOut={this.checkOut}
+                            checkedIn={this.state.checkedIn}
+                            checkOutDate={this.state.hotelBookingForm.checkOut}
+                        />
+                        <BookingForm
+                            hotelBookingForm={this.state.hotelBookingForm}
+                            onChanged={(event) => this.inputChangedHandler(event)}
+                            onRoomChanged={(event, name, index) => { this.roomDetailsChangedHandler(event, name, index) }}
+                            roomTypes={roomTypes}
+                            availableRooms={this.state.availableRooms}
+                            addRoom={this.addRoom}
+                            deleteRoom={this.deleteRoom}
+                            onBooked={(event) => this.hotelBookedHandler(event)}
+                            validated={this.state.validated}
+                            onClose={this.props.onClose}
+                        />
+                    </div>
+                ) :
+                    <BookingDetails booking={this.state.hotelBookingForm} generateReport={this.generateReport}></BookingDetails>}
             </React.Fragment>
         );
     }

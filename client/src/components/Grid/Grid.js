@@ -287,7 +287,8 @@ class Grid extends Component {
                     {this.state.showModal ? <Modal
                         modalTitle={this.state.modalTitle}
                         showModal={this.state.showModal}
-                        onClose={this.closeModalHandler}>
+                        onClose={this.closeModalHandler}
+                        size="md">
                             <Booking
                              detailsForForm={this.state.detailsForForm}
                              handleBookings={this.handleBookings}
