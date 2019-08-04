@@ -1,6 +1,10 @@
 /* .form {
-    padding: 0 3%;
+    padding: 3% 0 0 0;
 } */
+
+.form__container {
+    padding: 1.7% 3% 0 3%;
+}
 
 .form__group {
     margin-bottom: 1rem;
@@ -31,11 +35,14 @@
     visibility: hidden;
 } */
 
-.form__input:focus,
+/* .form__input:focus, */
+.form-control:focus:invalid,
+.form-control:focus:valid,
 .form-input:focus {
-    outline: none;
-    box-shadow: none;
-    border-color: #ced4da;
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: #ced4da !important;
+    padding-right: 0 !important;
 }
 
 /* .form-control:invalid,
@@ -45,22 +52,30 @@
     background-image: none !important;
 } */
 
-.form__input:focus:invalid,
+/* .form__input:focus:invalid, */
+/* .form-control.is-invalid */
+/* .was-validated */
 .form-control:invalid {
     /* border: none; */
     /* border-color: transparent !important; */
+    border-color: #ced4da !important;  /* rgb(206, 212, 218) */
     background-image: none !important;
-    box-shadow: 0 1rem 2rem rgba(black, .1);
+    /* box-shadow: 0 1rem 2rem rgba(black, .1) !important; */
     border-bottom: 2px solid #dc3545 !important;
+    padding-right: 0 !important;
 }
 
-.form__input:focus:valid,
+/* .form__input:focus:valid, */
+/* .form-control.is-valid */
+/* .was-validated */
 .form-control:valid {
     /* border: none; */
-    border-color: none !important;
+    border-color: #ced4da !important;
     background-image: none !important;
-    box-shadow: 0 1rem 2rem rgba(black, .1);
-    border-bottom: 2px solid #28a745 !important;
+    /* box-shadow: 0 1rem 2rem rgba(black, .1) !important; */
+    /* border-bottom: 2px solid #28a745 !important; */
+    border-bottom: 2px solid #ced4da !important;
+    padding-right: 0 !important;
 }
 
 .display-flex {
@@ -73,10 +88,6 @@
 
 .form-row>.col, .form-row>.col-md-5, .form-row>.col-md-3, .form-row>.col-md-6 {
     display: flex !important;
-}
-
-.form__container {
-    padding: 0 3%;
 }
 
 .booking-details-form {
@@ -167,6 +178,10 @@
 
 .modal-lg {
     max-width: 900px;
+}
+
+.svg-icon {
+    fill: #ced4da !important;
 }
 
 

@@ -8,7 +8,7 @@ const modal = (props) => {
         <Modal show={props.showModal} onHide={props.onClose} centered size={props.size}>
             <Modal.Header closeButton className="modalTitle modal-header">{props.modalTitle}</Modal.Header>
             <Modal.Body className="modal__body">
-                {props.children}
+                { props.children }
             </Modal.Body>
         </Modal>
     )

@@ -1,4 +1,5 @@
 import React from 'react';
+import Svg from '../../icons/open-exit-door';
 
 import './Header.css';
 import dateFNS from 'date-fns';
@@ -17,7 +18,7 @@ const header = (props) => (
                 <li className="navigation__item"
                     title="Check Out" onClick={props.checkOut}>
                     <span className="icon_container">
-                        <i className="fa fa-sign-out icon"></i>
+                        <Svg width="20px" height="20px" />
                     </span>
                     <a href="#" className="navigation__link">Check Out</a>
                 </li>
@@ -33,7 +34,7 @@ const header = (props) => (
                         <li className="navigation__item"
                             title="Check In" onClick={props.checkIn}>
                             <span className="icon_container">
-                                <i className="fa fa-sign-in icon"></i>
+                                <i className="fa fa-bed icon"></i>
                             </span>
                             <a href="#" className="navigation__link">Check In</a>
                         </li>

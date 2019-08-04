@@ -2,24 +2,24 @@ import React from 'react';
 import HeaderNavbar from '../Navbar/Navbar';
 import Grid from '../Grid/Grid';
 import './MainContainer.css';
-import { notifications, notificationTimeOut } from '../../constants/notification';
+import { types, notificationTimeOut } from '../../constants/notification';
 
 import 'react-notifications/lib/notifications.css';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 const mainContainer = (props) => {
-    const notify = (notification, message) => {
-        switch (notification) {
-            case notifications.SUCCESS :
+    const notify = (type, message) => {
+        switch (type) {
+            case types.SUCCESS :
               NotificationManager.success(message, "", notificationTimeOut);
               break;
-            case notifications.ERROR :
+            case types.ERROR :
                 NotificationManager.error(message, "", notificationTimeOut);
                 break;
-            case notifications.WARNING :
+            case types.WARNING :
                 NotificationManager.warning(message, "", notificationTimeOut);
                 break;
-            case notifications.INFO :
+            case types.INFO :
                 NotificationManager.info(message, "", notificationTimeOut);
                 break;
             default :
