@@ -32,8 +32,8 @@ class Booking extends Component {
         bookingId: null,
         personId: null,
         disable: false,
-        misc: '',
-        balance: '',
+        misc: 0,
+        balance: 0,
         status: ''
     }
 
@@ -71,7 +71,7 @@ class Booking extends Component {
             this.getAvailableRooms(new Date(data.checkIn), new Date(data.checkOut));
         } else {
             let updatedForm = { ...this.state.hotelBookingForm };
-            updatedForm['checkIn'] = new Date();
+            updatedForm['checkIn'] = this.props.detailsForForm.date;
             this.setState({
                 hotelBookingForm: updatedForm,
                 status: this.props.status
@@ -271,21 +271,22 @@ class Booking extends Component {
 
     checkOut = () => {
         this.setState({ checkedOut: true });
-        let data = {
-            'checkedOut': true,
-            '_id': this.state.bookingId
-        }
-        axios.post('/bookings/update', data)
-            .then(res => {
-                if (res.status === 200) {
-                    this.props.handleBookings();
-                    this.props.notify(types.SUCCESS, messages.BOOKING_CHECKOUT_SUCCESS);
-                }
-            }).catch(error => {
-                this.props.notify(types.ERROR, messages.BOOKING_ERROR);
-                console.log(error);
-            });
+        // let data = {
+        //     'checkedOut': true,
+        //     '_id': this.state.bookingId
+        // }
+        // axios.post('/bookings/update', data)
+        //     .then(res => {
+        //         if (res.status === 200) {
+        //             this.props.handleBookings();
+        //             this.props.notify(types.SUCCESS, messages.BOOKING_CHECKOUT_SUCCESS);
+        //         }
+        //     }).catch(error => {
+        //         this.props.notify(types.ERROR, messages.BOOKING_ERROR);
+        //         console.log(error);
+        //     });
         this.props.onClose();
+        this.props.changeModalSize();
     }
 
     generateReport = (payment) => {

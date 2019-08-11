@@ -14,7 +14,8 @@ const header = (props) => (
                 </span>
                 <a href="#" className="navigation__link">Edit</a>
             </li>
-            {props.checkedIn && dateFNS.format(new Date(), 'MM/DD/YYYY') === dateFNS.format(new Date(props.checkOutDate), 'MM/DD/YYYY') ? (
+            {/* && dateFNS.format(new Date(), 'MM/DD/YYYY') === dateFNS.format(new Date(props.checkOutDate), 'MM/DD/YYYY' )*/}
+            {props.checkedIn ? (
                 <li className="navigation__item"
                     title="Check Out" onClick={props.checkOut}>
                     <span className="icon_container">

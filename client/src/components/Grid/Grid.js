@@ -15,7 +15,8 @@ class Grid extends Component {
         bookingArray: [],
         loading: true,
         detailsForForm: {},
-        modalTile: ''
+        modalTitle: '',
+        modalSize: 'lg'
     }
 
     getRandomColor = () => {
@@ -229,6 +230,10 @@ class Grid extends Component {
             : null)
     }
 
+    changeModalSize = () => {
+        this.setState({ modalSize: 'md', showModal: true, modalTitle: 'Bill Details' });
+    }
+
     renderItems = () => {
         return this.state.items.map((item, itemIndex) =>
             <div className="template_item" key={'item' + itemIndex}>
@@ -288,14 +293,15 @@ class Grid extends Component {
                         modalTitle={this.state.modalTitle}
                         showModal={this.state.showModal}
                         onClose={this.closeModalHandler}
-                        size="lg">
-                            <Booking
-                             detailsForForm={this.state.detailsForForm}
-                             handleBookings={this.handleBookings}
-                             status={this.modalStatus()}
-                             rooms={this.state.rooms}
-                             onClose={this.closeModalHandler}
-                             notify={(notification, message) => this.props.notify(notification, message)}/>
+                        size={this.state.modalSize}>
+                        <Booking
+                            changeModalSize = {this.changeModalSize}
+                            detailsForForm={this.state.detailsForForm}
+                            handleBookings={this.handleBookings}
+                            status={this.modalStatus()}
+                            rooms={this.state.rooms}
+                            onClose={this.closeModalHandler}
+                            notify={(notification, message) => this.props.notify(notification, message)} />
                     </Modal> : null}
                 </div> : null}
             </div>
