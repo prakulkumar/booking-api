@@ -175,7 +175,7 @@ class BookingDetails extends Component {
 
                     <div className="bookingDetails__row">
                         <div>
-                            <input type="checkbox" id="card" className="bookingDetails__input" onChange={() => this.onChange(event)} />
+                            <input type="checkbox" id="card" className="bookingDetails__input" onChange={(event) => this.onChange(event)} />
                             <label for="card" className="bookingDetails__label">
                                 <span className="bookingDetails__checkbox"></span>
                                 <span>Card Payment</span>
@@ -187,7 +187,7 @@ class BookingDetails extends Component {
 
                     <div className="bookingDetails__row">
                         <div>
-                            <input type="checkbox" id="wallet" className="bookingDetails__input" onChange={() => this.onChange(event)} />
+                            <input type="checkbox" id="wallet" className="bookingDetails__input" onChange={(event) => this.onChange(event)} />
                             <label for="wallet" className="bookingDetails__label">
                                 <span className="bookingDetails__checkbox"></span>
                                 <span>Wallet Payment</span>
