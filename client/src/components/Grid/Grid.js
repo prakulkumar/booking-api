@@ -5,6 +5,7 @@ import { Tooltip, OverlayTrigger, Navbar } from 'react-bootstrap';
 import axios from 'axios';
 import './Grid.css';
 import Booking from '../Booking/Booking';
+import CancelAlert from '../CancelAlert/CancelAlert';
 
 class Grid extends Component {
     state = {
@@ -164,7 +165,7 @@ class Grid extends Component {
     showModalHandler = (subitem, dayOfMonth) => {
         const monthObj = this.state.monthObj;
         subitem.date = new Date(monthObj.year, monthObj.monthNumber, dayOfMonth);
-        this.setState({ detailsForForm: subitem, showModal: true });
+        this.setState({ modalSize: 'lg', detailsForForm: subitem, showModal: true });
     }
 
     closeModalHandler = () => {
@@ -175,6 +176,8 @@ class Grid extends Component {
         const tempArray = new Array(this.state.rooms.length);
         this.finalArray(tempArray, this.state.monthObj);
         this.setBookingsForMonth(this.state.monthObj);
+
+        console.log(this.state.detailsForForm.booking);
     }
 
     modalStatus = () => {
@@ -230,8 +233,12 @@ class Grid extends Component {
             : null)
     }
 
-    changeModalSize = () => {
+    openBillDetailsModal = () => {
         this.setState({ modalSize: 'md', showModal: true, modalTitle: 'Bill Details' });
+    }
+
+    openReportGenerateModal = () => {
+        this.setState({ modalSize: 'md', showModal: true, modalTitle: 'Report' });
     }
 
     renderItems = () => {
@@ -295,7 +302,8 @@ class Grid extends Component {
                         onClose={this.closeModalHandler}
                         size={this.state.modalSize}>
                         <Booking
-                            changeModalSize = {this.changeModalSize}
+                            openReportGenerateModal={this.openReportGenerateModal}
+                            openBillDetailsModal={this.openBillDetailsModal}
                             detailsForForm={this.state.detailsForForm}
                             handleBookings={this.handleBookings}
                             status={this.modalStatus()}

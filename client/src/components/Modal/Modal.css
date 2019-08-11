@@ -21,6 +21,7 @@
 }
 
 .close,
-.sr-only {
+.close:hover {
     color: #fff;
+    opacity: 1 !important;
 }

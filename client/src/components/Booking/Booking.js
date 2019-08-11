@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import BookingForm from './BookingForm';
 import BookingDetails from './BookingDetails';
 import Header from './Header';
+import CancelAlert from '../CancelAlert/CancelAlert';
+import Report from './Report';
 
 import axios from 'axios';
 import { types, messages } from '../../constants/notification';
@@ -32,13 +34,16 @@ class Booking extends Component {
         bookingId: null,
         personId: null,
         disable: false,
-        misc: 0,
-        balance: 0,
-        status: ''
+        misc: '',
+        balance: '',
+        status: '',
+        showCancelAlert: false,
+        payment: {},
+        billDetailsDone: false
     }
 
     componentDidMount() {
-        console.log(this.props);
+        console.log(this.props.detailsForForm.booking);
         let disable = false;
         if (this.props.status === 'viewBooking') {
             let data = this.props.detailsForForm.booking;
@@ -65,7 +70,8 @@ class Booking extends Component {
                 cancel: data.cancel,
                 checkedIn: data.checkedIn,
                 checkedOut: data.checkedOut,
-                status: this.props.status
+                status: this.props.status,
+                payment: data.payment
             });
 
             this.getAvailableRooms(new Date(data.checkIn), new Date(data.checkOut));
@@ -116,20 +122,19 @@ class Booking extends Component {
 
     // get the available rooms between checkin date and checkout date
     getAvailableRooms = (checkIn, checkOut) => {
-        if(checkOut !== '' && checkOut !== null) {
+        if (checkOut !== '' && checkOut !== null) {
             axios.post('/rooms/available', { checkIn, checkOut, bookingId: this.state.bookingId })
-            .then(res => {
-                console.log('new api', res.data);
-                let availableRooms = res.data;
-                let rooms = this.props.rooms.filter((room) => {
-                    return this.state.hotelBookingForm.rooms.indexOf(room._id) >= 0;
-                });
-                let updatedForm = { ...this.state.hotelBookingForm };
-                updatedForm.rooms = rooms;
-                availableRooms = availableRooms.concat(rooms);
-                this.setState({ availableRooms, hotelBookingForm: updatedForm });
-                if (this.state.hotelBookingForm.rooms.length === 0) { this.setDefaultRoom() };
-            }).catch(error => console.log(error));
+                .then(res => {
+                    let availableRooms = res.data;
+                    let rooms = this.props.rooms.filter((room) => {
+                        return this.state.hotelBookingForm.rooms.indexOf(room._id) >= 0;
+                    });
+                    let updatedForm = { ...this.state.hotelBookingForm };
+                    updatedForm.rooms = rooms;
+                    availableRooms = availableRooms.concat(rooms);
+                    this.setState({ availableRooms, hotelBookingForm: updatedForm });
+                    if (this.state.hotelBookingForm.rooms.length === 0) { this.setDefaultRoom() };
+                }).catch(error => console.log(error));
         }
     }
 
@@ -231,6 +236,10 @@ class Booking extends Component {
         this.setState({ isEdit: true, status: 'editBooking' });
     }
 
+    toggleCancelAlert = () => {
+        this.setState({ showCancelAlert: !this.state.showCancelAlert });
+    }
+
     cancel = () => {
         this.setState({ cancel: true });
         let data = {
@@ -247,6 +256,7 @@ class Booking extends Component {
                 this.props.notify(types.ERROR, messages.BOOKING_ERROR);
                 console.log(error);
             });
+        this.setState({ showCancelAlert: false });
         this.props.onClose();
     }
 
@@ -271,6 +281,7 @@ class Booking extends Component {
 
     checkOut = () => {
         this.setState({ checkedOut: true });
+        this.props.openBillDetailsModal();
         // let data = {
         //     'checkedOut': true,
         //     '_id': this.state.bookingId
@@ -278,23 +289,35 @@ class Booking extends Component {
         // axios.post('/bookings/update', data)
         //     .then(res => {
         //         if (res.status === 200) {
-        //             this.props.handleBookings();
-        //             this.props.notify(types.SUCCESS, messages.BOOKING_CHECKOUT_SUCCESS);
+        //             this.props.onClose();
+        //             // this.props.notify(types.SUCCESS, messages.BOOKING_CHECKOUT_SUCCESS);
+        //             // this.props.handleBookings();
+        //             this.props.openBillDetailsModal();
         //         }
         //     }).catch(error => {
         //         this.props.notify(types.ERROR, messages.BOOKING_ERROR);
         //         console.log(error);
         //     });
-        this.props.onClose();
-        this.props.changeModalSize();
     }
 
     generateReport = (payment) => {
-        this.setState({ hotelBookingForm: { ...this.state.hotelBookingForm, ...payment } });
+        this.setState({ payment: payment.payment });
 
-        setTimeout(() => {
-            console.log(this.state.hotelBookingForm);
-        }, 2000);
+        let data = {
+            // 'payment': payment.payment,
+            'checkedOut': true,
+            '_id': this.state.bookingId
+        }
+        axios.post('/bookings/update', data)
+            .then(res => {
+                if (res.status === 200) {
+                    this.setState({ billDetailsDone: true })
+                    this.props.openReportGenerateModal();
+                }
+            }).catch(error => {
+                this.props.notify(types.ERROR, messages.BOOKING_ERROR);
+                console.log(error);
+            });
     }
 
     render() {
@@ -323,8 +346,17 @@ class Booking extends Component {
                             onClose={this.props.onClose}
                         />
                     </div>
-                ) :
-                    <BookingDetails booking={this.state.hotelBookingForm} generateReport={this.generateReport}></BookingDetails>}
+                ) : (<React.Fragment>
+                    {!this.state.billDetailsDone ?
+                        <BookingDetails booking={this.state.hotelBookingForm} generateReport={this.generateReport}></BookingDetails>
+                        : <Report booking={this.state}></Report>
+                    }</React.Fragment>
+                    )}
+
+                {this.state.showCancelAlert ? <CancelAlert
+                    cancel={this.cancel}
+                    showCancelAlert={this.state.showCancelAlert}
+                    toggleCancelAlert={this.toggleCancelAlert} /> : null}
             </React.Fragment>
         );
     }

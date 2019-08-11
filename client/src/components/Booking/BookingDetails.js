@@ -7,7 +7,11 @@ class BookingDetails extends Component {
             amount: 0,
             advance: 0,
             balance: 0,
-            misc: 0
+            misc: 0,
+            payment: {
+                withTax: false,
+                taxPercent: 0,
+            }
         },
         cardDisable: true,
         cashDisable: true,
@@ -27,21 +31,38 @@ class BookingDetails extends Component {
 
     getPayment = () => {
         const payment = {
-            cashPayment: this.state.cashDisable ? Number(document.getElementById('cash_input').value) : 0,
-            cardPayment: this.state.cardDisable ? Number(document.getElementById('card_input').value) : 0,
-            walletPayment: this.state.walletDisable ? Number(document.getElementById('wallet_input').value) : 0
+            cashPayment: !this.state.cashDisable ? Number(document.getElementById('cash_input').value) : 0,
+            cardPayment: !this.state.cardDisable ? Number(document.getElementById('card_input').value) : 0,
+            walletPayment: !this.state.walletDisable ? Number(document.getElementById('wallet_input').value) : 0,
+            due: 0
         }
 
-        this.props.generateReport({ ...this.state.payment, payment });
+        this.checkPayment(payment);
+    }
+
+    checkPayment = (payment) => {
+        const paymentTotal = payment.cashPayment + payment.cardPayment + payment.walletPayment;
+        if (paymentTotal >= this.state.payment.balance && paymentTotal <= this.state.payment.balance + 100) {
+            payment.due = paymentTotal - this.state.payment.balance;
+
+            this.props.generateReport({ ...this.state, payment: { ...this.state.payment, payment: { ...this.state.payment.payment, payment } } });
+        } else {
+            alert('Not allowed to proceed');
+        }
     }
 
     restoreAmount = () => {
         this.setState({
+            ...this.state,
             payment: {
                 ...this.state.payment,
                 amount: Number(this.props.booking.amount),
                 advance: Number(this.props.booking.advance),
-                balance: (Number(this.props.booking.amount) + this.state.payment.misc) - Number(this.props.booking.advance)
+                balance: (Number(this.props.booking.amount) + this.state.payment.misc) - Number(this.props.booking.advance),
+                payment: {
+                    ...this.state.payment.payment,
+                    withTax: false
+                }
             }
         });
     }
@@ -60,10 +81,16 @@ class BookingDetails extends Component {
         amount = this.state.payment.amount - ((this.state.payment.amount * taxPercent) / 100);
 
         this.setState({
+            ...this.state,
             payment: {
                 ...this.state.payment,
                 amount,
-                balance: ((amount + this.state.payment.misc) - this.state.payment.advance)
+                balance: ((amount + this.state.payment.misc) - this.state.payment.advance),
+                payment: {
+                    ...this.state.payment.payment,
+                    taxPercent: taxPercent,
+                    withTax: true
+                }
             }
         });
     }
@@ -79,7 +106,9 @@ class BookingDetails extends Component {
             this.setState({ walletDisable: !this.state.walletDisable });
             document.getElementById('wallet_input').value = null;
         } else if (event.target.id === "withTax") {
-            event.target.checked === true ? this.taxCalculation() : this.restoreAmount();
+            this.taxCalculation();
+        } else if (event.target.id === "withoutTax") {
+            this.restoreAmount();
         }
     }
 
@@ -87,19 +116,19 @@ class BookingDetails extends Component {
         return <React.Fragment>
             <div className="taxInfo">
                 <div className="taxInfo__container">
-                    <div>
-                        <input type="checkbox" id="withTax" className="bookingDetails__input" onChange={(event) => this.onChange(event)} />
-                        <label for="withTax" className="bookingDetails__label">
-                            <span className="bookingDetails__checkbox"></span>
-                            <span>With Tax</span>
+                    <div className="taxInfo__radio-group">
+                        <input type="radio" className="taxInfo__radio-input" id="withTax" name="taxInfo" onChange={(event) => this.onChange(event)} />
+                        <label for="withTax" className="taxInfo__radio-label">
+                            <span className="taxInfo__radio-button"></span>
+                            With Tax
                         </label>
                     </div>
 
-                    <div>
-                        <input type="checkbox" id="withoutTax" className="bookingDetails__input" onChange={(event) => this.onChange(event)} checked={this.state.withoutTaxChecked} />
-                        <label for="withoutTax" className="bookingDetails__label">
-                            <span className="bookingDetails__checkbox"></span>
-                            <span>Without Tax</span>
+                    <div className="taxInfo__radio-group">
+                        <input type="radio" className="taxInfo__radio-input" id="withoutTax" name="taxInfo" onChange={(event) => this.onChange(event)} />
+                        <label for="withoutTax" className="taxInfo__radio-label">
+                            <span className="taxInfo__radio-button"></span>
+                            Without Tax
                         </label>
                     </div>
                 </div>

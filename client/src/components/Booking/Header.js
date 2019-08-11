@@ -19,14 +19,14 @@ const header = (props) => (
                 <li className="navigation__item"
                     title="Check Out" onClick={props.checkOut}>
                     <span className="icon_container">
-                        <Svg width="20px" height="20px" />
+                        <Svg width="20px" height="20px" fill="black" />
                     </span>
                     <a href="#" className="navigation__link">Check Out</a>
                 </li>
             ) : (
                     <React.Fragment>
                         <li className="navigation__item"
-                            title="Cancel" onClick={props.cancel}>
+                            title="Cancel" onClick={props.toggleCancelAlert}>
                             <span className="icon_container">
                                 <i className="fa fa-close icon"></i>
                             </span>

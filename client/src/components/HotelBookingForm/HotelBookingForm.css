@@ -19,6 +19,8 @@
     height: 162px;
     overflow-y: scroll;
     overflow-x: hidden;
+    display: flex;
+    justify-content: space-evenly;
 }
 
 .room-details-form::-webkit-scrollbar {

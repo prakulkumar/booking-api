@@ -23,7 +23,6 @@ dataBaseConnection().then(dbs => {
                 "months": {
                     $elemMatch: { "monthNumber": req.body.monthNumber, "year": req.body.year }
                 },
-                "checkedOut": false,
                 "cancel": false
             };
             findByObj(dbs, collections.booking, filter).then(result => res.send(result));

@@ -293,14 +293,14 @@ const bookingForm = (props) => {
                 {props.hotelBookingForm.rooms.length === 0 ? (
                     <div className="room-details-form">
                         <h4>Choose Room to Book</h4>
-                        <Svg width="150px" height="100px" fill="#ced4da !important" className="svg-icon" />
+                        <Svg width="150px" height="100px" fill="#ced4da" className="svg-icon" />
                     </div>
                 ) :
                     roomDetailsForm}
             </div>
             <Modal.Footer className="modal-footer">
                 <Button variant="outline-secondary" onClick={props.onClose}>Close</Button>
-                <Button variant="primary" type="submit">Submit</Button>
+                <Button variant="primary" type="submit" className="btn-submit">Submit</Button>
             </Modal.Footer>
         </Form>
     );

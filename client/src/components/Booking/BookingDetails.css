@@ -110,3 +110,49 @@
     display: flex;
     justify-content: space-between;
 }
+
+.taxInfo__radio-group {
+    width: 35%;
+    display: inline-block;
+}
+
+.taxInfo__radio-input {
+    display: none;
+}
+
+.taxInfo__radio-label {
+    font-size: 16px;
+    cursor: pointer;
+    position: relative;
+    padding-left: 35px;
+}
+
+.taxInfo__radio-button {
+    height: 20px;
+    width: 20px;
+    border: 2px solid #4C4B4B;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 3px;
+}
+
+.taxInfo__radio-button::after {
+    content: "";
+    display: block;
+    height: 9px;
+    width: 9px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #4C4B4B;
+    opacity: 0;
+    transition: all .2s;
+}
+
+.taxInfo__radio-input:checked ~ .taxInfo__radio-label .taxInfo__radio-button::after {
+    opacity: 1;
+}
