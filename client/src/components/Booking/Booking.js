@@ -344,6 +344,8 @@ class Booking extends Component {
                             onBooked={(event) => this.hotelBookedHandler(event)}
                             validated={this.state.validated}
                             onClose={this.props.onClose}
+                            isEdit={this.state.isEdit}
+                            disable={this.state.disable}
                         />
                     </div>
                 ) : (<React.Fragment>
