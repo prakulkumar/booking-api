@@ -39,7 +39,7 @@ class Booking extends Component {
         status: '',
         showCancelAlert: false,
         payment: {},
-        billDetailsDone: false
+        viewBillDetail: false
     }
 
     componentDidMount() {
@@ -280,38 +280,22 @@ class Booking extends Component {
     }
 
     checkOut = () => {
-        this.setState({ checkedOut: true });
+        this.setState({ viewBillDetail: true });
         this.props.openBillDetailsModal();
-        // let data = {
-        //     'checkedOut': true,
-        //     '_id': this.state.bookingId
-        // }
-        // axios.post('/bookings/update', data)
-        //     .then(res => {
-        //         if (res.status === 200) {
-        //             this.props.onClose();
-        //             // this.props.notify(types.SUCCESS, messages.BOOKING_CHECKOUT_SUCCESS);
-        //             // this.props.handleBookings();
-        //             this.props.openBillDetailsModal();
-        //         }
-        //     }).catch(error => {
-        //         this.props.notify(types.ERROR, messages.BOOKING_ERROR);
-        //         console.log(error);
-        //     });
     }
 
     generateReport = (payment) => {
         this.setState({ payment: payment.payment });
 
         let data = {
-            // 'payment': payment.payment,
+            'payment': payment.payment,
             'checkedOut': true,
             '_id': this.state.bookingId
         }
         axios.post('/bookings/update', data)
             .then(res => {
                 if (res.status === 200) {
-                    this.setState({ billDetailsDone: true })
+                    this.setState({ checkedOut: true })
                     this.props.openReportGenerateModal();
                 }
             }).catch(error => {
@@ -323,7 +307,7 @@ class Booking extends Component {
     render() {
         return (
             <React.Fragment>
-                {this.state.hotelBookingForm.checkIn !== '' && !this.state.checkedOut ? (
+                {this.state.hotelBookingForm.checkIn !== '' && !this.state.viewBillDetail && !this.state.checkedOut ? (
                     <div>
                         <Header
                             edit={this.edit}
@@ -347,7 +331,7 @@ class Booking extends Component {
                         />
                     </div>
                 ) : (<React.Fragment>
-                    {!this.state.billDetailsDone ?
+                    {!this.state.checkedOut ?
                         <BookingDetails booking={this.state.hotelBookingForm} generateReport={this.generateReport}></BookingDetails>
                         : <Report booking={this.state}></Report>
                     }</React.Fragment>

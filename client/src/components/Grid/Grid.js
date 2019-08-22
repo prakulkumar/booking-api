@@ -165,7 +165,12 @@ class Grid extends Component {
     showModalHandler = (subitem, dayOfMonth) => {
         const monthObj = this.state.monthObj;
         subitem.date = new Date(monthObj.year, monthObj.monthNumber, dayOfMonth);
-        this.setState({ modalSize: 'lg', detailsForForm: subitem, showModal: true });
+        this.setState({
+            modalSize: subitem.booking.checkedOut ? 'md' : 'lg',
+            detailsForForm: subitem,
+            showModal: true
+        });
+        subitem.booking.checkedOut ? this.openReportGenerateModal() : null;
     }
 
     closeModalHandler = () => {
