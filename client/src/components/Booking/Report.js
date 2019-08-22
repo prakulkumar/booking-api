@@ -62,6 +62,42 @@ const Report = ({ booking }) => {
                         <span className="report-value"></span>
                     </div>
                 </div>
+                <div className="report__section">
+                    <div className="report-row">
+                        <span className="report-key">Amount</span>
+                        <span className="report-value">{booking.payment.actualAmount}</span>
+                    </div>
+                    <div className="report-row">
+                        <span className="report-key">Tax</span>
+                        <span className="report-value">{booking.payment.payment.taxPercent + '%'}</span>
+                    </div>
+                    <div className="report-row">
+                        <span className="report-key">Total</span>
+                        <span className="report-value">{booking.payment.amount}</span>
+                    </div>
+                    <div className="report-row">
+                        <span className="report-key">Advance</span>
+                        <span className="report-value">{booking.payment.advance}</span>
+                    </div>
+                    <div className="report-row">
+                        <span className="report-key">Balance</span>
+                        <span className="report-value">{booking.payment.balance}</span>
+                    </div>
+                </div>
+                <div className="report__section">
+                    {booking.payment.payment.payment.cashPayment !== 0 ? <div className="report-row">
+                        <span className="report-key">Paid By Cash</span>
+                        <span className="report-value">{booking.payment.payment.payment.cashPayment}</span>
+                    </div> : null}
+                    {booking.payment.payment.payment.cardPayment !== 0 ? <div className="report-row">
+                        <span className="report-key">Paid By Card</span>
+                        <span className="report-value">{booking.payment.payment.payment.cardPayment}</span>
+                    </div> : null}
+                    {booking.payment.payment.payment.walletPayment !== 0 ? <div className="report-row">
+                        <span className="report-key">Paid By Wallet</span>
+                        <span className="report-value">{booking.payment.payment.payment.walletPayment}</span>
+                    </div> : null}
+                </div>
                 {/* <div className="report__section">
                     {booking.hotelBookingForm.rooms.map(() => {
                         <React.Fragment>

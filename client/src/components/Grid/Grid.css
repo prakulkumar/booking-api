@@ -83,7 +83,7 @@
     background: rgb(128, 128, 128, .3) !important;
     border: 1 px solid #99AAAB !important;
     color: rgb(128, 128, 128) !important;
-    pointer-events:none;
+    /* pointer-events:none; */
     cursor: none;
 }
 

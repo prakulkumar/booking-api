@@ -22,6 +22,7 @@ class BookingDetails extends Component {
         this.setState({
             payment: {
                 ...this.state.payment,
+                actualAmount: Number(this.props.booking.amount),
                 amount: Number(this.props.booking.amount),
                 advance: Number(this.props.booking.advance),
                 balance: (Number(this.props.booking.amount) + this.state.payment.misc) - Number(this.props.booking.advance)
@@ -78,7 +79,7 @@ class BookingDetails extends Component {
             taxPercent = 18;
         }
 
-        amount = this.state.payment.amount - ((this.state.payment.amount * taxPercent) / 100);
+        amount = this.state.payment.amount + ((this.state.payment.amount * taxPercent) / 100);
 
         this.setState({
             ...this.state,
