@@ -84,7 +84,7 @@
     border: 1 px solid #99AAAB !important;
     color: rgb(128, 128, 128) !important;
     /* pointer-events:none; */
-    cursor: none;
+    cursor: not-allowed;
 }
 
 .disableMonthNav {

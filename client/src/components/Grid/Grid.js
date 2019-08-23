@@ -53,6 +53,13 @@ class Grid extends Component {
         this.setState({ modalTitle: 'Booking Details' });
     }
 
+    componentDidUpdate = () => {
+        if(this.props.refresh) {
+            this.handleBookings();
+            this.props.refreshFalseHadler();
+        } 
+    }
+
     getBookings = async (monthObj) => {
         try {
             return await axios.post('/bookings/filterByMonth', monthObj);
@@ -97,7 +104,6 @@ class Grid extends Component {
     setBookingsForMonth = (monthObj) => {
         this.getBookings(monthObj).then(result => {
             if (result.status === 200) {
-                console.log(2323223223, result.data);
                 result.data.forEach(booking => {
                     if (booking.months.length === 1) this.setBookingForMonth(booking);
                     else if (booking.months.length > 1) this.setBookingForMonths(booking);
@@ -166,11 +172,11 @@ class Grid extends Component {
         const monthObj = this.state.monthObj;
         subitem.date = new Date(monthObj.year, monthObj.monthNumber, dayOfMonth);
         this.setState({
-            modalSize: subitem.booking.checkedOut ? 'md' : 'lg',
+            modalSize: subitem.booking ? (subitem.booking.checkedOut ? 'md' : 'lg') : 'lg',
             detailsForForm: subitem,
             showModal: true
         });
-        subitem.booking.checkedOut ? this.openReportGenerateModal() : null;
+        subitem.booking ? (subitem.booking.checkedOut ? this.openReportGenerateModal() : null) : null;
     }
 
     closeModalHandler = () => {
@@ -247,19 +253,23 @@ class Grid extends Component {
     }
 
     renderItems = () => {
+        let date = dateFNS.getDate(new Date());
+        let month = dateFNS.getMonth(new Date());
         return this.state.items.map((item, itemIndex) =>
             <div className="template_item" key={'item' + itemIndex}>
                 {item.map((subitem, subitemIndex) =>
                     subitem.showBooking ?
                         <OverlayTrigger placement={this.tooltipPlacement(itemIndex)} key={'subitem' + subitemIndex}
                             overlay={<Tooltip id={`tooltip-${this.tooltipPlacement(itemIndex)}`}>{subitem.name} {subitem.booking.checkedIn ? `- ${subitem.roomNumber}` : null}</Tooltip>}>
-                            <div className={this.setClassForCell(subitemIndex)} style={{ color: subitem.color, background: 'rgb(240,255,255)', fontWeight: 'bold' }} onClick={() => this.showModalHandler(subitem, subitemIndex)}>{this.renderShortName(subitem.name)}</div>
+                            <div className={this.setClassForCell(subitemIndex)} style={{ color: subitem.color, background: 'rgb(240,255,255)', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => this.showModalHandler(subitem, subitemIndex)}>{this.renderShortName(subitem.name)}</div>
                         </OverlayTrigger> :
                         subitem.showRoomNumber ?
                             <div className="template_subitem noselect importantCells" key={'subitem' + subitemIndex}>{subitem.showRoomNumber}</div>
-                            : <div key={'subitem' + subitemIndex} className={this.setClassForCell(subitemIndex)} onClick={() => this.showModalHandler(subitem, subitemIndex)}>
-                                <div className="template_subitem_showOnHover">{subitem.roomNumber}</div>
-                            </div>
+                            : (subitemIndex < date && month === this.state.monthObj.monthNumber ?
+                                <div key={'subitem' + subitemIndex} className={"template_subitem noselect disable-cell"}></div>
+                                : <div key={'subitem' + subitemIndex} className={this.setClassForCell(subitemIndex)} onClick={() => this.showModalHandler(subitem, subitemIndex)}>
+                                    <div className="template_subitem_showOnHover">{subitem.roomNumber}</div>
+                                </div>)
                 )}
             </div>
         )

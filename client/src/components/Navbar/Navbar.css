@@ -2,4 +2,10 @@
     color: white;
     font-weight: bold;
     font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar__mainContainer .btn-outline-light {
+    letter-spacing: 1.1px;
 }
