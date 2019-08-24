@@ -3,7 +3,7 @@ import { Modal, Button } from 'react-bootstrap';
 import './Report.css';
 import dateFNS from 'date-fns';
 
-const Report = ({ booking }) => {
+const Report = ({ booking, reportHandler }) => {
     console.log('I am Here ', booking);
     return (
         <React.Fragment>
@@ -110,7 +110,15 @@ const Report = ({ booking }) => {
                 </div> */}
             </div>
             <Modal.Footer>
-                <Button variant="primary">Done</Button>
+                <div className="report__footerContainer">
+                    <Button variant="primary" className="report__btn">Download</Button>
+                    <Button variant="primary" className="report__btn">Print</Button>
+                    {
+                        !booking.reportGenerated ?
+                            <Button variant="primary" className="report__btn" onClick={() => reportHandler()}>Done</Button>
+                            : null
+                    }
+                </div>
             </Modal.Footer>
         </React.Fragment>
     )

@@ -28,6 +28,7 @@ class Booking extends Component {
         cancel: false,
         checkedIn: false,
         checkedOut: false,
+        reportGenerated: false,
         availableRooms: [],
         formIsValid: true,
         isEdit: false,
@@ -71,7 +72,8 @@ class Booking extends Component {
                 checkedIn: data.checkedIn,
                 checkedOut: data.checkedOut,
                 status: this.props.status,
-                payment: data.payment
+                payment: data.payment,
+                reportGenerated: data.reportGenerated
             });
 
             this.getAvailableRooms(new Date(data.checkIn), new Date(data.checkOut));
@@ -279,6 +281,23 @@ class Booking extends Component {
         this.props.onClose();
     }
 
+    report = () => {
+        this.setState({ reportGenerated: true });
+        let data = {
+            'reportGenerated': true,
+            '_id': this.state.bookingId
+        }
+        axios.post('/bookings/update', data)
+            .then(res => {
+                if (res.status === 200) {
+                    this.props.handleBookings();
+                    this.props.onClose();
+                }
+            }).catch(error => {
+                this.props.notify(types.ERROR, messages.BOOKING_ERROR);
+            });
+    }
+
     checkOut = () => {
         this.setState({ viewBillDetail: true });
         this.props.openBillDetailsModal();
@@ -296,6 +315,7 @@ class Booking extends Component {
             .then(res => {
                 if (res.status === 200) {
                     this.setState({ checkedOut: true })
+                    this.props.notify(types.SUCCESS, messages.BOOKING_CHECKOUT_SUCCESS);
                     this.props.openReportGenerateModal();
                 }
             }).catch(error => {
@@ -335,7 +355,7 @@ class Booking extends Component {
                 ) : (<React.Fragment>
                     {!this.state.checkedOut ?
                         <BookingDetails booking={this.state.hotelBookingForm} generateReport={this.generateReport}></BookingDetails>
-                        : <Report booking={this.state}></Report>
+                        : <Report booking={this.state} reportHandler={() => this.report()}></Report>
                     }</React.Fragment>
                     )}
 

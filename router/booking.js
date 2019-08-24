@@ -58,7 +58,7 @@ dataBaseConnection().then(dbs => {
     router.post('/bookings/update', cors(), async (req, res) => {
         try {
             let booking = req.body;
-            if (!(req.body.cancel || req.body.checkedIn || req.body.checkedOut)) {
+            if (!(req.body.cancel || req.body.checkedIn || req.body.checkedOut || req.body.reportGenerated)) {
                 booking['balance'] = req.body.amount - req.body.advance;
                 booking['months'] = getMonths(req.body.checkIn, req.body.checkOut);
                 booking['misc'] = [];
