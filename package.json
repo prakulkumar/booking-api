@@ -24,7 +24,7 @@
     "dev": "env-cmd -f ./config/dev.env node server.js",
     "heroku-postbuild": "cd client && npm install && npm run build",
     "predeploy": "cd client && npm install && npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d client/build"
   },
   "keywords": [],
   "author": "",
