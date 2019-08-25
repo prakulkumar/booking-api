@@ -176,8 +176,10 @@ class Grid extends Component {
             detailsForForm: subitem,
             showModal: true
         });
-        subitem.booking ? (subitem.booking.checkedOut ? this.openReportGenerateModal() : null) : null;
+        subitem.booking ? (subitem.booking.checkedOut ? this.openReportGenerateModal() : this.returnNull()) : this.returnNull();
     }
+
+    returnNull = () => null;
 
     closeModalHandler = () => {
         this.setState({ showModal: false });
