@@ -10,6 +10,7 @@ const {
     correctMonthAndYear
 } = require('./data');
 const dateFNS = require('date-fns');
+const moment = require('moment');
 
 dataBaseConnection().then(dbs => {
     router.get('/rooms', cors(), (req, res) => {
@@ -113,6 +114,80 @@ dataBaseConnection().then(dbs => {
                 if (checkInCheck || checkOutCheck || isCheckInInclude || isCheckOutInclude) filteredRooms = filteredRooms.concat([...booking.rooms]);
 
                 console.log({ mychekIn: dateFNS.format(checkIn, "DD.MM.YYYY"), checkIn: dateFNS.format(booking.checkIn, "DD.MM.YYYY"), checkOut: dateFNS.format(booking.checkOut, "DD.MM.YYYY") });
+            });
+
+            filteredRooms = [...new Set(filteredRooms)];
+
+            const allRooms = await findAll(dbs, collections.room);
+
+            const availableRooms = allRooms.filter((room) => {
+                return filteredRooms.indexOf(room._id.toString()) < 0;
+            });
+
+            res.send(availableRooms);
+        } catch (error) {
+            console.log(error)
+        }
+    });
+
+    router.post('/rooms/available/timestamp', cors(), async (req, res) => {
+        try {
+            console.log('checkIn', req.body.checkIn);
+            console.log('checkOut', req.body.checkOut);
+
+            let checkIn = moment.unix(req.body.checkIn).toDate();
+            checkOut = moment.unix(req.body.checkOut).toDate();
+
+            console.log('checkIn', checkIn);
+            console.log('checkOut', checkOut);
+            console.log('bookingId', req.body.bookingId);
+
+            let diffrenceInMonth = dateFNS.differenceInCalendarMonths(checkOut, checkIn);
+
+            console.log('diffrenceInMonth', diffrenceInMonth);
+
+            let bookings = [],
+                filteredRooms = [];
+
+            for (let index = 0; index <= diffrenceInMonth; index++) {
+                let obj = correctMonthAndYear(dateFNS.getMonth(checkIn) + index, dateFNS.getYear(checkIn));
+                const filter = {
+                    "months": {
+                        $elemMatch: obj
+                    },
+                    "checkedOut": false,
+                    "cancel": false
+                };
+                result = await findByObj(dbs, collections.booking, filter);
+                bookings = result.length > 0 ? bookings.concat(result) : bookings;
+            }
+
+            if (req.body.bookingId !== null) {
+                bookings = bookings.filter(booking => booking._id.toString() !== req.body.bookingId.toString());
+            }
+
+            bookings.forEach(booking => {
+                let isCheckInInclude = false, isCheckOutInclude = false;
+
+                console.log('booking.checkIn', booking.checkIn);
+                console.log('booking.checkOut', booking.checkOut);
+
+                let checkInCheck = dateFNS.isWithinInterval(checkIn, { start: new Date(booking.checkIn), end: new Date(booking.checkOut) });
+                let checkOutCheck = dateFNS.isWithinInterval(checkOut, { start: new Date(booking.checkIn), end: new Date(booking.checkOut) });
+
+                console.log(232323, dateFNS.format(checkIn, "dd.MM.yyyy"))
+
+                if (dateFNS.format(checkIn, "dd.MM.yyyy") === dateFNS.format(new Date(booking.checkIn), "dd.MM.yyyy") ||
+                    dateFNS.format(checkIn, "dd.MM.yyyy") === dateFNS.format(new Date(booking.checkOut), "dd.MM.yyyy")) {
+                    isCheckInInclude = true;
+                };
+
+                if (dateFNS.format(checkOut, "dd.MM.yyyy") === dateFNS.format(new Date(booking.checkIn), "dd.MM.yyyy") ||
+                    dateFNS.format(checkOut, "dd.MM.yyyy") === dateFNS.format(new Date(booking.checkOut), "dd.MM.yyyy")) {
+                    isCheckOutInclude = true;
+                }
+
+                if (checkInCheck || checkOutCheck || isCheckInInclude || isCheckOutInclude) filteredRooms = filteredRooms.concat([...booking.rooms]);
             });
 
             filteredRooms = [...new Set(filteredRooms)];

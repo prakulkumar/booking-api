@@ -17,6 +17,13 @@ const server = http.createServer(app);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // const url = `mongodb+srv://prakul:mlab404@cluster0-jtu6n.gcp.mongodb.net/hotel-booking?retryWrites=true&w=majority`;
 // const url = 'mongodb://localhost:27017/hotel-booking';
 // const myobj = [{

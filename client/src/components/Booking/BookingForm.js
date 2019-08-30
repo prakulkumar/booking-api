@@ -50,7 +50,7 @@ const bookingForm = (props) => {
             <Form.Row>
                 <Form.Group as={Col} md="10" controlId="address"
                     className="form__group display-flex">
-                    <div>
+                    <div className="form__group-addressContainer">
                         <Form.Control
                             title="Address"
                             as="textarea"

@@ -8,6 +8,9 @@ import Report from './Report';
 import axios from 'axios';
 import { types, messages } from '../../constants/notification';
 
+import dateFNS from 'date-fns';
+import moment from 'moment';
+
 const roomTypes = ['AC', 'Non AC', 'Deluxe', 'Suite', 'Dormitory'];
 class Booking extends Component {
     state = {
@@ -124,8 +127,14 @@ class Booking extends Component {
 
     // get the available rooms between checkin date and checkout date
     getAvailableRooms = (checkIn, checkOut) => {
+        console.log('checkIn', moment(checkIn).unix());
+        console.log('checkOut', moment(checkOut).unix());
+
+        const unixCheckIN = moment(checkIn).unix();
+        const unixCheckOut = moment(checkOut).unix();
+
         if (checkOut !== '' && checkOut !== null) {
-            axios.post('/rooms/available', { checkIn, checkOut, bookingId: this.state.bookingId })
+            axios.post('/rooms/available/timestamp', { checkIn: unixCheckIN, checkOut:unixCheckOut, bookingId: this.state.bookingId })
                 .then(res => {
                     let availableRooms = res.data;
                     let rooms = this.props.rooms.filter((room) => {
