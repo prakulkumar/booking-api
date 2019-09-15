@@ -343,26 +343,27 @@ class Booking extends Component {
 
   generateReport = payment => {
     this.setState({ payment: payment.payment });
-
-    let data = {
-      payment: payment.payment,
-      checkedOut: true,
-      _id: this.state.bookingId,
-      checkOutTime: moment().format("LT")
-    };
-    axios
-      .post("/bookings/update", data)
-      .then(res => {
-        if (res.status === 200) {
-          this.setState({ checkedOut: true });
-          this.props.notify(types.SUCCESS, messages.BOOKING_CHECKOUT_SUCCESS);
-          this.props.openReportGenerateModal();
-        }
-      })
-      .catch(error => {
-        this.props.notify(types.ERROR, messages.BOOKING_ERROR);
-        console.log(error);
-      });
+    this.props.onClose();
+    alert("Report will generate");
+    // let data = {
+    //   payment: payment.payment,
+    //   checkedOut: true,
+    //   _id: this.state.bookingId,
+    //   checkOutTime: moment().format("LT")
+    // };
+    // axios
+    //   .post("/bookings/update", data)
+    //   .then(res => {
+    //     if (res.status === 200) {
+    //       this.setState({ checkedOut: true });
+    //       this.props.notify(types.SUCCESS, messages.BOOKING_CHECKOUT_SUCCESS);
+    //       this.props.openReportGenerateModal();
+    //     }
+    //   })
+    //   .catch(error => {
+    //     this.props.notify(types.ERROR, messages.BOOKING_ERROR);
+    //     console.log(error);
+    //   });
   };
 
   render() {

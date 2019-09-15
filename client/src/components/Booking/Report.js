@@ -151,7 +151,7 @@ const Report = props => {
           </ReactToPdf>
           <ReactToPrint
             trigger={() => (
-              <Button variant="primary" className="report__btn" onClick={print}>
+              <Button variant="primary" className="report__btn">
                 Print
               </Button>
             )}
