@@ -1,13 +1,17 @@
-import React from "react";
+import React, { Component, useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
 import "./Report.css";
 
 import moment from "moment";
+import ReactToPrint from "react-to-print";
+import ReactToPdf from "react-to-pdf";
 
-const Report = ({ booking, reportHandler }) => {
-  console.log("I am Here ", booking);
-  return (
-    <React.Fragment>
+let booking;
+const pdfComponentRef = React.createRef();
+
+class ReportGenerator extends Component {
+  render() {
+    return (
       <div className="report__container">
         <div className="report__section">
           <div className="report-row">
@@ -125,37 +129,46 @@ const Report = ({ booking, reportHandler }) => {
             </div>
           ) : null}
         </div>
-        {/* <div className="report__section">
-                    {booking.hotelBookingForm.rooms.map(() => {
-                        <React.Fragment>
-                            <div className="report-row">
-                                <span className="report-key">Booking Id</span>
-                                <span className="report-value">{booking.bookingId}</span>
-                            </div>
-                        </React.Fragment>
-                    })}
-                </div> */}
       </div>
+    );
+  }
+}
+
+const Report = props => {
+  const componentRef = useRef();
+  booking = props.booking;
+  return (
+    <div>
+      <ReportGenerator ref={componentRef} />
       <Modal.Footer>
         <div className="report__footerContainer">
-          <Button variant="primary" className="report__btn">
-            Download
-          </Button>
-          <Button variant="primary" className="report__btn">
-            Print
-          </Button>
+          <ReactToPdf targetRef={pdfComponentRef} filename="report.pdf">
+            {({ toPdf }) => (
+              <Button variant="primary" className="report__btn" onClick={toPdf}>
+                Download
+              </Button>
+            )}
+          </ReactToPdf>
+          <ReactToPrint
+            trigger={() => (
+              <Button variant="primary" className="report__btn" onClick={print}>
+                Print
+              </Button>
+            )}
+            content={() => componentRef.current}
+          />
           {!booking.reportGenerated ? (
             <Button
               variant="primary"
               className="report__btn"
-              onClick={() => reportHandler()}
+              onClick={() => props.reportHandler()}
             >
               Done
             </Button>
           ) : null}
         </div>
       </Modal.Footer>
-    </React.Fragment>
+    </div>
   );
 };
 
