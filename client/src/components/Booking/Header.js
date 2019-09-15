@@ -2,7 +2,7 @@ import React from 'react';
 import Svg from '../../icons/open-exit-door';
 
 import './Header.css';
-import dateFNS from 'date-fns';
+import moment from 'moment';
 
 const header = (props) => (
     <nav className="navigation">
@@ -14,8 +14,7 @@ const header = (props) => (
                 </span>
                 <a href="#" className="navigation__link">Edit</a>
             </li>
-            {/* && dateFNS.format(new Date(), 'MM/DD/YYYY') === dateFNS.format(new Date(props.checkOutDate), 'MM/DD/YYYY' )*/}
-            {props.checkedIn ? (
+            { props.checkedIn && moment().format('L') === moment(props.checkOutDate).format('L') ? (
                 <li className="navigation__item"
                     title="Check Out" onClick={props.checkOut}>
                     <span className="icon_container">
@@ -23,24 +22,25 @@ const header = (props) => (
                     </span>
                     <a href="#" className="navigation__link">Check Out</a>
                 </li>
-            ) : (
-                    <React.Fragment>
-                        <li className="navigation__item"
-                            title="Cancel" onClick={props.toggleCancelAlert}>
-                            <span className="icon_container">
-                                <i className="fa fa-close icon"></i>
-                            </span>
-                            <a href="#" className="navigation__link">Cancel Booking</a>
-                        </li>
-                        <li className="navigation__item"
-                            title="Check In" onClick={props.checkIn}>
-                            <span className="icon_container">
-                                <i className="fa fa-bed icon"></i>
-                            </span>
-                            <a href="#" className="navigation__link">Check In</a>
-                        </li>
-                    </React.Fragment>
-                )}
+            ) : null }
+            { !props.checkedIn ? (
+                <li className="navigation__item"
+                    title="Cancel" onClick={props.toggleCancelAlert}>
+                    <span className="icon_container">
+                        <i className="fa fa-close icon"></i>
+                    </span>
+                    <a href="#" className="navigation__link">Cancel Booking</a>
+                </li>
+            ) : null }
+            { moment().format('L') === moment(props.checkInDate).format('L') ? (
+                <li className="navigation__item"
+                title="Check In" onClick={props.checkIn}>
+                <span className="icon_container">
+                    <i className="fa fa-bed icon"></i>
+                </span>
+                <a href="#" className="navigation__link">Check In</a>
+            </li>
+            ) : null }
         </ul>
     </nav>
 );

@@ -4,11 +4,9 @@ import BookingDetails from './BookingDetails';
 import Header from './Header';
 import CancelAlert from '../CancelAlert/CancelAlert';
 import Report from './Report';
-
-import axios from 'axios';
 import { types, messages } from '../../constants/notification';
 
-import dateFNS from 'date-fns';
+import axios from 'axios';
 import moment from 'moment';
 
 const roomTypes = ['AC', 'Non AC', 'Deluxe', 'Suite', 'Dormitory'];
@@ -47,7 +45,6 @@ class Booking extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.detailsForForm.booking);
         let disable = false;
         if (this.props.status === 'viewBooking') {
             let data = this.props.detailsForForm.booking;
@@ -83,9 +80,14 @@ class Booking extends Component {
         } else {
             let updatedForm = { ...this.state.hotelBookingForm };
             updatedForm['checkIn'] = this.props.detailsForForm.date;
+            const selectedRoom = this.props.rooms.filter(room =>
+                room._id === this.props.detailsForForm.roomId
+            );
+            updatedForm['rooms'].push(selectedRoom[0]);
             this.setState({
                 hotelBookingForm: updatedForm,
-                status: this.props.status
+                status: this.props.status,
+                availableRooms: this.state.availableRooms.concat(selectedRoom)
             });
         }
     }
@@ -127,14 +129,11 @@ class Booking extends Component {
 
     // get the available rooms between checkin date and checkout date
     getAvailableRooms = (checkIn, checkOut) => {
-        console.log('checkIn', moment(checkIn).unix());
-        console.log('checkOut', moment(checkOut).unix());
-
         const unixCheckIN = moment(checkIn).unix();
         const unixCheckOut = moment(checkOut).unix();
 
         if (checkOut !== '' && checkOut !== null) {
-            axios.post('/rooms/available/timestamp', { checkIn: unixCheckIN, checkOut:unixCheckOut, bookingId: this.state.bookingId })
+            axios.post('/rooms/available/timestamp', { checkIn: unixCheckIN, checkOut: unixCheckOut, bookingId: this.state.bookingId })
                 .then(res => {
                     let availableRooms = res.data;
                     let rooms = this.props.rooms.filter((room) => {
@@ -229,7 +228,6 @@ class Booking extends Component {
             console.log('booking data : ', bookingData);
             axios.post(url, bookingData)
                 .then(res => {
-                    console.log(res.data);
                     if (res.status === 200) {
                         this.props.notify(notification, message);
                         this.props.handleBookings();
@@ -275,7 +273,8 @@ class Booking extends Component {
         this.setState({ checkedIn: true });
         let data = {
             'checkedIn': true,
-            '_id': this.state.bookingId
+            '_id': this.state.bookingId,
+            'checkInTime': moment().format('LT')
         }
         axios.post('/bookings/update', data)
             .then(res => {
@@ -318,7 +317,8 @@ class Booking extends Component {
         let data = {
             'payment': payment.payment,
             'checkedOut': true,
-            '_id': this.state.bookingId
+            '_id': this.state.bookingId,
+            'checkOutTime': moment().format('LT')
         }
         axios.post('/bookings/update', data)
             .then(res => {
@@ -338,14 +338,16 @@ class Booking extends Component {
             <React.Fragment>
                 {this.state.hotelBookingForm.checkIn !== '' && !this.state.viewBillDetail && !this.state.checkedOut ? (
                     <div>
-                        <Header
-                            edit={this.edit}
-                            cancel={this.cancel}
-                            checkIn={this.checkIn}
-                            checkOut={this.checkOut}
-                            checkedIn={this.state.checkedIn}
-                            checkOutDate={this.state.hotelBookingForm.checkOut}
-                        />
+                        {this.props.status === 'viewBooking' ?
+                            <Header
+                                edit={this.edit}
+                                toggleCancelAlert={this.toggleCancelAlert}
+                                checkIn={this.checkIn}
+                                checkOut={this.checkOut}
+                                checkedIn={this.state.checkedIn}
+                                checkInDate={this.state.hotelBookingForm.checkIn}
+                                checkOutDate={this.state.hotelBookingForm.checkOut}
+                            /> : null}
                         <BookingForm
                             hotelBookingForm={this.state.hotelBookingForm}
                             onChanged={(event) => this.inputChangedHandler(event)}
@@ -364,7 +366,7 @@ class Booking extends Component {
                 ) : (<React.Fragment>
                     {!this.state.checkedOut ?
                         <BookingDetails booking={this.state.hotelBookingForm} generateReport={this.generateReport}></BookingDetails>
-                        : <Report booking={this.state} reportHandler={() => this.report()}></Report>
+                        : <Report booking={this.props.detailsForForm.booking} reportHandler={() => this.report()}></Report>
                     }</React.Fragment>
                     )}
 

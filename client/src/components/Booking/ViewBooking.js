@@ -1,9 +1,8 @@
 import React from 'react';
-const dateFNS = require('date-fns');
+import moment from 'moment';
 
 const viewBooking = (props) => {
     const booking = props.booking;
-    console.log(11, dateFNS.format(new Date(booking.checkIn), 'MMMM d, yyyy'));
     return (
         <div className="bookingDetails__container">
             <div className="bookingDetails__info">
@@ -25,12 +24,12 @@ const viewBooking = (props) => {
                 <div className="bookingDetails__row">
                     <span className="bookingDetails__left">Check In</span>
                     <span className="bookingDetails__colon">:</span>
-                    <span className="bookingDetails__right">{dateFNS.format(new Date(booking.checkIn), 'MMM DD, YYYY')}</span>
+                    <span className="bookingDetails__right">{moment(new Date(booking.checkIn)).format('L')}</span>
                 </div>
                 <div className="bookingDetails__row">
                     <span className="bookingDetails__left">Check Out</span>
                     <span className="bookingDetails__colon">:</span>
-                    <span className="bookingDetails__right">{dateFNS.format(new Date(booking.checkOut), 'MMM DD, YYYY')}</span>
+                    <span className="bookingDetails__right">{moment(new Date(booking.checkOut)).format('L')}</span>
                 </div>
                 <div className="bookingDetails__row">
                     <span className="bookingDetails__left">Adults</span>

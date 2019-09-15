@@ -1,7 +1,8 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap';
 import './Report.css';
-import dateFNS from 'date-fns';
+
+import moment from 'moment';
 
 const Report = ({ booking, reportHandler }) => {
     console.log('I am Here ', booking);
@@ -11,7 +12,7 @@ const Report = ({ booking, reportHandler }) => {
                 <div className="report__section">
                     <div className="report-row">
                         <span className="report-key">Booking Id</span>
-                        <span className="report-value">{booking.bookingId}</span>
+                        <span className="report-value">{booking._id}</span>
                     </div>
                     <div className="report-row">
                         <span className="report-key">Booking Date</span>
@@ -25,37 +26,37 @@ const Report = ({ booking, reportHandler }) => {
                 <div className="report__section">
                     <div className="report-row">
                         <span className="report-key">Name</span>
-                        <span className="report-value">Mr. {booking.hotelBookingForm.firstName} {booking.hotelBookingForm.lastName}</span>
+                        <span className="report-value">Mr. {booking.firstName} {booking.lastName}</span>
                     </div>
                     <div className="report-row">
                         <span className="report-key">Contact Number</span>
-                        <span className="report-value">{booking.hotelBookingForm.contactNumber}</span>
+                        <span className="report-value">{booking.contactNumber}</span>
                     </div>
                 </div>
                 <div className="report__section">
                     <div className="report-row">
                         <span className="report-key">Check In</span>
-                        <span className="report-value">{dateFNS.format(booking.hotelBookingForm.checkIn, 'MM/DD/YYYY')}</span>
+                        <span className="report-value">{moment(booking.checkIn).format('L')}</span>
                     </div>
                     <div className="report-row">
                         <span className="report-key">Check In Time</span>
-                        <span className="report-value"></span>
+                        <span className="report-value">{booking.checkInTime}</span>
                     </div>
                     <div className="report-row">
                         <span className="report-key">Check Out</span>
-                        <span className="report-value">{dateFNS.format(booking.hotelBookingForm.checkOut, 'MM/DD/YYYY')}</span>
+                        <span className="report-value">{moment(booking.checkOut).format('L')}</span>
                     </div>
                     <div className="report-row">
                         <span className="report-key">Check Out Time</span>
-                        <span className="report-value"></span>
+                        <span className="report-value">{booking.checkOutTime}</span>
                     </div>
                     <div className="report-row">
                         <span className="report-key">No of Rooms</span>
-                        <span className="report-value"></span>
+                        <span className="report-value">{booking.rooms.length}</span>
                     </div>
                     <div className="report-row">
                         <span className="report-key">No of Guests</span>
-                        <span className="report-value"></span>
+                        <span className="report-value">{booking.adults + booking.children}</span>
                     </div>
                     <div className="report-row">
                         <span className="report-key">No of Nights</span>

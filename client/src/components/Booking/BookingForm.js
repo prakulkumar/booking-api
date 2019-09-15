@@ -212,7 +212,6 @@ const bookingForm = (props) => {
                         <Form.Row key={index}>
                             <Form.Group as={Col} md="4" controlId="roomType"
                                 className="form__group display-flex">
-                                {/* <div> */}
                                 <Form.Control
                                     as="select" title="Room Type"
                                     value={props.hotelBookingForm.rooms[index].roomType}
@@ -226,13 +225,10 @@ const bookingForm = (props) => {
                                         return <option key={`roomType${i}`}>{roomType}</option>
                                     })}
                                 </Form.Control>
-                                {/* { index === 0 ? <Form.Label className="form__label" for="roomType">Room Type</Form.Label> : null } */}
-                                {/* </div> */}
                                 <span className="required">*</span>
                             </Form.Group>
                             <Form.Group as={Col} md="4" controlId="roomNumber"
                                 className="form__group display-flex">
-                                {/* <div> */}
                                 <Form.Control
                                     as="select" title="Room No"
                                     value={props.hotelBookingForm.rooms[index].roomNumber}
@@ -249,8 +245,6 @@ const bookingForm = (props) => {
                                         return null;
                                     })}
                                 </Form.Control>
-                                {/* { index === 0 ? <Form.Label className="form__label" for="roomNumber">Room Number</Form.Label> : null } */}
-                                {/* </div> */}
                                 <span className="required">*</span>
                             </Form.Group>
                             {index === 0 ? (
@@ -290,13 +284,7 @@ const bookingForm = (props) => {
             <div className="form__container display-flex">
                 <div className="booking-details-form">{bookingDetailsForm}</div>
                 <div className="separator"></div>
-                {props.hotelBookingForm.rooms.length === 0 ? (
-                    <div className="room-details-form">
-                        <h4>Choose Room to Book</h4>
-                        <Svg width="150px" height="100px" fill="#ced4da" className="svg-icon" />
-                    </div>
-                ) :
-                    roomDetailsForm}
+                {roomDetailsForm}
             </div>
             <Modal.Footer className="modal-footer">
                 <Button variant="outline-secondary" onClick={props.onClose}>Close</Button>
