@@ -12,7 +12,7 @@ const pdfComponentRef = React.createRef();
 class ReportGenerator extends Component {
   render() {
     return (
-      <div className="report__container">
+      <div className="report__container" ref={pdfComponentRef}>
         <div className="report__section">
           <div className="report-row">
             <span className="report-key">Booking Id</span>
