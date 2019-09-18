@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import CalendarHeader from "./CalendarHeader";
 import CalendarBody from "./CalendarBody";
-import { getDateObj } from "./../../utils/utils";
+import { getDateObj, generateRandomColor, getDate } from "./../../utils/utils";
 import moment from "moment";
 import roomService from "../../services/roomService";
 import bookingService from "../../services/bookingService";
 import "./Calendar.scss";
 
 class Calendar extends Component {
-  state = { title: "", dateObj: {}, rooms: [] };
+  state = { title: "", dateObj: {}, rooms: [], bookings: [] };
 
   constructor(props) {
     super(props);
@@ -25,8 +25,8 @@ class Calendar extends Component {
     const rooms = await roomService.getRooms();
     const bookings = await bookingService.getBookings(this.state.dateObj);
 
-    console.log(233, bookings);
-    this.setState({ rooms });
+    this.setState({ rooms, bookings });
+    this.setBookings();
   }
 
   getTableHeaders = () => {
@@ -55,6 +55,49 @@ class Calendar extends Component {
     `${moment(date)
       .format("MMMM")
       .toUpperCase()} ${moment(date).year()}`;
+
+  setBookings = () => {
+    console.log(99, this.state.bookings);
+    const { bookings, dateObj } = this.state;
+
+    bookings.forEach(booking => {
+      let { checkIn, checkOut, months, rooms } = booking;
+      const color = generateRandomColor();
+      const index = months.findIndex(
+        month => month.monthNumber === dateObj.month
+      );
+
+      const updatedValue = this.updateValues(
+        checkIn,
+        checkOut,
+        dateObj,
+        months.length,
+        index
+      );
+
+      checkIn = updatedValue.checkIn;
+      ckeckOut = updatedValue.checkOut;
+
+      rooms.forEach(roomId => {});
+    });
+  };
+
+  updateValues = (checkIn, checkOut, dateObj, monthsCount, index) => {
+    const { month, year, days } = dateObj;
+
+    if (index === 0) {
+      checkIn = getDate(checkIn);
+      checkOut = getDate(`${month + 1}/${days}/${year}`);
+    } else if (index === monthsCount - 1) {
+      checkIn = getDate(`${month + 1}/1/${year}`);
+      checkOut = getDate(checkOut);
+    } else {
+      checkIn = getDate(`${month + 1}/1/${year}`);
+      checkOut = getDate(`${month + 1}/${days}/${year}`);
+    }
+
+    return { checkIn, checkOut };
+  };
 
   handleChange = value => {
     const { dateObj: prevDateObj } = this.state;
