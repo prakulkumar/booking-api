@@ -8,10 +8,22 @@ const { findAll, findByObj, correctMonthAndYear } = require("./data");
 const moment = require("moment");
 const momentTimeZone = require("moment-timezone");
 
+const sortRooms = rooms => {
+  rooms.sort((a, b) => {
+    if (a.roomNumber < b.roomNumber) return -1;
+    if (a.roomNumber > b.roomNumber) return 1;
+    return 0;
+  });
+
+  return rooms;
+};
+
 dataBaseConnection().then(dbs => {
   router.get("/rooms", cors(), (req, res) => {
     try {
-      findAll(dbs, collections.room).then(result => res.send(result));
+      findAll(dbs, collections.room).then(result =>
+        res.send(sortRooms(result))
+      );
     } catch (error) {
       console.log(error);
     }

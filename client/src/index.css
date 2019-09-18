@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   height: 100%;
   overflow: hidden;
@@ -16,4 +20,12 @@ code {
 
 .close:focus {
   outline: none !important;
+}
+
+.pointerCursor {
+  cursor: pointer;
+}
+
+.textCenter {
+  text-align: center;
 }

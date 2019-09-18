@@ -28,7 +28,7 @@ dataBaseConnection().then(dbs => {
     try {
       const filter = {
         months: {
-          $elemMatch: { monthNumber: req.body.monthNumber, year: req.body.year }
+          $elemMatch: { monthNumber: req.body.month, year: req.body.year }
         },
         cancel: false
       };
