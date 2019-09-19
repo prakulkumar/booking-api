@@ -41,7 +41,7 @@ const renderTableColumns = row => {
         column.show
           ? getStandardCell(
               `column_${index}`,
-              column.roomNumber,
+              column.room.roomNumber,
               "importantCell"
             )
           : getStandardCell(`column_${index}`, null)

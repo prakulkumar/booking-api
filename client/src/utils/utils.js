@@ -8,8 +8,23 @@ export function getDateObj(date) {
   };
 }
 
+export function daysBetweenDates(startDate, endDate) {
+  let dates = [];
+  const currDate = moment(startDate).startOf("day");
+  const lastDate = moment(endDate).startOf("day");
+
+  while (currDate.add(1, "days").diff(lastDate) < 0) {
+    dates.push(currDate.clone().toDate());
+  }
+
+  dates.unshift(moment(startDate).toDate());
+  dates.push(moment(endDate).toDate());
+
+  return dates;
+}
+
 export function getDate(value) {
-  return new Date(value);
+  return moment(value).toDate();
 }
 
 export function generateRandomColor() {
@@ -33,3 +48,10 @@ export function generateRandomColor() {
   }
   return rgb;
 }
+
+export default {
+  getDateObj,
+  daysBetweenDates,
+  getDate,
+  generateRandomColor
+};
