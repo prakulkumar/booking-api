@@ -27,6 +27,10 @@ export function getDate(value) {
   return moment(value).toDate();
 }
 
+export function getShortName(firstName, lastName) {
+  return firstName.charAt(0) + lastName.charAt(0);
+}
+
 export function generateRandomColor() {
   const lum = -0.25;
   let hex = String(
@@ -53,5 +57,6 @@ export default {
   getDateObj,
   daysBetweenDates,
   getDate,
-  generateRandomColor
+  generateRandomColor,
+  getShortName
 };

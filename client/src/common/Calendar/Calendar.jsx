@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import CalendarHeader from "./CalendarHeader";
 import CalendarBody from "./CalendarBody";
+import Modal from "../Modal/Modal";
 import utils from "./../../utils/utils";
 import moment from "moment";
 import roomService from "../../services/roomService";
@@ -8,7 +9,14 @@ import bookingService from "../../services/bookingService";
 import "./Calendar.scss";
 
 class Calendar extends Component {
-  state = { title: "", dateObj: {}, rooms: [], bookings: [], rows: [] };
+  state = {
+    title: "",
+    dateObj: {},
+    rooms: [],
+    bookings: [],
+    rows: [],
+    showModal: false
+  };
 
   constructor(props) {
     super(props);
@@ -39,7 +47,7 @@ class Calendar extends Component {
 
   showBookings = () => {
     console.log(99, this.state.bookings);
-    const { bookings, dateObj, rooms, rows } = this.state;
+    const { bookings, dateObj, rooms } = this.state;
 
     bookings.forEach(booking => {
       const { checkIn, checkOut, months } = booking;
@@ -53,45 +61,33 @@ class Calendar extends Component {
       booking.rooms.forEach(roomId => {
         const { roomNumber } = rooms.find(room => room._id === roomId);
 
-        this.setBookingObjByRoom(
-          roomNumber,
-          rows,
-          checkIn,
-          checkOut,
-          booking,
-          color
-        );
+        this.setBookingObjByRoom(roomNumber, checkIn, checkOut, booking, color);
       });
     });
   };
 
-  setBookingObjByRoom = (
-    roomNumber,
-    rows,
-    checkIn,
-    checkOut,
-    booking,
-    color
-  ) => {
-    const row = rows.find(row => row[0].room.roomNumber === roomNumber);
+  setBookingObjByRoom = (roomNumber, checkIn, checkOut, booking, color) => {
+    const rowIndex = this.state.rows.findIndex(
+      row => row[0].room.roomNumber === roomNumber
+    );
     const dates = utils.daysBetweenDates(checkIn, checkOut);
-    dates.forEach(date => {
-      const dateNumber = moment(date).date();
-      this.updateRowObjByDate();
-      // row[dateNumber] = {
-      //   ...row[dateNumber],
-      //   booking: booking,
-      //   showBooking: true,
-      //   name: `${booking.firstName} ${booking.lastName}`,
-      //   color
-      // };
-    });
-
-    console.log(dates);
+    this.updateRowObjByDate(dates, rowIndex, booking, color);
   };
 
-  updateRowObjByDate = (row, booking, color) => {
-    const obj = {};
+  updateRowObjByDate = (dates, rowIndex, booking, color) => {
+    const rowsArray = [...this.state.rows];
+
+    dates.forEach(date => {
+      const dateNumber = moment(date).date();
+      rowsArray[rowIndex] = [...rowsArray[rowIndex]];
+      rowsArray[rowIndex][dateNumber] = {
+        ...rowsArray[rowIndex][dateNumber],
+        booking,
+        color
+      };
+    });
+
+    this.setState({ rows: rowsArray });
   };
 
   getTableHeaders = () => {
@@ -110,7 +106,8 @@ class Calendar extends Component {
     let rows = new Array(rooms.length).fill();
     rows.forEach((row, index) => {
       rows[index] = new Array(dateObj.days + 1).fill({
-        room: { ...rooms[index] }
+        room: { ...rooms[index] },
+        handleShowModal: this.handleShowModal
       });
       rows[index][0] = { room: { ...rooms[index] }, show: true };
     });
@@ -154,8 +151,17 @@ class Calendar extends Component {
     this.setState({ title, dateObj });
   };
 
+  handleShowModal = booking => {
+    console.log(booking);
+    this.setState({ showModal: true });
+  };
+
+  handleCloseModal = () => {
+    this.setState({ showModal: false });
+  };
+
   render() {
-    const { title, dateObj, rows } = this.state;
+    const { title, dateObj, rows, showModal } = this.state;
 
     return (
       <div className="calendar__container">
@@ -165,6 +171,13 @@ class Calendar extends Component {
           month={dateObj.month}
         />
         <CalendarBody tableHeaders={this.getTableHeaders()} tableRows={rows} />
+        {showModal && (
+          <Modal
+            onShowModal={this.state.showModal}
+            onCloseModal={this.handleCloseModal}
+            size="lg"
+          />
+        )}
       </div>
     );
   }

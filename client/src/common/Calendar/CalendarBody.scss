@@ -25,11 +25,14 @@ $importantCell_color: #4c4b4b;
     width: $cell_width;
     min-width: $cell_min-width;
     height: 25px;
+    font-weight: bold;
   }
 }
 
 .importantCell {
   background: $importantCell_color;
   color: white;
+  font-weight: 400;
+  pointer-events: none;
   border: 1px solid $importantCell_color;
 }

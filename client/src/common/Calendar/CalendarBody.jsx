@@ -1,4 +1,6 @@
 import React from "react";
+import { getShortName } from "./../../utils/utils";
+
 import "./CalendarBody.scss";
 
 const renderTableHead = tableHeaders => {
@@ -26,9 +28,21 @@ const renderTableRows = tableRows => {
   );
 };
 
-const getStandardCell = (key, value, customClass) => {
+const getStandardCell = (
+  key,
+  value,
+  customClass,
+  handleShowModal,
+  color,
+  booking
+) => {
   return (
-    <td key={key} className={`textCenter calendarBody__cell ${customClass}`}>
+    <td
+      key={key}
+      style={{ color, backgroundColor: color && "rgb(240, 255, 255)" }}
+      className={`textCenter calendarBody__cell pointerCursor ${customClass}`}
+      onClick={() => handleShowModal(booking)}
+    >
       {value}
     </td>
   );
@@ -37,15 +51,22 @@ const getStandardCell = (key, value, customClass) => {
 const renderTableColumns = row => {
   return (
     <React.Fragment>
-      {row.map((column, index) =>
-        column.show
-          ? getStandardCell(
+      {row.map((column, index) => {
+        let { show, room, booking, handleShowModal, color } = column;
+        const name =
+          booking && getShortName(booking.firstName, booking.lastName);
+
+        return show
+          ? getStandardCell(`column_${index}`, room.roomNumber, "importantCell")
+          : getStandardCell(
               `column_${index}`,
-              column.room.roomNumber,
-              "importantCell"
-            )
-          : getStandardCell(`column_${index}`, null)
-      )}
+              name,
+              "",
+              handleShowModal,
+              color,
+              booking
+            );
+      })}
     </React.Fragment>
   );
 };
