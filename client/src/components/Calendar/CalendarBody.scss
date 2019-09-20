@@ -36,3 +36,10 @@ $importantCell_color: #4c4b4b;
   pointer-events: none;
   border: 1px solid $importantCell_color;
 }
+
+.disableCell {
+  background-color: rgba(128, 128, 128, 0.3) !important;
+  border: 1 px solid #99aaab !important;
+  color: rgb(128, 128, 128) !important;
+  cursor: not-allowed;
+}

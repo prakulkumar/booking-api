@@ -23,7 +23,7 @@ code {
 }
 
 .pointerCursor {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 .textCenter {

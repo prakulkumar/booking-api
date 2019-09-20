@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import CalendarHeader from "./CalendarHeader";
 import CalendarBody from "./CalendarBody";
-import Modal from "../Modal/Modal";
+import Modal from "../../common/Modal/Modal";
 import utils from "./../../utils/utils";
 import moment from "moment";
 import roomService from "../../services/roomService";
@@ -50,7 +50,7 @@ class Calendar extends Component {
     const { bookings, dateObj, rooms } = this.state;
 
     bookings.forEach(booking => {
-      const { checkIn, checkOut, months } = booking;
+      let { checkIn, checkOut, months } = booking;
       const color = utils.generateRandomColor();
       if (months.length > 1) {
         const updatedValue = this.getUpdatedValues(booking, dateObj);
@@ -152,7 +152,7 @@ class Calendar extends Component {
   };
 
   handleShowModal = booking => {
-    console.log(booking);
+    console.log({ booking }, this.state.showModal);
     this.setState({ showModal: true });
   };
 
@@ -173,7 +173,7 @@ class Calendar extends Component {
         <CalendarBody tableHeaders={this.getTableHeaders()} tableRows={rows} />
         {showModal && (
           <Modal
-            onShowModal={this.state.showModal}
+            openModal={this.state.showModal}
             onCloseModal={this.handleCloseModal}
             size="lg"
           />
