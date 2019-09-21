@@ -5,6 +5,7 @@ import Modal from "../../common/Modal/Modal";
 import utils from "./../../utils/utils";
 import moment from "moment";
 import roomService from "../../services/roomService";
+import bookingService from "../../services/bookingService";
 import "./Calendar.scss";
 
 class Calendar extends Component {
@@ -37,36 +38,38 @@ class Calendar extends Component {
     this.showBookingProcess();
   }
 
-  showBookingProcess = () => {
+  componentDidUpdate() {
+    this.props.data.isRefresh && this.showBookingProcess();
+  }
+
+  showBookingProcess = async () => {
+    const { data, onRefresh } = this.props;
+    const bookings = await bookingService.getBookings(this.state.dateObj);
+
+    this.setState({ bookings });
     this.showBookings();
+
+    data.isRefresh && onRefresh();
   };
 
   showBookings = () => {
-    const { dateObj, rooms } = this.state;
-    const { bookings } = this.props.data;
+    const { bookings, dateObj, rooms } = this.state;
 
-    bookings &&
-      bookings.forEach(booking => {
-        let { checkIn, checkOut, months } = booking;
-        const color = utils.generateRandomColor();
-        if (months.length > 1) {
-          const updatedValue = this.getUpdatedValues(booking, dateObj);
-          checkIn = updatedValue.checkIn;
-          checkOut = updatedValue.checkOut;
-        }
+    bookings.forEach(booking => {
+      let { checkIn, checkOut, months } = booking;
+      const color = utils.generateRandomColor();
+      if (months.length > 1) {
+        const updatedValue = this.getUpdatedValues(booking, dateObj);
+        checkIn = updatedValue.checkIn;
+        checkOut = updatedValue.checkOut;
+      }
 
-        booking.rooms.forEach(roomId => {
-          const { roomNumber } = rooms.find(room => room._id === roomId);
+      booking.rooms.forEach(roomId => {
+        const { roomNumber } = rooms.find(room => room._id === roomId);
 
-          this.setBookingObjByRoom(
-            roomNumber,
-            checkIn,
-            checkOut,
-            booking,
-            color
-          );
-        });
+        this.setBookingObjByRoom(roomNumber, checkIn, checkOut, booking, color);
       });
+    });
   };
 
   setBookingObjByRoom = (roomNumber, checkIn, checkOut, booking, color) => {

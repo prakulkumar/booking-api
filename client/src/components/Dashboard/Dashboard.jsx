@@ -1,29 +1,16 @@
 import React, { Component } from "react";
 import Calendar from "./../Calendar/Calendar";
 import Navbar from "./../Navbar/Navbar";
-import bookingService from "../../services/bookingService";
-import utils from "./../../utils/utils";
+import Button from "@material-ui/core/Button";
 
 class Dashboard extends Component {
   state = {
     currentDate: new Date(),
-    bookings: []
-  };
-
-  componentDidMount() {
-    this.getBookings();
-  }
-
-  getBookings = async () => {
-    const bookings = await bookingService.getBookings(
-      utils.getDateObj(this.state.currentDate)
-    );
-
-    this.setState({ bookings });
+    isRefresh: false
   };
 
   handleRefresh = () => {
-    this.getBookings();
+    this.setState({ isRefresh: !this.state.isRefresh });
   };
 
   render() {
@@ -31,8 +18,11 @@ class Dashboard extends Component {
 
     return (
       <React.Fragment>
+        <Button variant="contained" color="primary">
+          Hello World
+        </Button>
         <Navbar onRefresh={this.handleRefresh} />
-        <Calendar data={calendarData} />
+        <Calendar data={calendarData} onRefresh={this.handleRefresh} />
       </React.Fragment>
     );
   }
