@@ -61,6 +61,7 @@ dataBaseConnection().then(dbs => {
       booking["balance"] = req.body.amount - req.body.advance;
       booking["months"] = getMonths(req.body.checkIn, req.body.checkOut);
       booking["misc"] = [];
+      booking["bookingDate"] = moment();
       insertOne(dbs, collections.booking, booking).then(result =>
         res.status(200).send(result)
       );
