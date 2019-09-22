@@ -1,13 +1,13 @@
 .navbar {
   &__mainContainer {
-    color: white;
-    font-weight: bold;
-    font-size: 18px;
-    display: flex;
-    justify-content: space-between;
+    flex-grow: 1;
   }
 
   &__mainContainer .btn-outline-light {
     letter-spacing: 1.1px;
+  }
+
+  &__icon {
+    margin-right: 16px;
   }
 }

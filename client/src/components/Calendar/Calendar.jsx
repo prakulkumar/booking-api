@@ -31,29 +31,29 @@ class Calendar extends Component {
 
   async componentDidMount() {
     const rooms = await roomService.getRooms();
-    const rows = this.getTableRows(rooms);
+    const rows = this.getTableRows(rooms, this.state.dateObj);
 
     this.setState({ rooms, rows });
 
-    this.showBookingProcess();
+    this.showBookingProcess(this.state.dateObj);
   }
 
   componentDidUpdate() {
     this.props.data.isRefresh && this.showBookingProcess();
   }
 
-  showBookingProcess = async () => {
+  showBookingProcess = async dateObj => {
     const { data, onRefresh } = this.props;
-    const bookings = await bookingService.getBookings(this.state.dateObj);
+    const bookings = await bookingService.getBookings(dateObj);
 
     this.setState({ bookings });
-    this.showBookings();
+    this.showBookings(dateObj, bookings);
 
     data.isRefresh && onRefresh();
   };
 
-  showBookings = () => {
-    const { bookings, dateObj, rooms } = this.state;
+  showBookings = (dateObj, bookings) => {
+    const { rooms } = this.state;
 
     bookings.forEach(booking => {
       let { checkIn, checkOut, months } = booking;
@@ -106,8 +106,8 @@ class Calendar extends Component {
     return tableHeaders;
   };
 
-  getTableRows = rooms => {
-    const { dateObj } = this.state;
+  getTableRows = (rooms, dateObj) => {
+    console.log(dateObj);
 
     let rows = new Array(rooms.length).fill();
     rows.forEach((row, index) => {
@@ -148,13 +148,15 @@ class Calendar extends Component {
   };
 
   handleChange = value => {
-    const { dateObj: prevDateObj } = this.state;
+    const { dateObj: prevDateObj, rooms } = this.state;
     const prevDate = new Date(prevDateObj.year, prevDateObj.month);
     const newDate = moment(prevDate).add(value, "M");
     const dateObj = utils.getDateObj(newDate);
     const title = this.getTitle(newDate);
+    const rows = this.getTableRows(rooms, dateObj);
 
-    this.setState({ title, dateObj });
+    this.setState({ title, dateObj, rows });
+    this.showBookingProcess(dateObj);
   };
 
   handleShowModal = booking => {

@@ -1,21 +1,33 @@
 import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
 import "./Navbar.scss";
 
-// import { Navbar } from "react-bootstrap";
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1
+  },
+  title: {
+    flexGrow: 1
+  }
+}));
 
 const HeaderNavbar = ({ onRefresh }) => {
+  const classes = useStyles();
+
   return (
-    <div></div>
-    // <Navbar bg="dark" className="navbar__mainContainer">
-    //   <div>STEPIN</div>
-    //   <button
-    //     type="button"
-    //     className="btn btn-outline-light"
-    //     onClick={() => onRefresh()}
-    //   >
-    //     REFRESH
-    //   </button>
-    // </Navbar>
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" className={classes.title}>
+            STEPIN
+          </Typography>
+          <Button color="inherit" onClick={() => onRefresh()}>
+            Refresh
+          </Button>
+        </Toolbar>
+      </AppBar>
+    </div>
   );
 };
 

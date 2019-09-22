@@ -21,7 +21,7 @@ $importantCell_color: #4c4b4b;
   }
 
   &__cell {
-    border: 1px solid #99aaab;
+    outline: 1px solid #99aaab !important;
     width: $cell_width;
     min-width: $cell_min-width;
     height: 25px;
@@ -31,6 +31,7 @@ $importantCell_color: #4c4b4b;
 
 .importantCell {
   background: $importantCell_color;
+  outline: 1px solid $importantCell_color !important;
   color: white;
   font-weight: 400;
   pointer-events: none;
@@ -39,7 +40,11 @@ $importantCell_color: #4c4b4b;
 
 .disableCell {
   background-color: rgba(128, 128, 128, 0.3) !important;
-  border: 1 px solid #99aaab !important;
+  outline: 1px solid #99aaab !important;
   color: rgb(128, 128, 128) !important;
   cursor: not-allowed;
+}
+
+td {
+  border-collapse: collapse;
 }
