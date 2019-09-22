@@ -15,7 +15,8 @@ class Calendar extends Component {
     rooms: [],
     bookings: [],
     rows: [],
-    showModal: false
+    showModal: false,
+    loading: false
   };
 
   constructor(props) {
@@ -33,7 +34,7 @@ class Calendar extends Component {
     const rooms = await roomService.getRooms();
     const rows = this.getTableRows(rooms, this.state.dateObj);
 
-    this.setState({ rooms, rows });
+    this.setState({ rooms, rows, loading: true });
 
     this.showBookingProcess(this.state.dateObj);
   }
@@ -46,7 +47,7 @@ class Calendar extends Component {
     const { data, onRefresh } = this.props;
     const bookings = await bookingService.getBookings(dateObj);
 
-    this.setState({ bookings });
+    this.setState({ bookings, loading: false });
     this.showBookings(dateObj, bookings);
 
     data.isRefresh && onRefresh();
@@ -155,7 +156,7 @@ class Calendar extends Component {
     const title = this.getTitle(newDate);
     const rows = this.getTableRows(rooms, dateObj);
 
-    this.setState({ title, dateObj, rows });
+    this.setState({ title, dateObj, rows, loading: true });
     this.showBookingProcess(dateObj);
   };
 
@@ -169,7 +170,7 @@ class Calendar extends Component {
   };
 
   render() {
-    const { title, dateObj, rows, showModal } = this.state;
+    const { title, dateObj, rows, showModal, loading } = this.state;
 
     return (
       <div className="calendar__container">
@@ -178,7 +179,11 @@ class Calendar extends Component {
           onChange={this.handleChange}
           month={dateObj.month}
         />
-        <CalendarBody tableHeaders={this.getTableHeaders()} tableRows={rows} />
+        <CalendarBody
+          tableHeaders={this.getTableHeaders()}
+          tableRows={rows}
+          loading={loading}
+        />
         {showModal && (
           <Modal
             openModal={this.state.showModal}

@@ -4,13 +4,14 @@ import colorConverter from "hex-to-rgba";
 import { getShortName } from "./../../utils/utils";
 import { makeStyles, Table, Paper, ButtonBase } from "@material-ui/core";
 import { TableBody, TableCell, TableHead, TableRow } from "@material-ui/core";
+import LoaderDialog from "../../common/LoaderDialog/LoaderDialog";
 import Popover from "../../common/Popover/Popover";
 import "./CalendarBody.scss";
 
 const useStyles = makeStyles(theme => ({
   root: {
     width: "100%",
-    height: "80%",
+    height: "90%",
     overflowY: "auto"
   },
   head: {
@@ -53,11 +54,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const CalendarBody = ({ tableHeaders, tableRows }) => {
+const CalendarBody = ({ tableHeaders, tableRows, loading }) => {
+  const [open] = React.useState(true);
   const classes = useStyles();
 
   return (
     <React.Fragment>
+      {loading && <LoaderDialog open={open} />}
       <Paper className={`${classes.root} hideSrollbar`}>
         <Table className={classes.root} stickyHeader>
           <TableHead>
