@@ -28,13 +28,14 @@ class Calendar extends Component {
 
     this.state.title = title;
     this.state.dateObj = dateObj;
+    this.state.loading = true;
   }
 
   async componentDidMount() {
     const rooms = await roomService.getRooms();
     const rows = this.getTableRows(rooms, this.state.dateObj);
 
-    this.setState({ rooms, rows, loading: true });
+    this.setState({ rooms, rows });
 
     this.showBookingProcess(this.state.dateObj);
   }
