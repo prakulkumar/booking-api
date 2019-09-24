@@ -1,6 +1,9 @@
 import React, { Component } from "react";
+import { Route, Switch } from "react-router-dom";
+
 import Calendar from "./../Calendar/Calendar";
 import Navbar from "./../Navbar/Navbar";
+import BookingFormLayout from "../BookingFormLayout/BookingFormLayout";
 
 class Dashboard extends Component {
   state = {
@@ -18,7 +21,15 @@ class Dashboard extends Component {
     return (
       <React.Fragment>
         <Navbar onRefresh={this.handleRefresh} />
-        <Calendar data={calendarData} onRefresh={this.handleRefresh} />
+        <Switch>
+          <Route
+            path="/"
+            render={() => (
+              <Calendar data={calendarData} onRefresh={this.handleRefresh} />
+            )}
+          />
+          <Route path="/booking" component={BookingFormLayout} />
+        </Switch>
       </React.Fragment>
     );
   }

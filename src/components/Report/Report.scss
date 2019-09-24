@@ -1,0 +1,54 @@
+.report {
+  display: flex;
+  justify-content: center;
+
+  &__container {
+    color: rgba(0, 0, 0, 0.87);
+    height: 100vh;
+    width: 60%;
+    overflow: auto;
+    padding: 10px 20px;
+  }
+
+  &__header-primary {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+  }
+
+  &__header-secondary {
+    display: flex;
+    background-color: #e0e0e0;
+    padding: 10px 20px;
+  }
+
+  &__section {
+    padding: 20px 20px;
+  }
+
+  &-row {
+    width: 100%;
+    display: flex;
+    padding: 3px 0;
+  }
+
+  &-key {
+    display: inline-block;
+    width: 50%;
+  }
+
+  &-value {
+    display: inline-block;
+    width: 50%;
+    text-align: end;
+  }
+
+  &__footerContainer {
+    display: flex;
+    justify-content: end;
+  }
+
+  &__btn:not(:last-child) {
+    margin-right: 10px;
+  }
+}
