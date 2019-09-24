@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Calendar from "./../Calendar/Calendar";
 import Navbar from "./../Navbar/Navbar";
+import Snackbar from "./../../common/Snackbar/Snackbar";
 
 class Dashboard extends Component {
   state = {
