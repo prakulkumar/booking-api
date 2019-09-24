@@ -3,7 +3,7 @@ import http from "./httpService";
 async function getBookings(monthObj) {
   try {
     const { data: bookings } = await http.post(
-      "/bookings/filterByMonth",
+      `${http.baseUrl}/bookings/filterByMonth`,
       monthObj
     );
 
