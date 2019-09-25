@@ -64,7 +64,7 @@ class BookingForm extends Component {
             changed={this.inputChangedhandler}
           />
         </div>
-        <div className="form-group">
+        {/* <div className="form-group">
           <DatePicker
             id="checkIn"
             label="Check In"
@@ -77,7 +77,7 @@ class BookingForm extends Component {
             value=""
             changed={this.inputChangedhandler}
           />
-        </div>
+        </div> */}
         <div className="form-group">
           <Input
             id="adults"

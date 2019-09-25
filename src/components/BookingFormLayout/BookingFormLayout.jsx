@@ -63,9 +63,9 @@ class BookingFormLayout extends Component {
 
     return (
       <Card
-        cardHeader={cardHeader}
-        cardContent={cardContent}
-        minWidth={700}
+        header={cardHeader}
+        content={cardContent}
+        maxWidth={700}
         margin="80px auto"
       />
     );

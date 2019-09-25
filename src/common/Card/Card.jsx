@@ -4,20 +4,21 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import "./Card.scss";
 
-const useStyles = makeStyles(props => ({
+const useStyles = makeStyles({
   card: {
-    minWidth: props.minWidth || 275,
-    margin: props.margin || "0 auto"
+    maxWidth: props => props.maxWidth || 275,
+    margin: props => props.margin || "0 auto"
   }
-}));
+});
 
-const CustomCard = props => {
+const CustomCard = ({ header, content, actions, ...props }) => {
   const classes = useStyles(props);
+
   return (
     <Card className={classes.card}>
-      <CardHeader>{props.cardHeader}</CardHeader>
-      <CardContent>{props.cardContent}</CardContent>
-      <CardActions>{props.cardContent}</CardActions>
+      {header && header}
+      {content && <CardContent>{content}</CardContent>}
+      {actions && <CardActions>{actions}</CardActions>}
     </Card>
   );
 };
