@@ -26,12 +26,9 @@ const Select = props => {
   ];
   return (
     <TextField
-      id={props.id}
+      {...props}
       select
-      label={props.label}
       className={classes.input}
-      value={props.value}
-      onChange={handle}
       SelectProps={{
         MenuProps: {
           className: classes.menu

@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import Joi from "joi-browser";
+
 import { IconButton, AppBar, Toolbar, Typography } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import HotelIcon from "@material-ui/icons/Hotel";
@@ -7,11 +9,22 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 import Card from "../../common/Card/Card";
 import BookingForm from "../BookingForm/BookingForm";
+import Form from "../../common/Form/Form";
 
-class BookingFormLayout extends Component {
+class BookingFormLayout extends Form {
   state = {
     bookingForm: {}
   };
+
+  schema = {
+    firstName: Joi.string()
+      .required()
+      .label("First Name"),
+    lastName: Joi.string()
+      .required()
+      .label("Last Name")
+  };
+
   render() {
     const cardHeader = (
       <div>

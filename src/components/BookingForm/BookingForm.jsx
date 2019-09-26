@@ -1,19 +1,17 @@
-import React, { Component } from "react";
-import { Button, Typography } from "@material-ui/core";
+import React from "react";
+import { Typography } from "@material-ui/core";
 
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-import Input from "../../common/Input/Input";
-import Select from "../../common/Select/Select";
-import DatePicker from "../../common/DatePicker/DatePicker";
+import Form from "../../common/Form/Form";
 
 import "./BookingForm.scss";
 
 // let [expanded, setExpanded] = React.useState("panel1");
-class BookingForm extends Component {
+class BookingForm extends Form {
   state = {
     data: {
       firstName: "",
@@ -34,88 +32,28 @@ class BookingForm extends Component {
   //   setExpanded(isExpanded ? panel : false);
   // };
 
-  inputChangedhandler = () => {};
-
   render() {
     return (
       <React.Fragment>
         <div className="form-group">
-          <Input
-            id="firstName"
-            label="First Name"
-            type="text"
-            value=""
-            changed={this.inputChangedhandler}
-          />
-          <Input
-            id="lastName"
-            label="Last Name"
-            type="text"
-            value=""
-            changed={this.inputChangedhandler}
-          />
+          {this.renderInput("firstName", "First Name", "text", "")}
+          {this.renderInput("lastName", "Last Name", "text", "")}
         </div>
         <div className="form-group">
-          <Input
-            id="address"
-            label="Address"
-            type="text"
-            value=""
-            changed={this.inputChangedhandler}
-          />
-        </div>
-        {/* <div className="form-group">
-          <DatePicker
-            id="checkIn"
-            label="Check In"
-            value=""
-            changed={this.inputChangedhandler}
-          />
-          <DatePicker
-            id="checkOut"
-            label="Check Out"
-            value=""
-            changed={this.inputChangedhandler}
-          />
-        </div> */}
-        <div className="form-group">
-          <Input
-            id="adults"
-            label="Adults"
-            type="number"
-            value=""
-            changed={this.inputChangedhandler}
-          />
-          <Input
-            id="chlidren"
-            label="Children"
-            type="number"
-            value=""
-            changed={this.inputChangedhandler}
-          />
-          <Input
-            id="contactNumber"
-            label="Contact Number"
-            type="number"
-            value=""
-            changed={this.inputChangedhandler}
-          />
+          {this.renderInput("address", "Address", "text", "")}
         </div>
         <div className="form-group">
-          <Input
-            id="roomCharges"
-            label="Room Charges"
-            type="number"
-            value=""
-            changed={this.inputChangedhandler}
-          />
-          <Input
-            id="advance"
-            label="Advance"
-            type="number"
-            value=""
-            changed={this.inputChangedhandler}
-          />
+          {this.renderDatepicker("checkIn", "Check In", null, new Date())}
+          {this.renderDatepicker("checkOut", "Check Out", null, new Date())}
+        </div>
+        <div className="form-group">
+          {this.renderInput("adults", "Adults", "number", "")}
+          {this.renderInput("children", "Children", "number", "")}
+          {this.renderInput("contactNumber", "Contact Number", "number", "")}
+        </div>
+        <div className="form-group">
+          {this.renderInput("roomCharges", "Room Charges", "number", "")}
+          {this.renderInput("advance", "Advance", "number", "")}
         </div>
         <div className="panel">
           <ExpansionPanel
@@ -131,24 +69,12 @@ class BookingForm extends Component {
               <Typography>Room</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              <Select
-                id="roomType"
-                label="Room Type"
-                value=""
-                changed={this.inputChangedhandler}
-              />
-              <Select
-                id="roomType"
-                label="Room Type"
-                value=""
-                changed={this.inputChangedhandler}
-              />
+              {this.renderSelect("roomType", "Room Type", null, "")}
+              {this.renderSelect("roomNumber", "Room Number", null, "")}
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </div>
-        <Button size="large" color="primary" className="form-button">
-          Submit
-        </Button>
+        {this.renderButton("large", "Submit", "primary", "form-button")}
       </React.Fragment>
     );
   }
