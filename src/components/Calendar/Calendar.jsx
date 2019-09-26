@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import CalendarHeader from "./CalendarHeader";
 import CalendarBody from "./CalendarBody";
-import Modal from "../../common/Modal/Modal";
 import utils from "./../../utils/utils";
 import moment from "moment";
 import roomService from "../../services/roomService";
 import bookingService from "../../services/bookingService";
 import "./Calendar.scss";
+import Dialog from "./../../common/Dialog/Dialog";
 
 class Calendar extends Component {
   state = {
@@ -186,7 +186,7 @@ class Calendar extends Component {
           loading={loading}
         />
         {showModal && (
-          <Modal
+          <Dialog
             openModal={this.state.showModal}
             onCloseModal={this.handleCloseModal}
             size="lg"

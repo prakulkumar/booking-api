@@ -3,24 +3,49 @@ import { makeStyles } from "@material-ui/core";
 import { Typography, Divider } from "@material-ui/core";
 import Input from "../../common/Input/Input";
 import Checkbox from "./../../common/Checkbox/Checkbox";
+// import Dialog from "../../common/Dialog/Dialog";
 // import RadioGroup from "./../../common/RadioGroup/RadioGroup";
 
 const useStyles = makeStyles(theme => ({
+  formGroup: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
   input: { width: "50%" }
 }));
 
 const BillingForm = () => {
   const classes = useStyles();
+
+  // ------------------------RadioGroup-----------
   // const [value, setValue] = React.useState();
 
   // const handleChange = event => {
   //   setValue(event.target.value);
   // };
 
+  // const radioButtons = [
+  //   { value: "withTax", label: "With Tax" },
+  //   { value: "withOutTax", label: "WithOut Tax" }
+  // ];
+
+  // ------------------------DatePicker-----------
   // const [selectedDate, setSelectedDate] = React.useState(new Date());
 
   // const handleDateChange = date => {
   //   setSelectedDate(date);
+  // };
+
+  // ------------------------Dialog-----------
+  // const [open, setOpen] = React.useState(true);
+
+  // const handleClickOpen = () => {
+  //   setOpen(true);
+  // };
+
+  // const handleClose = () => {
+  //   setOpen(false);
   // };
 
   const renderInputItems = (label, value, inputId) => {
@@ -50,11 +75,6 @@ const BillingForm = () => {
     );
   };
 
-  // const radioButtons = [
-  //   { value: "withTax", label: "With Tax" },
-  //   { value: "withOutTax", label: "WithOut Tax" }
-  // ];
-
   return (
     <form>
       {/* <DatePicker date={selectedDate} handleDateChange={handleDateChange} /> */}
@@ -65,6 +85,7 @@ const BillingForm = () => {
         handleChange={handleChange}
         radioButtons={radioButtons}
       /> */}
+      {/* <Dialog open={open} onClose={handleClose} /> */}
       {renderInputItems("Room Charges", 3000, "roomCharges")}
       {renderInputItems("Advance", 1000, "advance")}
       {renderInputItems("Misllaneous", 2000, "misllaneous")}
