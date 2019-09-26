@@ -9,9 +9,8 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 import Card from "../../common/Card/Card";
 import BookingForm from "../BookingForm/BookingForm";
-import Form from "../../common/Form/Form";
 
-class BookingFormLayout extends Form {
+class BookingFormLayout extends Component {
   state = {
     bookingForm: {}
   };
