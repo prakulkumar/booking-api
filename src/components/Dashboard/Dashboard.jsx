@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router-dom";
 
 import Calendar from "./../Calendar/Calendar";
 import Navbar from "./../Navbar/Navbar";
-import BookingFormLayout from "../BookingFormLayout/BookingFormLayout";
+import BookingFormLayout from "../BookingForm/BookingFormLayout";
 import BillingFormLayout from "../BillingForm/BillingFormLayout";
 
 class Dashboard extends Component {
