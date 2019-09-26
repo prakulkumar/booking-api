@@ -5,6 +5,7 @@ import { Button } from "@material-ui/core";
 import Input from "../../common/Input/Input";
 import Select from "../../common/Select/Select";
 import DatePicker from "../../common/DatePicker/DatePicker";
+import RadioGroup from "./../RadioGroup/RadioGroup";
 
 class Form extends Component {
   state = {
@@ -53,41 +54,35 @@ class Form extends Component {
     return error ? error.details[0].message : null;
   };
 
-  renderInput = (id, label, type, value) => {
-    return (
-      <Input
-        id={id}
-        label={label}
-        type={type}
-        value={value}
-        onChanged={this.handleInputChange}
-        // helperText={this.state.errors[id] ? this.state.errors[id] : ""}
-      />
-    );
-  };
+  renderInput = (id, label, type, value) => (
+    <Input
+      id={id}
+      label={label}
+      type={type}
+      value={value}
+      onChanged={this.handleInputChange}
+      // helperText={this.state.errors[id] ? this.state.errors[id] : ""}
+    />
+  );
 
-  renderSelect = (id, label, type, value) => {
-    return (
-      <Select
-        id={id}
-        label={label}
-        value={value}
-        onChanged={this.handleInputChange}
-        // helperText={this.state.errors[id] ? this.state.errors[id] : ""}
-      />
-    );
-  };
+  renderSelect = (id, label, type, value) => (
+    <Select
+      id={id}
+      label={label}
+      value={value}
+      onChanged={this.handleInputChange}
+      // helperText={this.state.errors[id] ? this.state.errors[id] : ""}
+    />
+  );
 
-  renderDatepicker = (id, label, type, value) => {
-    return (
-      <DatePicker
-        id={id}
-        label={label}
-        value={value}
-        // helperText={this.state.errors[id] ? this.state.errors[id] : ""}
-      />
-    );
-  };
+  renderDatepicker = (id, label, type, value) => (
+    <DatePicker
+      id={id}
+      label={label}
+      value={value}
+      // helperText={this.state.errors[id] ? this.state.errors[id] : ""}
+    />
+  );
 
   renderButton = (size, label, color, className) => {
     return (
@@ -96,6 +91,18 @@ class Form extends Component {
       </Button>
     );
   };
+
+  /*
+   renderRadioGroup
+   parameters :- label: string, 
+                 ariaLabel: string 
+                 formGroupClass: object
+                 name: string (required)
+                 value: string (required) 
+                 handleChange: function (required)
+                 radioButtons: array (required)
+  */
+  renderRadioGroup = (...args) => <RadioGroup {...args} />;
 }
 
 export default Form;
