@@ -6,10 +6,6 @@ import styles from "./SelectStyle";
 const Select = props => {
   const classes = styles();
 
-  // const handle = () => {
-  //   console.log("handle");
-  // };
-
   const currencies = [
     {
       label: "$",
