@@ -48,13 +48,20 @@ const validateProperty = ({ name, value }) => {
   return error ? error.details[0].message : null;
 };
 
+/*
+   renderInput
+   parameters :- label: string
+                 id: string 
+                 type: object
+                 value: string (required)
+*/
 const renderInput = (id, label, type, value) => (
   <Input
     id={id}
     label={label}
     type={type}
     value={value}
-    onChanged={handleInputChange}
+    onChange={handleInputChange}
     // helperText={this.state.errors[id] ? this.state.errors[id] : ""}
   />
 );
@@ -64,7 +71,7 @@ const renderSelect = (id, label, type, value) => (
     id={id}
     label={label}
     value={value}
-    onChanged={handleInputChange}
+    onChange={handleInputChange}
     // helperText={this.state.errors[id] ? this.state.errors[id] : ""}
   />
 );
@@ -96,7 +103,7 @@ const renderButton = (size, label, color, className) => {
                  handleChange: function (required)
                  radioButtons: array (required)
 */
-const renderRadioGroup = (...args) => <RadioGroup {...args} />;
+const renderRadioGroup = args => <RadioGroup {...args} />;
 
 export default {
   handleSubmit,

@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardActions } from "@material-ui/core";
+import { Card, CardContent, CardActions } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import "./Card.scss";
