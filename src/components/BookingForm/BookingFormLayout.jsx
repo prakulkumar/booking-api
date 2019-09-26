@@ -10,6 +10,8 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import Card from "../../common/Card/Card";
 import BookingForm from "../BookingForm/BookingForm";
 
+import "./BookingForm.scss";
+
 class BookingFormLayout extends Component {
   state = {
     bookingForm: {}
@@ -28,8 +30,10 @@ class BookingFormLayout extends Component {
     const cardHeader = (
       <div className="form-header">
         <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6">Booking</Typography>
+          <Toolbar variant="dense">
+            <Typography variant="h6" className="title">
+              Booking
+            </Typography>
             <IconButton
               aria-label="account of current user"
               aria-controls="menu-appbar"

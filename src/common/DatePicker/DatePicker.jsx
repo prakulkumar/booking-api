@@ -6,10 +6,15 @@ import {
   KeyboardDatePicker
 } from "@material-ui/pickers";
 
-const CustomDatePicker = ({ label, date, handleDateChange }) => {
+import styles from "./DatePickerStyle";
+
+const CustomDatePicker = ({ label, date, handleDateChange, ...props }) => {
+  const classes = styles(props);
+
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <KeyboardDatePicker
+        className={classes.root}
         disableToolbar
         variant="inline"
         format="DD/MM/YYYY"

@@ -17,5 +17,8 @@ export default makeStyles(theme => ({
   },
   accordianHeader: {
     backgroundColor: "#eeeeee"
+  },
+  title: {
+    flexGrow: 1
   }
 }));
