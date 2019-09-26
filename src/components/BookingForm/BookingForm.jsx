@@ -25,7 +25,8 @@ class BookingForm extends Form {
       rooms: [],
       amount: "",
       advance: ""
-    }
+    },
+    errors: {}
   };
 
   // handleChange = panel => (event, isExpanded) => {

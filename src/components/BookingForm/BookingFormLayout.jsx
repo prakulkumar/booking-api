@@ -27,7 +27,7 @@ class BookingFormLayout extends Form {
 
   render() {
     const cardHeader = (
-      <div>
+      <div className="form-header">
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6">Booking</Typography>

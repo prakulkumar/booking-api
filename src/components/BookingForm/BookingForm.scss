@@ -2,6 +2,11 @@
   &-group {
     display: flex;
   }
+
+  &-header {
+    flex-grow: 1;
+  }
+
   // &-button {
   //     margin: theme.spacing(1);
   // }
