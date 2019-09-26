@@ -23,6 +23,12 @@ const BillingForm = () => {
     setValue(event.target.value);
   };
 
+  // const [selectedDate, setSelectedDate] = React.useState(new Date());
+
+  // const handleDateChange = date => {
+  //   setSelectedDate(date);
+  // };
+
   const renderInputItems = (label, value, inputId) => {
     return (
       <div className={classes.formGroup}>
@@ -52,6 +58,7 @@ const BillingForm = () => {
 
   return (
     <form>
+      {/* <DatePicker date={selectedDate} handleDateChange={handleDateChange} /> */}
       <FormControl component="fieldset" className={classes.formControl}>
         <FormLabel component="legend">Payment</FormLabel>
         <RadioGroup
