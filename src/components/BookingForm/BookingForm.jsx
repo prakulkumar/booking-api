@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { Typography } from "@material-ui/core";
 
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
@@ -6,12 +6,11 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-import Form from "../../common/Form/Form";
-
+import FormUtils from "../../utils/formUtils";
 import "./BookingForm.scss";
 
 // let [expanded, setExpanded] = React.useState("panel1");
-class BookingForm extends Form {
+class BookingForm extends Component {
   state = {
     data: {
       firstName: "",
@@ -37,24 +36,34 @@ class BookingForm extends Form {
     return (
       <React.Fragment>
         <div className="form-group">
-          {this.renderInput("firstName", "First Name", "text", "")}
-          {this.renderInput("lastName", "Last Name", "text", "")}
+          {FormUtils.renderInput("firstName", "First Name", "text", "")}
+          {FormUtils.renderInput("lastName", "Last Name", "text", "")}
         </div>
         <div className="form-group">
-          {this.renderInput("address", "Address", "text", "")}
+          {FormUtils.renderInput("address", "Address", "text", "")}
         </div>
         <div className="form-group">
-          {this.renderDatepicker("checkIn", "Check In", null, new Date())}
-          {this.renderDatepicker("checkOut", "Check Out", null, new Date())}
+          {FormUtils.renderDatepicker("checkIn", "Check In", null, new Date())}
+          {FormUtils.renderDatepicker(
+            "checkOut",
+            "Check Out",
+            null,
+            new Date()
+          )}
         </div>
         <div className="form-group">
-          {this.renderInput("adults", "Adults", "number", "")}
-          {this.renderInput("children", "Children", "number", "")}
-          {this.renderInput("contactNumber", "Contact Number", "number", "")}
+          {FormUtils.renderInput("adults", "Adults", "number", "")}
+          {FormUtils.renderInput("children", "Children", "number", "")}
+          {FormUtils.renderInput(
+            "contactNumber",
+            "Contact Number",
+            "number",
+            ""
+          )}
         </div>
         <div className="form-group">
-          {this.renderInput("roomCharges", "Room Charges", "number", "")}
-          {this.renderInput("advance", "Advance", "number", "")}
+          {FormUtils.renderInput("roomCharges", "Room Charges", "number", "")}
+          {FormUtils.renderInput("advance", "Advance", "number", "")}
         </div>
         <div className="panel">
           <ExpansionPanel
@@ -70,12 +79,12 @@ class BookingForm extends Form {
               <Typography>Room</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
-              {this.renderSelect("roomType", "Room Type", null, "")}
-              {this.renderSelect("roomNumber", "Room Number", null, "")}
+              {FormUtils.renderSelect("roomType", "Room Type", null, "")}
+              {FormUtils.renderSelect("roomNumber", "Room Number", null, "")}
             </ExpansionPanelDetails>
           </ExpansionPanel>
         </div>
-        {this.renderButton("large", "Submit", "primary", "form-button")}
+        {FormUtils.renderButton("large", "Submit", "primary", "form-button")}
       </React.Fragment>
     );
   }

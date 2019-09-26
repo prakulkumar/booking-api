@@ -1,27 +1,21 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
-import { FormControl, FormLabel, FormControlLabel } from "@material-ui/core";
-import { Radio, RadioGroup } from "@material-ui/core";
 import { Typography, Divider } from "@material-ui/core";
 import Input from "../../common/Input/Input";
 import Checkbox from "./../../common/Checkbox/Checkbox";
+// import RadioGroup from "./../../common/RadioGroup/RadioGroup";
 
 const useStyles = makeStyles(theme => ({
-  formGroup: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
   input: { width: "50%" }
 }));
 
 const BillingForm = () => {
   const classes = useStyles();
-  const [value, setValue] = React.useState("withTax");
+  // const [value, setValue] = React.useState();
 
-  const handleChange = event => {
-    setValue(event.target.value);
-  };
+  // const handleChange = event => {
+  //   setValue(event.target.value);
+  // };
 
   // const [selectedDate, setSelectedDate] = React.useState(new Date());
 
@@ -56,39 +50,29 @@ const BillingForm = () => {
     );
   };
 
+  // const radioButtons = [
+  //   { value: "withTax", label: "With Tax" },
+  //   { value: "withOutTax", label: "WithOut Tax" }
+  // ];
+
   return (
     <form>
       {/* <DatePicker date={selectedDate} handleDateChange={handleDateChange} /> */}
-      <FormControl component="fieldset" className={classes.formControl}>
-        <FormLabel component="legend">Payment</FormLabel>
-        <RadioGroup
-          aria-label="gender"
-          name="tax"
-          value={value}
-          onChange={handleChange}
-        >
-          <div className={classes.formGroup}>
-            <FormControlLabel
-              value="withTax"
-              control={<Radio />}
-              label="With Tax"
-            />
-            <FormControlLabel
-              value="withoutTax"
-              control={<Radio />}
-              label="Without Tax"
-            />
-          </div>
-        </RadioGroup>
-      </FormControl>
+      {/* <RadioGroup
+        ariaLabel={"taxInfo"}
+        name={"tax"}
+        value={value}
+        handleChange={handleChange}
+        radioButtons={radioButtons}
+      /> */}
       {renderInputItems("Room Charges", 3000, "roomCharges")}
       {renderInputItems("Advance", 1000, "advance")}
       {renderInputItems("Misllaneous", 2000, "misllaneous")}
       {renderInputItems("Balance", 4000, "balance")}
       <Divider />
-      {renderPaymentMethods("Cash Payment", "", "cash", "Ammount")}
-      {renderPaymentMethods("Card Payment", "", "card", "Ammount")}
-      {renderPaymentMethods("Wallet Payment", "", "wallet", "Ammount")}
+      {renderPaymentMethods("Cash Payment", "", "cash", "Amount")}
+      {renderPaymentMethods("Card Payment", "", "card", "Amount")}
+      {renderPaymentMethods("Wallet Payment", "", "wallet", "Amount")}
     </form>
   );
 };
