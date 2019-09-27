@@ -6,7 +6,7 @@ export default makeStyles(theme => ({
   },
   panel: {
     width: "100%",
-    margin: "5% auto"
+    margin: "5% auto 8% auto"
   },
   button: {
     textAlign: "right"
