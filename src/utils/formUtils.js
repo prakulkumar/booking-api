@@ -81,7 +81,13 @@ const renderDatepicker = (id, label, value, onInputChange, error) => (
 
 const renderButton = (type, size, label, color, className) => {
   return (
-    <Button type={type} size={size} color={color}>
+    <Button
+      variant="contained"
+      type={type}
+      size={size}
+      color={color}
+      className={className}
+    >
       {label}
     </Button>
   );

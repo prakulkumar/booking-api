@@ -5,7 +5,9 @@ import "./Navbar.scss";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1
+    position: "fixed",
+    width: "100%",
+    zIndex: "1000"
   },
   title: {
     flexGrow: 1
