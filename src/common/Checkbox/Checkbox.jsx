@@ -2,7 +2,7 @@ import React from "react";
 import Checkbox from "@material-ui/core/Checkbox";
 import { FormControl, FormControlLabel, FormGroup } from "@material-ui/core";
 
-const CustomCheckbox = ({ label }) => {
+const CustomCheckbox = ({ label, className }) => {
   const [checked, setState] = React.useState(false);
 
   const handleChange = event => {
@@ -15,7 +15,12 @@ const CustomCheckbox = ({ label }) => {
       <FormGroup>
         <FormControlLabel
           control={
-            <Checkbox checked={checked} onChange={handleChange} value="gilad" />
+            <Checkbox
+              className={className}
+              checked={checked}
+              onChange={handleChange}
+              value="gilad"
+            />
           }
           label={label}
         />

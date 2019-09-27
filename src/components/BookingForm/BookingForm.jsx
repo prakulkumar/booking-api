@@ -133,11 +133,19 @@ const BookingForm = props => {
         {FormUtils.renderButton(
           null,
           "large",
-          "Cancel",
+          "Back",
           "secondary",
-          classes.buttonSec
+          classes.buttonSec,
+          false
         )}
-        {FormUtils.renderButton("submit", "large", "Submit", "primary")}
+        {FormUtils.renderButton(
+          "submit",
+          "large",
+          "Submit",
+          "primary",
+          null,
+          Object.keys(errors).length ? true : false
+        )}
       </div>
     </form>
   );

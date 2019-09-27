@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
   card: {
-    height: "100%",
     maxWidth: props => props.maxWidth || 275,
     margin: props => props.margin || "0 auto"
   }

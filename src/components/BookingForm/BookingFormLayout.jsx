@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Joi from "joi-browser";
 
 import { IconButton, AppBar, Toolbar, Typography } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
@@ -11,6 +10,7 @@ import Card from "../../common/Card/Card";
 import BookingForm from "../BookingForm/BookingForm";
 
 import FormUtils from "../../utils/formUtils";
+import schema from "../../utils/joiUtils";
 import "./BookingFormLayout.scss";
 
 class BookingFormLayout extends Component {
@@ -31,54 +31,20 @@ class BookingFormLayout extends Component {
     errors: {}
   };
 
-  schema = {
-    firstName: Joi.string()
-      .required()
-      .label("First Name")
-      .min(3),
-    lastName: Joi.string()
-      .required()
-      .label("Last Name"),
-    address: Joi.string()
-      .required()
-      .label("Address"),
-    checkIn: Joi.string()
-      .required()
-      .label("Check In"),
-    checkOut: Joi.string()
-      .required()
-      .label("Check Out"),
-    adults: Joi.number()
-      .required()
-      .label("Adults"),
-    children: Joi.number()
-      .required()
-      .label("Children"),
-    contactNumber: Joi.number()
-      .required()
-      .label("Contact Number"),
-    roomCharges: Joi.number()
-      .required()
-      .label("Room Charges"),
-    advance: Joi.number()
-      .required()
-      .label("Advance")
-  };
-
   handleInputChange = ({ currentTarget: input }) => {
     const { data, errors } = this.state;
     const updatedState = FormUtils.handleInputChange(
       input,
       data,
       errors,
-      this.schema
+      schema
     );
     this.setState({ data: updatedState.data, errors: updatedState.errors });
   };
 
   handleFormSubmit = event => {
     event.preventDefault();
-    const errors = FormUtils.validate(this.state.data, this.schema);
+    const errors = FormUtils.validate(this.state.data, schema);
     this.setState({ errors });
     if (errors) return;
   };
