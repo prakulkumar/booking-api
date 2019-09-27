@@ -68,11 +68,13 @@ const renderSelect = (id, label, type, value) => (
   />
 );
 
-const renderDatepicker = (id, label, type, value) => (
+const renderDatepicker = (id, label, value, onInputChange, error) => (
   <DatePicker
     id={id}
     label={label}
     value={value}
+    onChange={onInputChange}
+    error={error}
     // helperText={this.state.errors[id] ? this.state.errors[id] : ""}
   />
 );

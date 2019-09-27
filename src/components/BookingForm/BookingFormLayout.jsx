@@ -11,7 +11,7 @@ import Card from "../../common/Card/Card";
 import BookingForm from "../BookingForm/BookingForm";
 
 import FormUtils from "../../utils/formUtils";
-import "./BookingForm.scss";
+import "./BookingFormLayout.scss";
 
 class BookingFormLayout extends Component {
   state = {
@@ -25,7 +25,7 @@ class BookingFormLayout extends Component {
       children: 0,
       contactNumber: "",
       rooms: [],
-      amount: "",
+      roomCharges: "",
       advance: ""
     },
     errors: {}
@@ -38,7 +38,31 @@ class BookingFormLayout extends Component {
       .min(3),
     lastName: Joi.string()
       .required()
-      .label("Last Name")
+      .label("Last Name"),
+    address: Joi.string()
+      .required()
+      .label("Address"),
+    checkIn: Joi.string()
+      .required()
+      .label("Check In"),
+    checkOut: Joi.string()
+      .required()
+      .label("Check Out"),
+    adults: Joi.number()
+      .required()
+      .label("Adults"),
+    children: Joi.number()
+      .required()
+      .label("Children"),
+    contactNumber: Joi.number()
+      .required()
+      .label("Contact Number"),
+    roomCharges: Joi.number()
+      .required()
+      .label("Room Charges"),
+    advance: Joi.number()
+      .required()
+      .label("Advance")
   };
 
   handleInputChange = ({ currentTarget: input }) => {
@@ -118,12 +142,14 @@ class BookingFormLayout extends Component {
     );
 
     return (
-      <Card
-        header={cardHeader}
-        content={cardContent}
-        maxWidth={700}
-        margin="80px auto"
-      />
+      <div className="cardContainer">
+        <Card
+          header={cardHeader}
+          content={cardContent}
+          maxWidth={700}
+          margin="30px auto"
+        />
+      </div>
     );
   }
 }
