@@ -3,10 +3,18 @@ import TextField from "@material-ui/core/TextField";
 
 import styles from "./InputStyle";
 
-const Input = props => {
+const Input = ({ onChange, error, ...props }) => {
   const classes = styles(props);
-
-  return <TextField {...props} className={classes.input} margin="normal" />;
+  return (
+    <TextField
+      error={error && true}
+      {...props}
+      onChange={event => onChange(event)}
+      className={classes.input}
+      margin="normal"
+      helperText={error}
+    />
+  );
 };
 
 export default Input;

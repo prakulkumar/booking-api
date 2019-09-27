@@ -7,33 +7,21 @@ import Select from "../common/Select/Select";
 import DatePicker from "../common/DatePicker/DatePicker";
 import RadioGroup from "../common/RadioGroup/RadioGroup";
 
-const handleSubmit = event => {
-  event.preventDefault();
-  const errors = this.validate();
-  this.setState({ errors: errors || {} });
-
-  if (errors) return;
-  console.log("submitted");
-
-  // doSubmit()
-  // ......
-};
-
-const handleInputChange = ({ currentTarget: input }) => {
-  const errors = { ...this.state.errors };
-  const errorMessage = this.validateProperty(input);
+const handleInputChange = (input, formData, formErrors, formSchema) => {
+  const errors = { ...formErrors };
+  const errorMessage = validateProperty(input, formSchema);
   if (errorMessage) errors[input.name] = errorMessage;
   else delete errors[input.name];
 
-  const data = { ...this.state.data };
+  const data = { ...formData };
   data[input.name] = input.value;
 
-  this.setState({ data, errors });
+  return { data, errors };
 };
 
-const validate = () => {
+const validate = (data, schema) => {
   const options = { abortEarly: false };
-  const { error } = Joi.validate(this.sata.data, this.schema, options);
+  const { error } = Joi.validate(data, schema, options);
   if (!error) return null;
 
   const errors = {};
@@ -41,9 +29,9 @@ const validate = () => {
   return errors;
 };
 
-const validateProperty = ({ name, value }) => {
+const validateProperty = ({ name, value }, formSchema) => {
   const obj = { [name]: value };
-  const schema = { [name]: this.schema[name] };
+  const schema = { [name]: formSchema[name] };
   const { error } = Joi.validate(obj, schema);
   return error ? error.details[0].message : null;
 };
@@ -55,16 +43,20 @@ const validateProperty = ({ name, value }) => {
                  type: object
                  value: string (required)
 */
-const renderInput = (id, label, type, value) => (
-  <Input
-    id={id}
-    label={label}
-    type={type}
-    value={value}
-    onChange={handleInputChange}
-    // helperText={this.state.errors[id] ? this.state.errors[id] : ""}
-  />
-);
+const renderInput = (id, label, type, value, onInputChange, error) => {
+  return (
+    <Input
+      id={id}
+      name={id}
+      label={label}
+      type={type}
+      value={value}
+      onChange={onInputChange}
+      error={error}
+      // helperText={this.state.errors[id] ? this.state.errors[id] : ""}
+    />
+  );
+};
 
 const renderSelect = (id, label, type, value) => (
   <Select
@@ -85,9 +77,9 @@ const renderDatepicker = (id, label, type, value) => (
   />
 );
 
-const renderButton = (size, label, color, className) => {
+const renderButton = (type, size, label, color, className) => {
   return (
-    <Button size={size} color={color} className={className}>
+    <Button type={type} size={size} color={color}>
       {label}
     </Button>
   );
@@ -106,7 +98,6 @@ const renderButton = (size, label, color, className) => {
 const renderRadioGroup = args => <RadioGroup {...args} />;
 
 export default {
-  handleSubmit,
   handleInputChange,
   validate,
   validateProperty,

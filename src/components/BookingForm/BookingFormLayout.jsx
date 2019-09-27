@@ -10,20 +10,53 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import Card from "../../common/Card/Card";
 import BookingForm from "../BookingForm/BookingForm";
 
+import FormUtils from "../../utils/formUtils";
 import "./BookingForm.scss";
 
 class BookingFormLayout extends Component {
   state = {
-    bookingForm: {}
+    data: {
+      firstName: "",
+      lastName: "",
+      address: "",
+      checkIn: "",
+      checkOut: "",
+      adults: "",
+      children: 0,
+      contactNumber: "",
+      rooms: [],
+      amount: "",
+      advance: ""
+    },
+    errors: {}
   };
 
   schema = {
     firstName: Joi.string()
       .required()
-      .label("First Name"),
+      .label("First Name")
+      .min(3),
     lastName: Joi.string()
       .required()
       .label("Last Name")
+  };
+
+  handleInputChange = ({ currentTarget: input }) => {
+    const { data, errors } = this.state;
+    const updatedState = FormUtils.handleInputChange(
+      input,
+      data,
+      errors,
+      this.schema
+    );
+    this.setState({ data: updatedState.data, errors: updatedState.errors });
+  };
+
+  handleFormSubmit = event => {
+    event.preventDefault();
+    const errors = FormUtils.validate(this.state.data, this.schema);
+    this.setState({ errors });
+    if (errors) return;
   };
 
   render() {
@@ -75,7 +108,14 @@ class BookingFormLayout extends Component {
       </div>
     );
 
-    const cardContent = <BookingForm />;
+    const cardContent = (
+      <BookingForm
+        onInputChange={this.handleInputChange}
+        onFormSubmit={this.handleFormSubmit}
+        data={this.state.data}
+        errors={this.state.errors}
+      />
+    );
 
     return (
       <Card
