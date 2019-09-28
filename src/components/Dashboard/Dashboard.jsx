@@ -7,10 +7,11 @@ import BookingFormLayout from "../BookingForm/BookingFormLayout";
 import BillingFormLayout from "../BillingForm/BillingFormLayout";
 
 import "./Dashboard.scss";
+import utils from "../../utils/utils";
 
 class Dashboard extends Component {
   state = {
-    currentDate: new Date(),
+    currentDate: utils.getDate(),
     isRefresh: false
   };
 

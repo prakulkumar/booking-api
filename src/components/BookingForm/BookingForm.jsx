@@ -1,113 +1,127 @@
 import React from "react";
 import { Typography } from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
 
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 import FormUtils from "../../utils/formUtils";
+import utils from "../../utils/utils";
 import useStyles from "./BookingFormStyle";
 import "./BookingForm.scss";
 
 const BookingForm = props => {
   const classes = useStyles();
 
-  let [expanded, setExpanded] = React.useState("panel1");
-  const { onFormSubmit, onInputChange, data, errors } = props;
+  let [expanded] = React.useState("panel1");
+  const {
+    onFormSubmit,
+    onInputChange: inputfun,
+    onDatePickerChange: datefun,
+    onSelectChange: selectfun,
+    onAddRoom,
+    onDeleteRoom,
+    avilableRooms,
+    data,
+    errors,
+    options
+  } = props;
+
+  // const roomOptions = avilableRooms.map(room => {
+  //   return { label: room.roomNumber, value: room.roomNumber };
+  // });
+
+  // data.rooms.map(roomId =>
+  //   avilableRooms.filter(room => {
+  //     if (room._id === roomId) selectedRooms.push(room);
+  //     return room;
+  //   })
+  // );
+
   const handleChange = panel => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
+    // setExpanded(isExpanded ? panel : false);
+  };
+
+  const getInputArgObj = (id, label, type) => {
+    return {
+      id,
+      label,
+      type,
+      value: data[id],
+      onChange: inputfun,
+      error: errors[id]
+    };
+  };
+
+  const getDateArgObj = (id, label, type, minDate) => {
+    return {
+      id,
+      label,
+      type,
+      value: data[id],
+      onChange: datefun,
+      error: errors[id],
+      minDate
+    };
+  };
+
+  const getRoomOptions = roomType => {
+    if (avilableRooms.length === 0) return [];
+
+    const roomsByType = avilableRooms.filter(
+      room => room.roomType === roomType
+    );
+    return roomsByType.map(room => {
+      return { label: room.roomNumber, value: room.roomNumber, room };
+    });
+  };
+
+  const checkRoomError = index => {
+    if (errors.rooms && errors.rooms.length > 0) {
+      const err = errors.rooms.find(error => error.index === index);
+      return err ? err.message : null;
+    }
+
+    return null;
   };
 
   return (
     <form onSubmit={event => onFormSubmit(event)}>
       <div className="form-group">
         {FormUtils.renderInput(
-          "firstName",
-          "First Name",
-          "text",
-          data.firstName,
-          onInputChange,
-          errors.firstName
+          getInputArgObj("firstName", "First Name", "text")
         )}
-        {FormUtils.renderInput(
-          "lastName",
-          "Last Name",
-          "text",
-          data.lastName,
-          onInputChange,
-          errors.lastName
-        )}
+        {FormUtils.renderInput(getInputArgObj("lastName", "Last Name", "text"))}
       </div>
       <div className="form-group">
-        {FormUtils.renderInput(
-          "address",
-          "Address",
-          "text",
-          data.address,
-          onInputChange,
-          errors.address
-        )}
+        {FormUtils.renderInput(getInputArgObj("address", "Address", "text"))}
       </div>
       <div className="form-group">
         {FormUtils.renderDatepicker(
-          "checkIn",
-          "Check In",
-          data.checkIn,
-          onInputChange,
-          errors.checkIn
+          getDateArgObj("checkIn", "Check In", "text", utils.getDate())
         )}
         {FormUtils.renderDatepicker(
-          "checkOut",
-          "Check Out",
-          data.checkOut,
-          onInputChange,
-          errors.checkOut
+          getDateArgObj("checkOut", "Check Out", "text", data.checkIn)
+        )}
+      </div>
+      <div className="form-group">
+        {FormUtils.renderInput(getInputArgObj("adults", "Adults", "number"))}
+        {FormUtils.renderInput(
+          getInputArgObj("children", "Children", "number")
+        )}
+        {FormUtils.renderInput(
+          getInputArgObj("contactNumber", "Contact Number", "number")
         )}
       </div>
       <div className="form-group">
         {FormUtils.renderInput(
-          "adults",
-          "Adults",
-          "number",
-          data.adults,
-          onInputChange,
-          errors.adults
+          getInputArgObj("roomCharges", "Room Charges", "number")
         )}
-        {FormUtils.renderInput(
-          "children",
-          "Children",
-          "number",
-          data.children,
-          onInputChange,
-          errors.children
-        )}
-        {FormUtils.renderInput(
-          "contactNumber",
-          "Contact Number",
-          "number",
-          data.contactNumber,
-          onInputChange,
-          errors.contactNumber
-        )}
-      </div>
-      <div className="form-group">
-        {FormUtils.renderInput(
-          "roomCharges",
-          "Room Charges",
-          "number",
-          data.roomCharges,
-          onInputChange,
-          errors.roomCharges
-        )}
-        {FormUtils.renderInput(
-          "advance",
-          "Advance",
-          "number",
-          data.advance,
-          onInputChange,
-          errors.advance
-        )}
+        {FormUtils.renderInput(getInputArgObj("advance", "Advance", "number"))}
       </div>
       <div className={classes.panel}>
         <ExpansionPanel
@@ -115,16 +129,59 @@ const BookingForm = props => {
           onChange={handleChange("panel1")}
         >
           <ExpansionPanelSummary
-            expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
             id="panel1a-header"
             className={classes.panelHeader}
           >
-            <Typography>Room</Typography>
+            <div className={classes.expansionPanelSummary}>
+              <Typography className={classes.panelLabel}>Room</Typography>
+              <Fab
+                size="small"
+                color="primary"
+                aria-label="add"
+                onClick={onAddRoom}
+              >
+                <AddIcon />
+              </Fab>
+            </div>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>
-            {FormUtils.renderSelect("roomType", "Room Type", null, "")}
-            {FormUtils.renderSelect("roomNumber", "Room Number", null, "")}
+          <ExpansionPanelDetails className={classes.expansionPanelDetails}>
+            {data.rooms.map((room, index) => {
+              const error = checkRoomError(index);
+              return (
+                <div key={`room-${index}`} className="form-group">
+                  {FormUtils.renderSelect({
+                    id: "roomType",
+                    label: "Room Type",
+                    value: room.roomType,
+                    onChange: event => selectfun(event, index),
+                    options,
+                    error
+                  })}
+
+                  {FormUtils.renderSelect({
+                    id: "roomNumber",
+                    label: "Room Number",
+                    value: room.roomNumber,
+                    onChange: event => selectfun(event, index),
+                    options: getRoomOptions(room.roomType),
+                    error: error ? " " : null
+                  })}
+
+                  <div>
+                    <IconButton
+                      color="secondary"
+                      className={classes.deleteButton}
+                      onClick={() => onDeleteRoom(index)}
+                      disabled={index === 0}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
+                </div>
+              );
+            })}
+            {/* {FormUtils.renderSelect("roomNumber", "Room Number", null, "")} */}
           </ExpansionPanelDetails>
         </ExpansionPanel>
       </div>

@@ -1,19 +1,17 @@
 import "moment";
 import React from "react";
 import MomentUtils from "@date-io/moment";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker
-} from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 
 import styles from "./DatePickerStyle";
+import { ArrowRightRounded } from "@material-ui/icons";
 
-const CustomDatePicker = ({ label, value, onChange, error, ...props }) => {
+const CustomDatePicker = ({ label, onChange, error, ...props }) => {
   const classes = styles(props);
 
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
-      <KeyboardDatePicker
+      <DatePicker
         error={error && true}
         className={classes.root}
         disableToolbar
@@ -22,12 +20,9 @@ const CustomDatePicker = ({ label, value, onChange, error, ...props }) => {
         margin="normal"
         id={label}
         label={label}
-        value={value}
-        onChange={event => onChange(event)}
+        onChange={event => onChange(event, props.id)}
         helperText={error}
-        KeyboardButtonProps={{
-          "aria-label": "change date"
-        }}
+        {...props}
       />
     </MuiPickersUtilsProvider>
   );

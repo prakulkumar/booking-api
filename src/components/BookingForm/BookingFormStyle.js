@@ -13,5 +13,19 @@ export default makeStyles(theme => ({
   },
   buttonSec: {
     marginRight: 20
+  },
+  expansionPanelDetails: {
+    display: "block"
+  },
+  expansionPanelSummary: {
+    display: "flex",
+    alignItems: "center",
+    width: "100%"
+  },
+  panelLabel: {
+    flexGrow: 1
+  },
+  deleteButton: {
+    marginTop: 20
   }
 }));

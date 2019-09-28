@@ -1,21 +1,27 @@
 import Joi from "joi-browser";
 
+const roomsSchema = Joi.object().keys({
+  roomType: Joi.string()
+    .required()
+    .label("Room Type"),
+  roomNumber: Joi.required().label("Room Number")
+});
+
 export default {
   bookingFormSchema: {
     firstName: Joi.string()
       .required()
-      .label("First Name")
-      .min(3),
+      .label("First Name"),
     lastName: Joi.string()
       .required()
       .label("Last Name"),
     address: Joi.string()
       .required()
       .label("Address"),
-    checkIn: Joi.string()
+    checkIn: Joi.date()
       .required()
       .label("Check In"),
-    checkOut: Joi.string()
+    checkOut: Joi.date()
       .required()
       .label("Check Out"),
     adults: Joi.number()
@@ -25,6 +31,8 @@ export default {
       .required()
       .label("Children"),
     contactNumber: Joi.number()
+      .min(1000000000)
+      .max(9999999999)
       .required()
       .label("Contact Number"),
     roomCharges: Joi.number()
@@ -32,7 +40,11 @@ export default {
       .label("Room Charges"),
     advance: Joi.number()
       .required()
-      .label("Advance")
+      .label("Advance"),
+    rooms: Joi.array()
+      .items(roomsSchema)
+      .unique()
+      .required()
   },
   billingFormSchema: {
     card: Joi.number(),

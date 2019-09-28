@@ -3,27 +3,13 @@ import { TextField, MenuItem } from "@material-ui/core";
 
 import styles from "./SelectStyle";
 
-const Select = props => {
+const Select = ({ options, onChange, error, ...props }) => {
   const classes = styles();
-
-  const currencies = [
-    {
-      label: "$",
-      value: "$"
-    },
-    {
-      label: "R",
-      value: "R"
-    },
-    {
-      label: "S",
-      value: "S"
-    }
-  ];
   return (
     <TextField
-      {...props}
+      error={error && true}
       select
+      onChange={event => onChange(event)}
       className={classes.input}
       SelectProps={{
         MenuProps: {
@@ -31,8 +17,10 @@ const Select = props => {
         }
       }}
       margin="normal"
+      {...props}
+      helperText={error}
     >
-      {currencies.map(option => (
+      {options.map(option => (
         <MenuItem key={option.value} value={option.value}>
           {option.label}
         </MenuItem>

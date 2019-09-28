@@ -25,7 +25,16 @@ const validate = (data, schema) => {
   if (!error) return null;
 
   const errors = {};
-  for (let item of error.details) errors[item.path[0]] = item.message;
+  const rooms = [];
+  error.details = error.details.filter(
+    error => error.type !== "object.allowUnknown"
+  );
+  for (let item of error.details) {
+    if (item.path[0] === "rooms") {
+      rooms.push({ message: item.message, index: item.path[1] });
+      errors[item.path[0]] = rooms;
+    } else errors[item.path[0]] = item.message;
+  }
   return errors;
 };
 
@@ -37,60 +46,27 @@ const validateProperty = ({ name, value }, formSchema) => {
 };
 
 /*
-   renderInput
-   parameters :- label: string
-                 id: string 
-                 type: object
-                 value: string (required)
+  renderInput
+  renderDatepicker
+  args:   id: string
+          label: string
+          type: string
+          value: string
+          onChange: function
+          error: string
 */
-const renderInput = (
-  id,
-  label,
-  type,
-  value,
-  onInputChange,
-  error,
-  placeholder,
-  disabled
-) => {
-  return (
-    <Input
-      disabled={disabled}
-      id={id}
-      name={id}
-      label={label}
-      type={type}
-      value={value}
-      onChange={onInputChange}
-      error={error}
-      placeholder={placeholder}
-      // helperText={this.state.errors[id] ? this.state.errors[id] : ""}
-    />
-  );
-};
+const renderInput = args => <Input name={args.id} {...args} />;
+const renderDatepicker = args => <DatePicker name={args.id} {...args} />;
 
-const renderSelect = (id, label, type, value) => (
-  <Select
-    id={id}
-    name={id}
-    label={label}
-    value={value}
-    onChange={handleInputChange}
-    // helperText={this.state.errors[id] ? this.state.errors[id] : ""}
-  />
-);
-
-const renderDatepicker = (id, label, value, onInputChange, error) => (
-  <DatePicker
-    id={id}
-    name={id}
-    label={label}
-    value={value}
-    onChange={onInputChange}
-    error={error}
-    // helperText={this.state.errors[id] ? this.state.errors[id] : ""}
-  />
-);
+/*
+  renderSelect
+  args:   id: string
+          label: string
+          value: string
+          onChange: function
+          options: array  => [{value: any, label: string}]
+*/
+const renderSelect = args => <Select name={args.id} {...args} />;
 
 const renderButton = (type, size, label, color, className, disabled) => {
   return (

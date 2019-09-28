@@ -13,4 +13,12 @@ async function getBookings(monthObj) {
   }
 }
 
-export default { getBookings };
+async function addBooking(booking) {
+  try {
+    return await http.post(`${http.baseUrl}/bookings/insert`, booking);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export default { getBookings, addBooking };

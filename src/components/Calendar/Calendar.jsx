@@ -66,8 +66,10 @@ class Calendar extends Component {
         checkOut = updatedValue.checkOut;
       }
 
-      booking.rooms.forEach(roomId => {
-        const { roomNumber } = rooms.find(room => room._id === roomId);
+      booking.rooms.forEach(bookedRoom => {
+        const { roomNumber } = rooms.find(room => {
+          return room._id === bookedRoom._id;
+        });
 
         this.setBookingObjByRoom(roomNumber, checkIn, checkOut, booking, color);
       });
