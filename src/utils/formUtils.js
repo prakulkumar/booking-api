@@ -43,7 +43,15 @@ const validateProperty = ({ name, value }, formSchema) => {
                  type: object
                  value: string (required)
 */
-const renderInput = (id, label, type, value, onInputChange, error) => {
+const renderInput = (
+  id,
+  label,
+  type,
+  value,
+  onInputChange,
+  error,
+  placeholder
+) => {
   return (
     <Input
       id={id}
@@ -53,6 +61,7 @@ const renderInput = (id, label, type, value, onInputChange, error) => {
       value={value}
       onChange={onInputChange}
       error={error}
+      placeholder={placeholder}
       // helperText={this.state.errors[id] ? this.state.errors[id] : ""}
     />
   );
@@ -81,9 +90,16 @@ const renderDatepicker = (id, label, value, onInputChange, error) => (
   />
 );
 
-const renderButton = (type, size, label, color, className) => {
+const renderButton = (type, size, label, color, className, disabled) => {
   return (
-    <Button type={type} size={size} color={color}>
+    <Button
+      disabled={disabled}
+      variant="contained"
+      type={type}
+      size={size}
+      color={color}
+      className={className}
+    >
       {label}
     </Button>
   );

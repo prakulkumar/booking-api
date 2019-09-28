@@ -6,6 +6,8 @@ import Navbar from "./../Navbar/Navbar";
 import BookingFormLayout from "../BookingForm/BookingFormLayout";
 import BillingFormLayout from "../BillingForm/BillingFormLayout";
 
+import "./Dashboard.scss";
+
 class Dashboard extends Component {
   state = {
     currentDate: new Date(),
@@ -20,19 +22,21 @@ class Dashboard extends Component {
     const calendarData = this.state;
 
     return (
-      <React.Fragment>
+      <div className="mainContainer">
         <Navbar onRefresh={this.handleRefresh} />
-        <Switch>
-          <Route path="/booking" component={BookingFormLayout} />
-          <Route path="/billing" component={BillingFormLayout} />
-          <Route
-            path="/"
-            render={() => (
-              <Calendar data={calendarData} onRefresh={this.handleRefresh} />
-            )}
-          />
-        </Switch>
-      </React.Fragment>
+        <div className="subContainer">
+          <Switch>
+            <Route path="/booking" component={BookingFormLayout} />
+            <Route path="/billing" component={BillingFormLayout} />
+            <Route
+              path="/"
+              render={() => (
+                <Calendar data={calendarData} onRefresh={this.handleRefresh} />
+              )}
+            />
+          </Switch>
+        </div>
+      </div>
     );
   }
 }

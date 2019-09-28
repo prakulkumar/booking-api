@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core";
 import { Typography, Divider } from "@material-ui/core";
 import Input from "../../common/Input/Input";
 import Checkbox from "./../../common/Checkbox/Checkbox";
+import FormUtils from "../../utils/formUtils";
 // import Dialog from "../../common/Dialog/Dialog";
 // import RadioGroup from "./../../common/RadioGroup/RadioGroup";
 
@@ -12,12 +13,18 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "space-between",
     alignItems: "center"
   },
-  input: { width: "50%" }
+  input: { width: "50%" },
+  paymentMethods: {
+    display: "flex"
+  },
+  checkbox: {
+    marginTop: 10
+  }
 }));
 
-const BillingForm = () => {
+const BillingForm = props => {
   const classes = useStyles();
-
+  const { onFormSubmit, onInputChange, data, errors } = props;
   // ------------------------RadioGroup-----------
   // const [value, setValue] = React.useState();
 
@@ -60,23 +67,30 @@ const BillingForm = () => {
     );
   };
 
-  const renderPaymentMethods = (label, value, inputId, placeholder) => {
+  const renderPaymentMethods = (
+    label,
+    inputId,
+    value,
+    onInputChange,
+    error
+  ) => {
     return (
       <div className={classes.formGroup}>
-        <Checkbox label={label} />
-        <Input
-          width="50%"
-          id={inputId}
-          type="text"
-          value={value}
-          placeholder={placeholder}
-        />
+        <Checkbox className={classes.checkbox} />
+        {FormUtils.renderInput(
+          inputId,
+          label,
+          "number",
+          value,
+          onInputChange,
+          error
+        )}
       </div>
     );
   };
 
   return (
-    <form>
+    <form onSubmit={event => onFormSubmit(event)}>
       {/* <DatePicker date={selectedDate} handleDateChange={handleDateChange} /> */}
       {/* <RadioGroup
         ariaLabel={"taxInfo"}
@@ -91,9 +105,40 @@ const BillingForm = () => {
       {renderInputItems("Misllaneous", 2000, "misllaneous")}
       {renderInputItems("Balance", 4000, "balance")}
       <Divider />
-      {renderPaymentMethods("Cash Payment", "", "cash", "Amount")}
-      {renderPaymentMethods("Card Payment", "", "card", "Amount")}
-      {renderPaymentMethods("Wallet Payment", "", "wallet", "Amount")}
+      <div className={classes.paymentMethods}>
+        {renderPaymentMethods(
+          "Cash Payment",
+          "cash",
+          data.cash,
+          onInputChange,
+          errors.cash
+        )}
+        {renderPaymentMethods(
+          "Card Payment",
+          "card",
+          data.card,
+          onInputChange,
+          errors.card
+        )}
+        {renderPaymentMethods(
+          "Wallet Payment",
+          "wallet",
+          data.wallet,
+          onInputChange,
+          errors.wallet
+        )}
+      </div>
+
+      <div>
+        {FormUtils.renderButton(
+          "submit",
+          "large",
+          "Submit",
+          "primary",
+          null,
+          Object.keys(errors).length ? true : false
+        )}
+      </div>
     </form>
   );
 };

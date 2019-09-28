@@ -7,9 +7,12 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import FormUtils from "../../utils/formUtils";
+import useStyles from "./BookingFormStyle";
 import "./BookingForm.scss";
 
 const BookingForm = props => {
+  const classes = useStyles();
+
   let [expanded, setExpanded] = React.useState("panel1");
   const { onFormSubmit, onInputChange, data, errors } = props;
   const handleChange = panel => (event, isExpanded) => {
@@ -106,7 +109,7 @@ const BookingForm = props => {
           errors.advance
         )}
       </div>
-      <div className="panel">
+      <div className={classes.panel}>
         <ExpansionPanel
           expanded={expanded === "panel1"}
           onChange={handleChange("panel1")}
@@ -115,7 +118,7 @@ const BookingForm = props => {
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
             id="panel1a-header"
-            className="accordianHeader"
+            className={classes.panelHeader}
           >
             <Typography>Room</Typography>
           </ExpansionPanelSummary>
@@ -126,7 +129,24 @@ const BookingForm = props => {
         </ExpansionPanel>
       </div>
 
-      {FormUtils.renderButton("submit", "large", "Submit", "primary")}
+      <div className={classes.button}>
+        {FormUtils.renderButton(
+          null,
+          "large",
+          "Back",
+          "secondary",
+          classes.buttonSec,
+          false
+        )}
+        {FormUtils.renderButton(
+          "submit",
+          "large",
+          "Submit",
+          "primary",
+          null,
+          Object.keys(errors).length ? true : false
+        )}
+      </div>
     </form>
   );
 };

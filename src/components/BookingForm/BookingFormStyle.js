@@ -1,24 +1,17 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 export default makeStyles(theme => ({
-  formGroup: {
-    display: "flex"
-  },
-  button: {
-    margin: theme.spacing(1)
+  panelHeader: {
+    backgroundColor: "#bdbdbd"
   },
   panel: {
     width: "100%",
-    margin: "8% 0 auto"
+    margin: "5% auto 8% auto"
   },
-  panelHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular
+  button: {
+    textAlign: "right"
   },
-  accordianHeader: {
-    backgroundColor: "#eeeeee"
-  },
-  title: {
-    flexGrow: 1
+  buttonSec: {
+    marginRight: 20
   }
 }));
