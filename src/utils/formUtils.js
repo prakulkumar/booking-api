@@ -50,10 +50,12 @@ const renderInput = (
   value,
   onInputChange,
   error,
-  placeholder
+  placeholder,
+  disabled
 ) => {
   return (
     <Input
+      disabled={disabled}
       id={id}
       name={id}
       label={label}
@@ -113,7 +115,25 @@ const renderButton = (type, size, label, color, className, disabled) => {
                  handleChange: function (required)
                  radioButtons: array (required)
 */
-const renderRadioGroup = args => <RadioGroup {...args} />;
+const renderRadioGroup = (
+  label,
+  ariaLabel,
+  name,
+  value,
+  onChange,
+  radioButtons,
+  customClass
+) => (
+  <RadioGroup
+    label={label}
+    ariaLabel={ariaLabel}
+    name={name}
+    value={value}
+    onChange={onChange}
+    radioButtons={radioButtons}
+    formGroupClass={customClass}
+  />
+);
 
 export default {
   handleInputChange,

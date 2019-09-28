@@ -30,6 +30,7 @@ const CustomRadioGroup = props => {
         <div className={classes.formGroup}>
           {radioButtons.map(radio => (
             <FormControlLabel
+              key={radio.value}
               value={radio.value}
               control={<Radio />}
               label={radio.label}

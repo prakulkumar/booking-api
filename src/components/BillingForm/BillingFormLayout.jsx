@@ -10,7 +10,8 @@ class BillingFormLayout extends Component {
     data: {
       cash: "",
       card: "",
-      wallet: ""
+      wallet: "",
+      tax: "withOutTax"
     },
     errors: {}
   };

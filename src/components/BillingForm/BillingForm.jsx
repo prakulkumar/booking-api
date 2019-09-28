@@ -1,68 +1,61 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
-import { Typography, Divider } from "@material-ui/core";
-import Input from "../../common/Input/Input";
+import { Typography } from "@material-ui/core";
 import Checkbox from "./../../common/Checkbox/Checkbox";
 import FormUtils from "../../utils/formUtils";
-// import Dialog from "../../common/Dialog/Dialog";
-// import RadioGroup from "./../../common/RadioGroup/RadioGroup";
 
 const useStyles = makeStyles(theme => ({
   formGroup: {
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
+    marginBottom: 20
   },
-  input: { width: "50%" },
+  input: { width: "40%" },
   paymentMethods: {
     display: "flex"
   },
   checkbox: {
-    marginTop: 10
+    marginTop: 20
+  },
+  inputItems: {
+    width: "30%"
+  },
+  button: {
+    textAlign: "right"
+  },
+  radioGroup: {
+    marginBottom: 20
   }
 }));
 
 const BillingForm = props => {
   const classes = useStyles();
   const { onFormSubmit, onInputChange, data, errors } = props;
-  // ------------------------RadioGroup-----------
-  // const [value, setValue] = React.useState();
-
-  // const handleChange = event => {
-  //   setValue(event.target.value);
-  // };
-
-  // const radioButtons = [
-  //   { value: "withTax", label: "With Tax" },
-  //   { value: "withOutTax", label: "WithOut Tax" }
-  // ];
-
-  // ------------------------DatePicker-----------
-  // const [selectedDate, setSelectedDate] = React.useState(new Date());
-
-  // const handleDateChange = date => {
-  //   setSelectedDate(date);
-  // };
-
-  // ------------------------Dialog-----------
-  // const [open, setOpen] = React.useState(true);
-
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
 
   const renderInputItems = (label, value, inputId) => {
     return (
       <div className={classes.formGroup}>
-        <Typography display={"block"} nowrap={"true"}>
+        <Typography
+          display={"block"}
+          nowrap={"true"}
+          className={classes.inputItems}
+        >
           {label}
         </Typography>
         <Typography>:</Typography>
-        <Input disabled width="50%" id={inputId} type="text" value={value} />
+        <div style={{ width: "50%" }}>
+          {FormUtils.renderInput(
+            inputId,
+            null,
+            "number",
+            value,
+            null,
+            null,
+            null,
+            true
+          )}
+        </div>
       </div>
     );
   };
@@ -72,7 +65,8 @@ const BillingForm = props => {
     inputId,
     value,
     onInputChange,
-    error
+    error,
+    disabled
   ) => {
     return (
       <div className={classes.formGroup}>
@@ -83,53 +77,66 @@ const BillingForm = props => {
           "number",
           value,
           onInputChange,
-          error
+          !disabled && error,
+          null,
+          disabled
         )}
       </div>
     );
   };
 
+  const radioButtons = [
+    { value: "withOutTax", label: "WithOut Tax" },
+    { value: "withTax", label: "With Tax" }
+  ];
+
   return (
     <form onSubmit={event => onFormSubmit(event)}>
-      {/* <DatePicker date={selectedDate} handleDateChange={handleDateChange} /> */}
-      {/* <RadioGroup
-        ariaLabel={"taxInfo"}
-        name={"tax"}
-        value={value}
-        handleChange={handleChange}
-        radioButtons={radioButtons}
-      /> */}
-      {/* <Dialog open={open} onClose={handleClose} /> */}
-      {renderInputItems("Room Charges", 3000, "roomCharges")}
-      {renderInputItems("Advance", 1000, "advance")}
-      {renderInputItems("Misllaneous", 2000, "misllaneous")}
-      {renderInputItems("Balance", 4000, "balance")}
-      <Divider />
+      <div className={classes.radioGroup}>
+        {FormUtils.renderRadioGroup(
+          "",
+          "taxInfo",
+          "tax",
+          data.tax,
+          onInputChange,
+          radioButtons
+        )}
+      </div>
+      <div>
+        {renderInputItems("Room Charges", 3000, "roomCharges")}
+        {renderInputItems("Advance", 1000, "advance")}
+        {renderInputItems("Misllaneous", 2000, "misllaneous")}
+        {renderInputItems("Balance", 4000, "balance")}
+      </div>
+      {/* <Divider className={classes.divider} /> */}
       <div className={classes.paymentMethods}>
         {renderPaymentMethods(
           "Cash Payment",
           "cash",
           data.cash,
           onInputChange,
-          errors.cash
+          errors.cash,
+          false
         )}
         {renderPaymentMethods(
           "Card Payment",
           "card",
           data.card,
           onInputChange,
-          errors.card
+          errors.card,
+          true
         )}
         {renderPaymentMethods(
           "Wallet Payment",
           "wallet",
           data.wallet,
           onInputChange,
-          errors.wallet
+          errors.wallet,
+          true
         )}
       </div>
 
-      <div>
+      <div className={classes.button}>
         {FormUtils.renderButton(
           "submit",
           "large",
