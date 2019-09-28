@@ -61,6 +61,7 @@ const renderInput = (id, label, type, value, onInputChange, error) => {
 const renderSelect = (id, label, type, value) => (
   <Select
     id={id}
+    name={id}
     label={label}
     value={value}
     onChange={handleInputChange}
@@ -71,6 +72,7 @@ const renderSelect = (id, label, type, value) => (
 const renderDatepicker = (id, label, value, onInputChange, error) => (
   <DatePicker
     id={id}
+    name={id}
     label={label}
     value={value}
     onChange={onInputChange}
