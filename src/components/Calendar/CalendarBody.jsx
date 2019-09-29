@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
     overflow: "auto"
   },
   div: {
-    padding: 10,
+    padding: 6,
     width: "100%",
     height: "100%",
     fontWeight: 600
