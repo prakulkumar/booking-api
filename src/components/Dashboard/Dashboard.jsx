@@ -17,6 +17,7 @@ class Dashboard extends Component {
     isRefresh: false,
     selectedBooking: null,
     selectedRoom: null,
+    selectedDate: null,
     snackbarObj: {
       open: false,
       message: "",
@@ -28,10 +29,10 @@ class Dashboard extends Component {
     // this.setState({ isRefresh: !this.state.isRefresh });
   };
 
-  handleFormRedirect = (bookingObj, roomObj) => {
+  handleFormRedirect = (bookingObj, roomObj, selectedDate) => {
     const selectedBooking = bookingObj && { ...bookingObj };
     const selectedRoom = { ...roomObj };
-    this.setState({ selectedBooking, selectedRoom });
+    this.setState({ selectedBooking, selectedRoom, selectedDate });
 
     if (bookingObj) this.props.history.push("/booking/viewBooking");
     else this.props.history.push("/booking/newBooking");
@@ -54,7 +55,8 @@ class Dashboard extends Component {
       isRefresh,
       snackbarObj,
       selectedBooking,
-      selectedRoom
+      selectedRoom,
+      selectedDate
     } = this.state;
     const calendarData = { currentDate, isRefresh };
 
@@ -76,6 +78,7 @@ class Dashboard extends Component {
                   onSnackbarEvent={this.handleSnackbarEvent}
                   selectedBooking={selectedBooking}
                   selectedRoom={selectedRoom}
+                  selectedDate={selectedDate}
                   {...props}
                 />
               )}
