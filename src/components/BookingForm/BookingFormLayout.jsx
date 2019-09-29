@@ -1,23 +1,19 @@
 import React, { Component } from "react";
 import utils from "../../utils/utils";
 
-import { IconButton, AppBar, Toolbar, Typography } from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
-import HotelIcon from "@material-ui/icons/Hotel";
-import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-
 import Card from "../../common/Card/Card";
 import BookingForm from "../BookingForm/BookingForm";
-import Snackbar from "../../common/Snackbar/Snackbar";
+import BookingFormHeader from "./BookingFormHeader";
 
 import FormUtils from "../../utils/formUtils";
+import constants from "../../utils/constants";
 import schemas from "../../utils/joiUtils";
 import "./BookingFormLayout.scss";
 import roomService from "../../services/roomService";
 import bookingService from "../../services/bookingService";
 
 const schema = schemas.bookingFormSchema;
+const { success, error } = constants.snackbarVariants;
 const roomTypes = [
   { label: "AC", value: "AC" },
   { label: "Non AC", value: "Non AC" },
@@ -49,12 +45,7 @@ class BookingFormLayout extends Component {
     },
     errors: {},
     allRooms: [],
-    availableRooms: [],
-    snackbar: {
-      open: false,
-      message: "",
-      variant: "success"
-    }
+    availableRooms: []
   };
 
   async componentDidMount() {
@@ -118,19 +109,9 @@ class BookingFormLayout extends Component {
       bookingDate: utils.getDate()
     };
 
-    const response = await bookingService.addBooking(bookingData);
-    const snackbar = { ...this.state.snackbar };
-    snackbar.open = true;
-    if (response.status === 200) {
-      snackbar.message = "Booking Done";
-      snackbar.variant = "success";
-      this.setState({ snackbar });
-      this.props.history.push("/");
-    } else {
-      snackbar.message = "Error Occured";
-      snackbar.variant = "error";
-      this.setState({ snackbar });
-    }
+    const { status } = await bookingService.addBooking(bookingData);
+    if (status === 200) this.openSnackBar("Booking Successfull", success, "/");
+    else this.openSnackBar("Error Occurred", error);
   };
 
   handleAddRoom = () => {
@@ -156,62 +137,13 @@ class BookingFormLayout extends Component {
     this.setState({ data });
   };
 
-  handleSnackBar = () => {
-    const snackbar = { ...this.state.snackbar };
-    snackbar.open = false;
-
-    this.setState({ snackbar });
+  openSnackBar = (message, variant, redirectTo) => {
+    const snakbarObj = { open: true, message, variant };
+    this.props.onSnackbarEvent(snakbarObj);
+    redirectTo && this.props.history.push(redirectTo);
   };
 
   render() {
-    const cardHeader = (
-      <div className="form-header">
-        <AppBar position="static">
-          <Toolbar variant="dense">
-            <Typography variant="h6" className="title">
-              Booking
-            </Typography>
-            <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={this.props.changed}
-              color="inherit"
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={this.props.changed}
-              color="inherit"
-            >
-              <DeleteForeverIcon />
-            </IconButton>
-            <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={this.props.changed}
-              color="inherit"
-            >
-              <HotelIcon />
-            </IconButton>
-            <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={this.props.changed}
-              color="inherit"
-            >
-              <MeetingRoomIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-      </div>
-    );
-
     const cardContent = (
       <BookingForm
         onDatePickerChange={this.handleDatePickerChange}
@@ -230,14 +162,8 @@ class BookingFormLayout extends Component {
 
     return (
       <div className="cardContainer">
-        <Snackbar
-          open={this.state.snackbar.open}
-          message={this.state.snackbar.message}
-          onClose={this.handleSnackBar}
-          variant={this.state.snackbar.variant}
-        />
         <Card
-          header={cardHeader}
+          header={<BookingFormHeader />}
           content={cardContent}
           maxWidth={700}
           margin="40px auto"

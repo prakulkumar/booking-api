@@ -6,6 +6,7 @@ import { makeStyles, Table, Paper, ButtonBase } from "@material-ui/core";
 import { TableBody, TableCell, TableHead, TableRow } from "@material-ui/core";
 import LoaderDialog from "../../common/LoaderDialog/LoaderDialog";
 import Popover from "../../common/Popover/Popover";
+import utils from "../../utils/utils";
 import "./CalendarBody.scss";
 
 const useStyles = makeStyles(theme => ({
@@ -54,7 +55,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const CalendarBody = ({ tableHeaders, tableRows, loading }) => {
+const CalendarBody = ({ tableHeaders, tableRows, loading, dateObj }) => {
   const [open] = React.useState(true);
   const classes = useStyles();
 
@@ -67,7 +68,7 @@ const CalendarBody = ({ tableHeaders, tableRows, loading }) => {
             <TableRow>{renderTableHead(tableHeaders, classes)}</TableRow>
           </TableHead>
           <TableBody className={classes.tableBody}>
-            {renderTableRows(tableRows, classes)}
+            {renderTableRows(tableRows, classes, dateObj)}
           </TableBody>
         </Table>
       </Paper>
@@ -89,23 +90,23 @@ const renderTableHead = (tableHeaders, classes) => {
   );
 };
 
-const renderTableRows = (tableRows, classes) => {
+const renderTableRows = (tableRows, classes, dateObj) => {
   return (
     <React.Fragment>
       {tableRows.map((row, index) => (
         <TableRow key={`row_${index}`}>
-          {renderTableColumns(row, classes)}
+          {renderTableColumns(row, classes, dateObj)}
         </TableRow>
       ))}
     </React.Fragment>
   );
 };
 
-const renderTableColumns = (row, classes) => {
+const renderTableColumns = (row, classes, dateObj) => {
   return (
     <React.Fragment>
       {row.map((column, index) =>
-        getStandardCell(getArgObj(column, index, classes))
+        getStandardCell(getArgObj(column, index, classes, dateObj))
       )}
     </React.Fragment>
   );
@@ -152,14 +153,21 @@ const getStandardCell = (...argument) => {
   );
 };
 
-const getArgObj = (column, index, classes) => {
+const getArgObj = (column, index, classes, dateObj) => {
   let { show, room, booking, handleShowModal, color } = column;
   const currentDate = moment().date();
   handleShowModal =
     index >= currentDate || booking ? handleShowModal : () => {};
   const name = booking && getShortName(booking.firstName, booking.lastName);
   const key = `column_${index}`;
-  const disable = index < currentDate ? true : false;
+
+  const currentDateObj = utils.getDateObj(utils.getDate());
+  const { month, year } = dateObj;
+  const { month: currentMonth, year: currentYear } = currentDateObj;
+  let disable = false;
+
+  if (month === currentMonth && year === currentYear)
+    disable = index < currentDate ? true : false;
 
   if (show) return { key, value: room.roomNumber, classes };
   else

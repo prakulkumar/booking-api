@@ -111,8 +111,6 @@ class Calendar extends Component {
   };
 
   getTableRows = (rooms, dateObj) => {
-    console.log(dateObj);
-
     let rows = new Array(rooms.length).fill();
     rows.forEach((row, index) => {
       rows[index] = new Array(dateObj.days + 1).fill({
@@ -133,9 +131,7 @@ class Calendar extends Component {
   getUpdatedValues = (booking, dateObj) => {
     let { checkIn, checkOut, months } = booking;
     const { month, year, days } = dateObj;
-    const index = months.findIndex(
-      month => month.monthNumber === dateObj.month
-    );
+    const index = months.findIndex(month => month.month === dateObj.month);
 
     if (index === 0) {
       checkIn = utils.getDate(checkIn);
@@ -186,6 +182,7 @@ class Calendar extends Component {
           tableHeaders={this.getTableHeaders()}
           tableRows={rows}
           loading={loading}
+          dateObj={dateObj}
         />
         {showModal && (
           <Dialog
