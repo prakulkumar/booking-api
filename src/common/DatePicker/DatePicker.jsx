@@ -4,7 +4,6 @@ import MomentUtils from "@date-io/moment";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 
 import styles from "./DatePickerStyle";
-import { ArrowRightRounded } from "@material-ui/icons";
 
 const CustomDatePicker = ({ label, onChange, error, ...props }) => {
   const classes = styles(props);

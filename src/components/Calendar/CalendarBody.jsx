@@ -114,6 +114,7 @@ const renderTableColumns = (row, classes, dateObj) => {
 
 const getStandardCell = (...argument) => {
   const arg = argument[0];
+
   const customStyle = {
     color: arg.color,
     pointerEvents: "",
@@ -129,7 +130,7 @@ const getStandardCell = (...argument) => {
       key={arg.key}
       style={customStyle}
       className={arg.classes.tableCell}
-      onClick={() => arg.handleShowModal(arg.booking)}
+      onClick={() => arg.handleRedirect(arg.booking, arg.room)}
     >
       <ButtonBase
         disabled={arg.disable}
@@ -154,10 +155,9 @@ const getStandardCell = (...argument) => {
 };
 
 const getArgObj = (column, index, classes, dateObj) => {
-  let { show, room, booking, handleShowModal, color } = column;
+  let { show, room, booking, handleRedirect, color } = column;
   const currentDate = moment().date();
-  handleShowModal =
-    index >= currentDate || booking ? handleShowModal : () => {};
+  handleRedirect = index >= currentDate || booking ? handleRedirect : () => {};
   const name = booking && getShortName(booking.firstName, booking.lastName);
   const key = `column_${index}`;
 
@@ -175,10 +175,11 @@ const getArgObj = (column, index, classes, dateObj) => {
       key,
       value: name,
       disable,
-      handleShowModal,
+      handleRedirect,
       color,
       booking,
-      classes
+      classes,
+      room
     };
 };
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 import Calendar from "./../Calendar/Calendar";
 import Navbar from "./../Navbar/Navbar";
@@ -15,6 +15,8 @@ class Dashboard extends Component {
   state = {
     currentDate: utils.getDate(),
     isRefresh: false,
+    selectedBooking: null,
+    selectedRoom: null,
     snackbarObj: {
       open: false,
       message: "",
@@ -24,6 +26,15 @@ class Dashboard extends Component {
 
   handleRefresh = () => {
     // this.setState({ isRefresh: !this.state.isRefresh });
+  };
+
+  handleFormRedirect = (bookingObj, roomObj) => {
+    const selectedBooking = bookingObj && { ...bookingObj };
+    const selectedRoom = { ...roomObj };
+    this.setState({ selectedBooking, selectedRoom });
+
+    if (bookingObj) this.props.history.push("/booking/viewBooking");
+    else this.props.history.push("/booking/newBooking");
   };
 
   handleSnackbarEvent = snackbarObj => {
@@ -38,7 +49,13 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { currentDate, isRefresh, snackbarObj } = this.state;
+    const {
+      currentDate,
+      isRefresh,
+      snackbarObj,
+      selectedBooking,
+      selectedRoom
+    } = this.state;
     const calendarData = { currentDate, isRefresh };
 
     return (
@@ -53,10 +70,12 @@ class Dashboard extends Component {
         <div className="subContainer">
           <Switch>
             <Route
-              path="/booking"
+              path={["/booking/newBooking", "/booking/viewBooking"]}
               render={props => (
                 <BookingFormLayout
                   onSnackbarEvent={this.handleSnackbarEvent}
+                  selectedBooking={selectedBooking}
+                  selectedRoom={selectedRoom}
                   {...props}
                 />
               )}
@@ -64,14 +83,17 @@ class Dashboard extends Component {
             <Route path="/billing" component={BillingFormLayout} />
             <Route
               path="/"
+              exact
               render={props => (
                 <Calendar
                   data={calendarData}
                   onRefresh={this.handleRefresh}
+                  onFormRedirect={this.handleFormRedirect}
                   {...props}
                 />
               )}
             />
+            <Redirect to="/" />
           </Switch>
         </div>
       </div>

@@ -115,7 +115,7 @@ class Calendar extends Component {
     rows.forEach((row, index) => {
       rows[index] = new Array(dateObj.days + 1).fill({
         room: { ...rooms[index] },
-        handleShowModal: this.handleShowModal
+        handleRedirect: this.handleRedirect
       });
       rows[index][0] = { room: { ...rooms[index] }, show: true };
     });
@@ -159,9 +159,9 @@ class Calendar extends Component {
     this.showBookingProcess(dateObj);
   };
 
-  handleShowModal = booking => {
-    console.log({ booking }, this.state.showModal);
-    this.setState({ showModal: true });
+  handleRedirect = (bookingObj, roomObj) => {
+    this.props.onFormRedirect(bookingObj, roomObj);
+    // this.setState({ showModal: true });
   };
 
   handleCloseModal = () => {
