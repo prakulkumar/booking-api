@@ -28,7 +28,8 @@ const BookingForm = props => {
     avilableRooms,
     data,
     errors,
-    options
+    options,
+    shouldDisable
   } = props;
 
   // const roomOptions = avilableRooms.map(room => {
@@ -46,18 +47,19 @@ const BookingForm = props => {
     // setExpanded(isExpanded ? panel : false);
   };
 
-  const getInputArgObj = (id, label, type) => {
+  const getInputArgObj = (id, label, type, shouldDisable) => {
     return {
       id,
       label,
       type,
       value: data[id],
       onChange: inputfun,
-      error: errors[id]
+      error: errors[id],
+      disabled: shouldDisable
     };
   };
 
-  const getDateArgObj = (id, label, type, minDate) => {
+  const getDateArgObj = (id, label, type, minDate, shouldDisable) => {
     return {
       id,
       label,
@@ -65,7 +67,8 @@ const BookingForm = props => {
       value: data[id],
       onChange: datefun,
       error: errors[id],
-      minDate
+      minDate,
+      disabled: shouldDisable
     };
   };
 
@@ -93,35 +96,60 @@ const BookingForm = props => {
     <form onSubmit={event => onFormSubmit(event)}>
       <div className="form-group">
         {FormUtils.renderInput(
-          getInputArgObj("firstName", "First Name", "text")
+          getInputArgObj("firstName", "First Name", "text", shouldDisable)
         )}
-        {FormUtils.renderInput(getInputArgObj("lastName", "Last Name", "text"))}
+        {FormUtils.renderInput(
+          getInputArgObj("lastName", "Last Name", "text", shouldDisable)
+        )}
       </div>
       <div className="form-group">
-        {FormUtils.renderInput(getInputArgObj("address", "Address", "text"))}
+        {FormUtils.renderInput(
+          getInputArgObj("address", "Address", "text", shouldDisable)
+        )}
       </div>
       <div className="form-group">
         {FormUtils.renderDatepicker(
-          getDateArgObj("checkIn", "Check In", "text", utils.getDate())
+          getDateArgObj(
+            "checkIn",
+            "Check In",
+            "text",
+            utils.getDate(),
+            shouldDisable
+          )
         )}
         {FormUtils.renderDatepicker(
-          getDateArgObj("checkOut", "Check Out", "text", data.checkIn)
+          getDateArgObj(
+            "checkOut",
+            "Check Out",
+            "text",
+            data.checkIn,
+            shouldDisable
+          )
         )}
       </div>
       <div className="form-group">
-        {FormUtils.renderInput(getInputArgObj("adults", "Adults", "number"))}
         {FormUtils.renderInput(
-          getInputArgObj("children", "Children", "number")
+          getInputArgObj("adults", "Adults", "number", shouldDisable)
         )}
         {FormUtils.renderInput(
-          getInputArgObj("contactNumber", "Contact Number", "number")
+          getInputArgObj("children", "Children", "number", shouldDisable)
+        )}
+        {FormUtils.renderInput(
+          getInputArgObj(
+            "contactNumber",
+            "Contact Number",
+            "number",
+            shouldDisable
+          )
         )}
       </div>
       <div className="form-group">
         {FormUtils.renderInput(
-          getInputArgObj("roomCharges", "Room Charges", "number")
+          getInputArgObj("roomCharges", "Room Charges", "number", shouldDisable)
         )}
-        {FormUtils.renderInput(getInputArgObj("advance", "Advance", "number"))}
+        {FormUtils.renderInput(
+          getInputArgObj("advance", "Advance", "number", shouldDisable)
+        )}
       </div>
       <div className={classes.panel}>
         <ExpansionPanel
@@ -140,6 +168,7 @@ const BookingForm = props => {
                 color="primary"
                 aria-label="add"
                 onClick={onAddRoom}
+                disabled={shouldDisable}
               >
                 <AddIcon />
               </Fab>
@@ -156,7 +185,8 @@ const BookingForm = props => {
                     value: room.roomType,
                     onChange: event => selectfun(event, index),
                     options,
-                    error
+                    error,
+                    disabled: shouldDisable
                   })}
 
                   {FormUtils.renderSelect({
@@ -165,7 +195,8 @@ const BookingForm = props => {
                     value: room.roomNumber,
                     onChange: event => selectfun(event, index),
                     options: getRoomOptions(room.roomType),
-                    error: error ? " " : null
+                    error: error ? " " : null,
+                    disabled: shouldDisable
                   })}
 
                   <div>
@@ -201,7 +232,7 @@ const BookingForm = props => {
           "Submit",
           "primary",
           null,
-          Object.keys(errors).length ? true : false
+          Object.keys(errors).length || shouldDisable ? true : false
         )}
       </div>
     </form>

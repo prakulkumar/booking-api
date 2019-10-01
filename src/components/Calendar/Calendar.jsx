@@ -178,8 +178,8 @@ class Calendar extends Component {
     this.showBookingProcess(dateObj);
   };
 
-  handleRedirect = (bookingObj, roomObj) => {
-    this.props.onFormRedirect(bookingObj, roomObj);
+  handleRedirect = (bookingObj, roomObj, date) => {
+    this.props.onFormRedirect(bookingObj, roomObj, date);
   };
 
   handleCloseModal = () => {

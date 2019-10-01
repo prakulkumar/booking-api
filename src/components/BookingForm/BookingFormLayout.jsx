@@ -32,20 +32,17 @@ class BookingFormLayout extends Component {
       adults: "",
       children: 0,
       contactNumber: "",
-      rooms: [
-        {
-          roomNumber: "101",
-          roomType: "AC",
-          _id: "5d3430ad632e154594ebf4a3"
-        }
-      ],
+      rooms: [],
       roomCharges: "",
       advance: "",
       cancel: false
     },
     errors: {},
     allRooms: [],
-    availableRooms: []
+    availableRooms: [],
+    isEdit: false,
+    disable: false,
+    shouldDisable: false
   };
 
   async componentDidMount() {
@@ -60,11 +57,31 @@ class BookingFormLayout extends Component {
   }
 
   setViewBookingData = () => {
-    console.log("setViewBookingData");
+    const { selectedBooking } = this.props;
+    const booking = {
+      ...selectedBooking,
+      checkIn: selectedBooking.checkIn,
+      checkOut: selectedBooking.checkOut
+    };
+
+    this.setState({
+      data: booking,
+      disable: true,
+      shouldDisable: !this.state.isEdit
+    });
   };
 
   setNewBookingData = () => {
     console.log("setNewBookingData");
+    const { selectedRoom, selectedDate } = this.props;
+    console.log(selectedDate);
+    const data = { ...this.state.data };
+    const { roomNumber, roomType, _id } = selectedRoom;
+    const room = { roomNumber, roomType, _id };
+    data.rooms.push(room);
+    data.checkIn = selectedDate;
+    data.checkOut = selectedDate;
+    this.setState({ data });
   };
 
   handleInputChange = ({ currentTarget: input }) => {
@@ -171,6 +188,7 @@ class BookingFormLayout extends Component {
         avilableRooms={this.state.availableRooms}
         errors={this.state.errors}
         options={roomTypes}
+        shouldDisable={this.state.shouldDisable}
       />
     );
 

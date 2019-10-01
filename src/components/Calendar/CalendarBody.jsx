@@ -130,7 +130,7 @@ const getStandardCell = (...argument) => {
       key={arg.key}
       style={customStyle}
       className={arg.classes.tableCell}
-      onClick={() => arg.handleRedirect(arg.booking, arg.room)}
+      onClick={() => arg.handleRedirect(arg.booking, arg.room, arg.date)}
     >
       <ButtonBase
         disabled={arg.disable}
@@ -161,6 +161,7 @@ const getArgObj = (column, index, classes, dateObj) => {
   const key = `column_${index}`;
 
   const currentDateObj = utils.getDateObj(utils.getDate());
+
   const { month, year } = dateObj;
   const { month: currentMonth, year: currentYear } = currentDateObj;
   let disable = false;
@@ -170,6 +171,8 @@ const getArgObj = (column, index, classes, dateObj) => {
     handleRedirect =
       index >= currentDate || booking ? handleRedirect : () => {};
   }
+
+  const date = moment(`${dateObj.month + 1}/${index}/${dateObj.year}`).toDate();
 
   if (show) return { key, value: room.roomNumber, classes };
   else
@@ -181,6 +184,7 @@ const getArgObj = (column, index, classes, dateObj) => {
       color,
       booking,
       classes,
+      date,
       room
     };
 };
