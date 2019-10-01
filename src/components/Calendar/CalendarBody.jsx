@@ -157,7 +157,6 @@ const getStandardCell = (...argument) => {
 const getArgObj = (column, index, classes, dateObj) => {
   let { show, room, booking, handleRedirect, color } = column;
   const currentDate = moment().date();
-  handleRedirect = index >= currentDate || booking ? handleRedirect : () => {};
   const name = booking && getShortName(booking.firstName, booking.lastName);
   const key = `column_${index}`;
 
@@ -166,8 +165,11 @@ const getArgObj = (column, index, classes, dateObj) => {
   const { month: currentMonth, year: currentYear } = currentDateObj;
   let disable = false;
 
-  if (month === currentMonth && year === currentYear)
+  if (month === currentMonth && year === currentYear) {
     disable = index < currentDate ? true : false;
+    handleRedirect =
+      index >= currentDate || booking ? handleRedirect : () => {};
+  }
 
   if (show) return { key, value: room.roomNumber, classes };
   else
