@@ -29,12 +29,7 @@ class Dashboard extends Component {
     this.setState({ isRefresh: !this.state.isRefresh });
   };
 
-<<<<<<< HEAD
-  handleFormRedirect = (bookingObj, roomObj) => {
-    console.log(bookingObj, roomObj);
-=======
   handleFormRedirect = (bookingObj, roomObj, selectedDate) => {
->>>>>>> b124abbf8af519ff655282baba24ea379fde0dc6
     const selectedBooking = bookingObj && { ...bookingObj };
     const selectedRoom = { ...roomObj };
     this.setState({ selectedBooking, selectedRoom, selectedDate });
