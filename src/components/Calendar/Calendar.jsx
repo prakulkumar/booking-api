@@ -44,23 +44,27 @@ class Calendar extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.isRefresh && nextState.callCount === 0) {
       this.setState({ callCount: 1 });
-      this.showBookingProcess(this.state.dateObj);
-      nextProps.onRefresh();
+      // this.showBookingProcess(this.state.dateObj);
+      // nextProps.onRefresh();
+      // window.location.reload();
       this.setState({ callCount: 0 });
     }
     return true;
   }
 
   showBookingProcess = async dateObj => {
-    const bookings = await this.getBookings(dateObj);
+    const bookingsFromDb = await this.getBookings(dateObj);
+
+    const bookings = [...bookingsFromDb];
+
     if (bookings) {
       this.setState({ bookings });
-      this.showBookings(dateObj);
+      this.showBookings(dateObj, bookings);
     }
   };
 
-  showBookings = dateObj => {
-    const { rooms, bookings } = this.state;
+  showBookings = (dateObj, bookings) => {
+    const { rooms } = this.state;
 
     bookings &&
       bookings.forEach(booking => {
