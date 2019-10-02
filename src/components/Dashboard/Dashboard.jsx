@@ -26,7 +26,7 @@ class Dashboard extends Component {
   };
 
   handleRefresh = () => {
-    // this.setState({ isRefresh: !this.state.isRefresh });
+    this.setState({ isRefresh: !this.state.isRefresh });
   };
 
   handleFormRedirect = (bookingObj, roomObj, selectedDate) => {
@@ -58,7 +58,6 @@ class Dashboard extends Component {
       selectedRoom,
       selectedDate
     } = this.state;
-    const calendarData = { currentDate, isRefresh };
 
     return (
       <div className="mainContainer">
@@ -85,11 +84,12 @@ class Dashboard extends Component {
             />
             <Route path="/billing" component={BillingFormLayout} />
             <Route
-              path="/"
+              path={["/", "/calendar"]}
               exact
               render={props => (
                 <Calendar
-                  data={calendarData}
+                  currentDate={currentDate}
+                  isRefresh={isRefresh}
                   onRefresh={this.handleRefresh}
                   onFormRedirect={this.handleFormRedirect}
                   {...props}

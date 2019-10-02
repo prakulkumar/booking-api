@@ -16,13 +16,14 @@ class Calendar extends Component {
     bookings: [],
     rows: [],
     showModal: false,
-    loading: false
+    loading: false,
+    callCount: 0
   };
 
   constructor(props) {
     super(props);
 
-    const { currentDate: date } = props.data;
+    const date = props.currentDate;
     const dateObj = utils.getDateObj(date);
     const title = this.getTitle(date);
 
@@ -40,40 +41,51 @@ class Calendar extends Component {
     this.showBookingProcess(this.state.dateObj);
   }
 
-  componentDidUpdate() {
-    this.props.data.isRefresh && this.showBookingProcess();
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.isRefresh && nextState.callCount === 0) {
+      this.setState({ callCount: 1 });
+      this.showBookingProcess(this.state.dateObj);
+      nextProps.onRefresh();
+      this.setState({ callCount: 0 });
+    }
+    return true;
   }
 
   showBookingProcess = async dateObj => {
-    const { data, onRefresh } = this.props;
-    const bookings = await bookingService.getBookings(dateObj);
-
-    this.setState({ bookings, loading: false });
-    this.showBookings(dateObj, bookings);
-
-    data.isRefresh && onRefresh();
+    const bookings = await this.getBookings(dateObj);
+    if (bookings) {
+      this.setState({ bookings });
+      this.showBookings(dateObj);
+    }
   };
 
-  showBookings = (dateObj, bookings) => {
-    const { rooms } = this.state;
+  showBookings = dateObj => {
+    const { rooms, bookings } = this.state;
 
-    bookings.forEach(booking => {
-      let { checkIn, checkOut, months } = booking;
-      const color = utils.generateRandomColor();
-      if (months.length > 1) {
-        const updatedValue = this.getUpdatedValues(booking, dateObj);
-        checkIn = updatedValue.checkIn;
-        checkOut = updatedValue.checkOut;
-      }
+    bookings &&
+      bookings.forEach(booking => {
+        let { checkIn, checkOut, months } = booking;
+        const color = utils.generateRandomColor();
+        if (months.length > 1) {
+          const updatedValue = this.getUpdatedValues(booking, dateObj);
+          checkIn = updatedValue.checkIn;
+          checkOut = updatedValue.checkOut;
+        }
 
-      booking.rooms.forEach(bookedRoom => {
-        const { roomNumber } = rooms.find(room => {
-          return room._id === bookedRoom._id;
+        booking.rooms.forEach(bookedRoom => {
+          const { roomNumber } = rooms.find(room => {
+            return room._id === bookedRoom._id;
+          });
+
+          this.setBookingObjByRoom(
+            roomNumber,
+            checkIn,
+            checkOut,
+            booking,
+            color
+          );
         });
-
-        this.setBookingObjByRoom(roomNumber, checkIn, checkOut, booking, color);
       });
-    });
   };
 
   setBookingObjByRoom = (roomNumber, checkIn, checkOut, booking, color) => {
@@ -98,6 +110,13 @@ class Calendar extends Component {
     });
 
     this.setState({ rows: rowsArray });
+  };
+
+  getBookings = async dateObj => {
+    if (!this.state.loading) this.setState({ loading: true });
+    const bookings = await bookingService.getBookings(dateObj);
+    this.setState({ loading: false });
+    return bookings;
   };
 
   getTableHeaders = () => {
@@ -135,13 +154,13 @@ class Calendar extends Component {
 
     if (index === 0) {
       checkIn = utils.getDate(checkIn);
-      checkOut = utils.getDate(`${month + 1}/${days}/${year}`);
+      checkOut = new Date(`${month + 1}/${days}/${year}`);
     } else if (index === months.length - 1) {
-      checkIn = utils.getDate(`${month + 1}/1/${year}`);
+      checkIn = new Date(`${month + 1}/1/${year}`);
       checkOut = utils.getDate(checkOut);
     } else {
-      checkIn = utils.getDate(`${month + 1}/1/${year}`);
-      checkOut = utils.getDate(`${month + 1}/${days}/${year}`);
+      checkIn = new Date(`${month + 1}/1/${year}`);
+      checkOut = new Date(`${month + 1}/${days}/${year}`);
     }
 
     return { checkIn, checkOut };
@@ -161,7 +180,6 @@ class Calendar extends Component {
 
   handleRedirect = (bookingObj, roomObj, date) => {
     this.props.onFormRedirect(bookingObj, roomObj, date);
-    // this.setState({ showModal: true });
   };
 
   handleCloseModal = () => {
