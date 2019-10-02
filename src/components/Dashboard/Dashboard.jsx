@@ -26,7 +26,8 @@ class Dashboard extends Component {
   };
 
   handleRefresh = () => {
-    this.setState({ isRefresh: !this.state.isRefresh });
+    // this.setState({ isRefresh: !this.state.isRefresh });
+    window.location.reload();
   };
 
   handleFormRedirect = (bookingObj, roomObj, selectedDate) => {
