@@ -21,4 +21,12 @@ async function addBooking(booking) {
   }
 }
 
-export default { getBookings, addBooking };
+async function updateBooking(booking) {
+  try {
+    return await http.put(`${http.baseUrl}/bookings/update`, booking);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export default { getBookings, addBooking, updateBooking };

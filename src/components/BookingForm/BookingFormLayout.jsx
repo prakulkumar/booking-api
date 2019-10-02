@@ -35,13 +35,18 @@ class BookingFormLayout extends Component {
       rooms: [],
       roomCharges: "",
       advance: "",
-      cancel: false
+      bookingId: "",
+      bookingDate: null,
+      status: {
+        cancel: false,
+        checkedIn: false,
+        checkedOut: false
+      }
     },
     errors: {},
     allRooms: [],
     availableRooms: [],
     isEdit: false,
-    disable: false,
     shouldDisable: false
   };
 
@@ -61,7 +66,8 @@ class BookingFormLayout extends Component {
     const booking = {
       ...selectedBooking,
       checkIn: selectedBooking.checkIn,
-      checkOut: selectedBooking.checkOut
+      checkOut: selectedBooking.checkOut,
+      bookingId: selectedBooking._id
     };
 
     this.setState({
@@ -74,7 +80,6 @@ class BookingFormLayout extends Component {
   setNewBookingData = () => {
     console.log("setNewBookingData");
     const { selectedRoom, selectedDate } = this.props;
-    console.log(selectedDate);
     const data = { ...this.state.data };
     const { roomNumber, roomType, _id } = selectedRoom;
     const room = { roomNumber, roomType, _id };
@@ -127,22 +132,42 @@ class BookingFormLayout extends Component {
     this.setState({ data, errors });
   };
 
-  handleFormSubmit = async event => {
-    const data = this.state.data;
+  handleFormSubmit = event => {
     event.preventDefault();
-    const errors = FormUtils.validate(data, schema);
-    this.setState({ errors });
-    if (Object.keys(errors).length) return;
+    const data = this.state.data;
+    const errors = this.checkForErrors();
+    if (errors) return;
 
-    const bookingData = {
+    let bookingData = {
       ...data,
-      balance: data.roomCharges - data.advance,
-      bookingDate: utils.getDate()
+      balance: data.roomCharges - data.advance
     };
+    delete bookingData.bookingId;
+    if (!this.state.isEdit) {
+      bookingData["bookingDate"] = utils.getDate();
+      this.createBooking(bookingData);
+    } else {
+      this.updateBooking(bookingData);
+    }
+  };
 
+  createBooking = async bookingData => {
     const { status } = await bookingService.addBooking(bookingData);
     if (status === 200) this.openSnackBar("Booking Successfull", success, "/");
     else this.openSnackBar("Error Occurred", error);
+  };
+
+  updateBooking = async bookingData => {
+    const { status } = await bookingService.updateBooking(bookingData);
+    if (status === 200)
+      this.openSnackBar("Booking Updated Successfully", success, "/");
+    else this.openSnackBar("Error Occurred", error);
+  };
+
+  checkForErrors = () => {
+    const errors = FormUtils.validate(this.state.data, schema);
+    this.setState({ errors });
+    return Object.keys(errors).length;
   };
 
   handleAddRoom = () => {
@@ -174,6 +199,10 @@ class BookingFormLayout extends Component {
     redirectTo && this.props.history.push(redirectTo);
   };
 
+  handleEdit = () => {
+    this.setState({ isEdit: true, shouldDisable: false });
+  };
+
   render() {
     const cardContent = (
       <BookingForm
@@ -195,7 +224,7 @@ class BookingFormLayout extends Component {
     return (
       <div className="cardContainer">
         <Card
-          header={<BookingFormHeader />}
+          header={<BookingFormHeader onEdit={this.handleEdit} />}
           content={cardContent}
           maxWidth={700}
           margin="40px auto"

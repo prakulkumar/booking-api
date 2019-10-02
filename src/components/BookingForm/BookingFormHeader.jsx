@@ -6,26 +6,16 @@ import HotelIcon from "@material-ui/icons/Hotel";
 import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1
-  },
-  menuButton: {
-    marginRight: theme.spacing(2)
-  },
-  title: {
-    flexGrow: 1
-  }
-}));
+import useStyles from "./BookingFormStyle";
 
-const BookingFormHeader = () => {
+const BookingFormHeader = ({ onEdit }) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <div className={classes.formHeader}>
       <AppBar position="static">
         <Toolbar variant="dense">
-          <Typography variant="h6" className="title">
+          <Typography variant="h6" className={classes.formTitle}>
             Booking
           </Typography>
           <IconButton
@@ -33,6 +23,7 @@ const BookingFormHeader = () => {
             aria-controls="menu-appbar"
             aria-haspopup="true"
             color="inherit"
+            onClick={onEdit}
           >
             <EditIcon />
           </IconButton>

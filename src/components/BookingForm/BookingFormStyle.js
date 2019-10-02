@@ -27,5 +27,11 @@ export default makeStyles(theme => ({
   },
   deleteButton: {
     marginTop: 20
+  },
+  formHeader: {
+    flexGrow: 1
+  },
+  formTitle: {
+    flexGrow: 1
   }
 }));
