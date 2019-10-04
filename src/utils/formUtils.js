@@ -68,20 +68,21 @@ const renderDatepicker = args => <DatePicker name={args.id} {...args} />;
 */
 const renderSelect = args => <Select name={args.id} {...args} />;
 
-const renderButton = (type, size, label, color, className, disabled) => {
-  return (
-    <Button
-      disabled={disabled}
-      variant="contained"
-      type={type}
-      size={size}
-      color={color}
-      className={className}
-    >
-      {label}
-    </Button>
-  );
-};
+/*
+  renderButton
+  args:   type: string,
+          size: string,
+          label: string,
+          color: string,
+          className: classObject,
+          disabled: boolean,
+          onClick: function
+*/
+const renderButton = args => (
+  <Button variant="contained" {...args}>
+    {args.label}
+  </Button>
+);
 
 /*
    renderRadioGroup
@@ -93,24 +94,8 @@ const renderButton = (type, size, label, color, className, disabled) => {
                  handleChange: function (required)
                  radioButtons: array (required)
 */
-const renderRadioGroup = (
-  label,
-  ariaLabel,
-  name,
-  value,
-  onChange,
-  radioButtons,
-  customClass
-) => (
-  <RadioGroup
-    label={label}
-    ariaLabel={ariaLabel}
-    name={name}
-    value={value}
-    onChange={onChange}
-    radioButtons={radioButtons}
-    formGroupClass={customClass}
-  />
+const renderRadioGroup = args => (
+  <RadioGroup formGroupClass={args.customClass} {...args} />
 );
 
 export default {

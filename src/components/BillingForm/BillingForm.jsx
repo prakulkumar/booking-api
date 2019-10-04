@@ -93,14 +93,14 @@ const BillingForm = props => {
   return (
     <form onSubmit={event => onFormSubmit(event)}>
       <div className={classes.radioGroup}>
-        {FormUtils.renderRadioGroup(
-          "",
-          "taxInfo",
-          "tax",
-          data.tax,
-          onInputChange,
+        {FormUtils.renderRadioGroup({
+          label: "",
+          ariaLabel: "taxInfo",
+          name: "tax",
+          value: data.tax,
+          onChange: onInputChange,
           radioButtons
-        )}
+        })}
       </div>
       <div>
         {renderInputItems("Room Charges", 3000, "roomCharges")}

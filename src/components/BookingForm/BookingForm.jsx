@@ -29,6 +29,7 @@ const BookingForm = props => {
     data,
     errors,
     options,
+    onBack,
     shouldDisable
   } = props;
 
@@ -204,7 +205,7 @@ const BookingForm = props => {
                       color="secondary"
                       className={classes.deleteButton}
                       onClick={() => onDeleteRoom(index)}
-                      disabled={index === 0}
+                      disabled={index === 0 ? true : shouldDisable}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -218,22 +219,23 @@ const BookingForm = props => {
       </div>
 
       <div className={classes.button}>
-        {FormUtils.renderButton(
-          null,
-          "large",
-          "Back",
-          "secondary",
-          classes.buttonSec,
-          false
-        )}
-        {FormUtils.renderButton(
-          "submit",
-          "large",
-          "Submit",
-          "primary",
-          null,
-          Object.keys(errors).length || shouldDisable ? true : false
-        )}
+        {FormUtils.renderButton({
+          type: "button",
+          size: "large",
+          label: "Back",
+          color: "secondary",
+          className: classes.buttonSec,
+          disabled: false,
+          onClick: onBack
+        })}
+        {FormUtils.renderButton({
+          type: "submit",
+          size: "large",
+          label: "Submit",
+          color: "primary",
+          className: null,
+          disabled: Object.keys(errors).length || shouldDisable ? true : false
+        })}
       </div>
     </form>
   );

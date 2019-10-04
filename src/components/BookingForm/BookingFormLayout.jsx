@@ -89,6 +89,25 @@ class BookingFormLayout extends Component {
     this.setState({ data });
   };
 
+  createBooking = async bookingData => {
+    const { status } = await bookingService.addBooking(bookingData);
+    if (status === 200) this.openSnackBar("Booking Successfull", success, "/");
+    else this.openSnackBar("Error Occurred", error);
+  };
+
+  updateBooking = async bookingData => {
+    const { status } = await bookingService.updateBooking(bookingData);
+    if (status === 200)
+      this.openSnackBar("Booking Updated Successfully", success, "/");
+    else this.openSnackBar("Error Occurred", error);
+  };
+
+  checkForErrors = () => {
+    const errors = FormUtils.validate(this.state.data, schema);
+    this.setState({ errors });
+    return Object.keys(errors).length;
+  };
+
   handleInputChange = ({ currentTarget: input }) => {
     const { data, errors } = this.state;
     const updatedState = FormUtils.handleInputChange(
@@ -151,25 +170,6 @@ class BookingFormLayout extends Component {
     }
   };
 
-  createBooking = async bookingData => {
-    const { status } = await bookingService.addBooking(bookingData);
-    if (status === 200) this.openSnackBar("Booking Successfull", success, "/");
-    else this.openSnackBar("Error Occurred", error);
-  };
-
-  updateBooking = async bookingData => {
-    const { status } = await bookingService.updateBooking(bookingData);
-    if (status === 200)
-      this.openSnackBar("Booking Updated Successfully", success, "/");
-    else this.openSnackBar("Error Occurred", error);
-  };
-
-  checkForErrors = () => {
-    const errors = FormUtils.validate(this.state.data, schema);
-    this.setState({ errors });
-    return Object.keys(errors).length;
-  };
-
   handleAddRoom = () => {
     const data = { ...this.state.data };
     const rooms = [...data.rooms];
@@ -193,14 +193,18 @@ class BookingFormLayout extends Component {
     this.setState({ data });
   };
 
+  handleEdit = () => {
+    this.setState({ isEdit: true, shouldDisable: false });
+  };
+
+  handleBack = () => {
+    this.props.history.push("/");
+  };
+
   openSnackBar = (message, variant, redirectTo) => {
     const snakbarObj = { open: true, message, variant };
     this.props.onSnackbarEvent(snakbarObj);
     redirectTo && this.props.history.push(redirectTo);
-  };
-
-  handleEdit = () => {
-    this.setState({ isEdit: true, shouldDisable: false });
   };
 
   render() {
@@ -218,6 +222,7 @@ class BookingFormLayout extends Component {
         errors={this.state.errors}
         options={roomTypes}
         shouldDisable={this.state.shouldDisable}
+        onBack={this.handleBack}
       />
     );
 

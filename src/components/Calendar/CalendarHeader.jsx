@@ -10,9 +10,7 @@ import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounde
 import "./CalendarHeader.scss";
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    // flexGrow: 1
-  },
+  root: {},
   appBar: {
     backgroundColor: "#616161"
   },

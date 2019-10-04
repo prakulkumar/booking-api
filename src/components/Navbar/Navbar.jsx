@@ -17,20 +17,8 @@ const useStyles = makeStyles(theme => ({
 const HeaderNavbar = ({ onRefresh }) => {
   const classes = useStyles();
 
-  // const [open, setOpen] = React.useState(true);
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
-
   return (
     <div className={classes.root}>
-      {/* <Snackbar
-        open={open}
-        message={"I am snackbar"}
-        onClose={handleClose}
-        variant={"success"}
-      /> */}
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
