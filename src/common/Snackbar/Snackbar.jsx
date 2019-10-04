@@ -51,7 +51,7 @@ const CustomSnackbar = props => {
     message,
     onClose,
     variant,
-    timeout = 5000,
+    timeout = 3000,
     position = {}
   } = props;
   const classes = useStyles1();

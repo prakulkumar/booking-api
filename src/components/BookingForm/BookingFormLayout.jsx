@@ -236,21 +236,29 @@ class BookingFormLayout extends Component {
     this.updateBooking(data, "Booking Cancelled Successfully");
   };
 
-  onCheckIn = () => {
+  handleCheckIn = () => {
     const data = { ...this.state.data };
-    data.status = { ...data.status, checkIn: true };
+    data.status = { ...data.status, checkedIn: true };
     this.setState({ data });
     this.updateBooking(data, "Checked In Successfully");
   };
 
-  onCheckOut = () => {
+  handleCheckOut = () => {
     const data = { ...this.state.data };
-    data.status = { ...data.status, checkOut: true };
+    data.status = { ...data.status, checkedOut: true };
     this.setState({ data });
     this.updateBooking(data, "Checked Out Successfully");
   };
 
   render() {
+    const {
+      data,
+      allRooms,
+      availableRooms,
+      errors,
+      shouldDisable
+    } = this.state;
+
     const cardContent = (
       <BookingForm
         onDatePickerChange={this.handleDatePickerChange}
@@ -259,12 +267,12 @@ class BookingFormLayout extends Component {
         onFormSubmit={this.handleFormSubmit}
         onAddRoom={this.handleAddRoom}
         onDeleteRoom={this.handleDeleteRoom}
-        data={this.state.data}
-        allRooms={this.state.allRooms}
-        avilableRooms={this.state.availableRooms}
-        errors={this.state.errors}
+        data={data}
+        allRooms={allRooms}
+        avilableRooms={availableRooms}
+        errors={errors}
         options={roomTypes}
-        shouldDisable={this.state.shouldDisable}
+        shouldDisable={shouldDisable}
         onBack={this.handleBack}
       />
     );
@@ -274,6 +282,9 @@ class BookingFormLayout extends Component {
         <Card
           header={
             <BookingFormHeader
+              status={data.status}
+              checkIn={data.checkIn}
+              checkOut={data.checkOut}
               onEdit={this.handleEdit}
               onCancel={this.handleCancel}
               onCheckIn={this.handleCheckIn}
