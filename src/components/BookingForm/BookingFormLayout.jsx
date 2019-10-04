@@ -35,7 +35,6 @@ class BookingFormLayout extends Component {
       rooms: [],
       roomCharges: "",
       advance: "",
-      bookingId: "",
       bookingDate: null,
       status: {
         cancel: false,
@@ -66,8 +65,7 @@ class BookingFormLayout extends Component {
     const booking = {
       ...selectedBooking,
       checkIn: selectedBooking.checkIn,
-      checkOut: selectedBooking.checkOut,
-      bookingId: selectedBooking._id
+      checkOut: selectedBooking.checkOut
     };
 
     this.setState({
@@ -161,13 +159,33 @@ class BookingFormLayout extends Component {
       ...data,
       balance: data.roomCharges - data.advance
     };
-    delete bookingData.bookingId;
     if (!this.state.isEdit) {
       bookingData["bookingDate"] = utils.getDate();
       this.createBooking(bookingData);
     } else {
       this.updateBooking(bookingData);
     }
+  };
+
+  createBooking = async bookingData => {
+    const { status } = await bookingService.addBooking(bookingData);
+    if (status === 200) this.openSnackBar("Booking Successfull", success, "/");
+    else this.openSnackBar("Error Occurred", error);
+  };
+
+  updateBooking = async (
+    bookingData,
+    message = "Booking Updated Successfully"
+  ) => {
+    const { status } = await bookingService.updateBooking(bookingData);
+    if (status === 200) this.openSnackBar(message, success, "/");
+    else this.openSnackBar("Error Occurred", error);
+  };
+
+  checkForErrors = () => {
+    const errors = FormUtils.validate(this.state.data, schema);
+    this.setState({ errors });
+    return Object.keys(errors).length;
   };
 
   handleAddRoom = () => {
@@ -207,6 +225,31 @@ class BookingFormLayout extends Component {
     redirectTo && this.props.history.push(redirectTo);
   };
 
+  handleEdit = () => {
+    this.setState({ isEdit: true, shouldDisable: false });
+  };
+
+  handleCancel = () => {
+    const data = { ...this.state.data };
+    data.status = { ...data.status, cancel: true };
+    this.setState({ data });
+    this.updateBooking(data, "Booking Cancelled Successfully");
+  };
+
+  onCheckIn = () => {
+    const data = { ...this.state.data };
+    data.status = { ...data.status, checkIn: true };
+    this.setState({ data });
+    this.updateBooking(data, "Checked In Successfully");
+  };
+
+  onCheckOut = () => {
+    const data = { ...this.state.data };
+    data.status = { ...data.status, checkOut: true };
+    this.setState({ data });
+    this.updateBooking(data, "Checked Out Successfully");
+  };
+
   render() {
     const cardContent = (
       <BookingForm
@@ -229,7 +272,14 @@ class BookingFormLayout extends Component {
     return (
       <div className="cardContainer">
         <Card
-          header={<BookingFormHeader onEdit={this.handleEdit} />}
+          header={
+            <BookingFormHeader
+              onEdit={this.handleEdit}
+              onCancel={this.handleCancel}
+              onCheckIn={this.handleCheckIn}
+              onCheckOut={this.handleCheckOut}
+            />
+          }
           content={cardContent}
           maxWidth={700}
           margin="40px auto"

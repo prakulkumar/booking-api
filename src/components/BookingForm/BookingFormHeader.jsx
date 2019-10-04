@@ -8,7 +8,7 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 import useStyles from "./BookingFormStyle";
 
-const BookingFormHeader = ({ onEdit }) => {
+const BookingFormHeader = ({ onEdit, onCancel, onCheckIn, onCheckOut }) => {
   const classes = useStyles();
 
   return (
@@ -32,6 +32,7 @@ const BookingFormHeader = ({ onEdit }) => {
             aria-controls="menu-appbar"
             aria-haspopup="true"
             color="inherit"
+            onClick={onCancel}
           >
             <DeleteForeverIcon />
           </IconButton>
@@ -40,6 +41,7 @@ const BookingFormHeader = ({ onEdit }) => {
             aria-controls="menu-appbar"
             aria-haspopup="true"
             color="inherit"
+            onClick={onCheckIn}
           >
             <HotelIcon />
           </IconButton>
@@ -48,6 +50,7 @@ const BookingFormHeader = ({ onEdit }) => {
             aria-controls="menu-appbar"
             aria-haspopup="true"
             color="inherit"
+            onClick={onCheckOut}
           >
             <MeetingRoomIcon />
           </IconButton>
