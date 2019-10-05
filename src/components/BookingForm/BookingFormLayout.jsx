@@ -50,11 +50,11 @@ class BookingFormLayout extends Component {
   };
 
   async componentDidMount() {
-    if (this.props.selectedRoom === null) this.props.history.push("/");
-
     const { pathname } = this.props.location;
-    if (pathname === "/booking/viewBooking") this.setViewBookingData();
-    else if (pathname === "/booking/newBooking") this.setNewBookingData();
+    if (this.props.selectedRoom !== null) {
+      if (pathname === "/booking/viewBooking") this.setViewBookingData();
+      else if (pathname === "/booking/newBooking") this.setNewBookingData();
+    } else this.props.history.replace("/");
   }
 
   setViewBookingData = () => {

@@ -16,10 +16,10 @@ class Dashboard extends Component {
   state = {
     currentDate: utils.getDate(),
     isRefresh: false,
-    selectedBooking: null,
+    selectedBooking: {},
     allRooms: [],
     selectedRoom: null,
-    selectedDate: null,
+    selectedDate: utils.getDate(),
     snackbarObj: {
       open: false,
       message: "",
