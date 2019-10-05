@@ -9,4 +9,20 @@ async function getRooms() {
   }
 }
 
-export default { getRooms };
+async function getAvailableRooms(checkIn, checkOut, bookingId = null) {
+  try {
+    const { data: availableRooms } = await http.post(
+      `${http.baseUrl}/rooms/available`,
+      {
+        checkIn,
+        checkOut,
+        bookingId
+      }
+    );
+    return availableRooms;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export default { getRooms, getAvailableRooms };

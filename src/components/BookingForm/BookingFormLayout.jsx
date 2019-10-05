@@ -18,7 +18,8 @@ const roomTypes = [
   { label: "AC", value: "AC" },
   { label: "Non AC", value: "Non AC" },
   { label: "Deluxe", value: "Deluxe" },
-  { label: "Suite", value: "Suite" }
+  { label: "Suite", value: "Suite" },
+  { label: "Dormitory", value: "Dormitory" }
 ];
 
 class BookingFormLayout extends Component {
@@ -43,7 +44,6 @@ class BookingFormLayout extends Component {
       }
     },
     errors: {},
-    allRooms: [],
     availableRooms: [],
     isEdit: false,
     shouldDisable: false
@@ -52,9 +52,6 @@ class BookingFormLayout extends Component {
   async componentDidMount() {
     if (this.props.selectedRoom === null) this.props.history.push("/");
 
-    const allRooms = await roomService.getRooms();
-    this.setState({ allRooms, availableRooms: allRooms });
-
     const { pathname } = this.props.location;
     if (pathname === "/booking/viewBooking") this.setViewBookingData();
     else if (pathname === "/booking/newBooking") this.setNewBookingData();
@@ -62,6 +59,7 @@ class BookingFormLayout extends Component {
 
   setViewBookingData = () => {
     const { selectedBooking } = this.props;
+    const availableRooms = this.props.selectedBooking.rooms;
     const booking = {
       ...selectedBooking,
       checkIn: selectedBooking.checkIn,
@@ -71,12 +69,12 @@ class BookingFormLayout extends Component {
     this.setState({
       data: booking,
       disable: true,
+      availableRooms,
       shouldDisable: !this.state.isEdit
     });
   };
 
-  setNewBookingData = () => {
-    console.log("setNewBookingData");
+  setNewBookingData = async () => {
     const { selectedRoom, selectedDate } = this.props;
     const data = { ...this.state.data };
     const { roomNumber, roomType, _id } = selectedRoom;
@@ -84,7 +82,17 @@ class BookingFormLayout extends Component {
     data.rooms.push(room);
     data.checkIn = selectedDate;
     data.checkOut = selectedDate;
-    this.setState({ data });
+
+    const availableRooms = await this.getAvailableRooms(
+      data.checkIn,
+      data.checkOut
+    );
+    availableRooms && console.log(availableRooms.length);
+    this.setState({ data, availableRooms });
+  };
+
+  getAvailableRooms = async (checkIn, checkOut) => {
+    return await roomService.getAvailableRooms(checkIn, checkOut);
   };
 
   createBooking = async bookingData => {
@@ -117,12 +125,51 @@ class BookingFormLayout extends Component {
     this.setState({ data: updatedState.data, errors: updatedState.errors });
   };
 
-  handleDatePickerChange = (event, id) => {
+  handleDatePickerChange = async (event, id) => {
     const data = { ...this.state.data };
+    let rooms = [...data.rooms];
     data[id] = utils.getDate(event);
     if (id === "checkIn") data["checkOut"] = data[id];
+    const availableRooms = await this.getAvailableRooms(
+      data.checkIn,
+      data.checkOut
+    );
 
-    this.setState({ data });
+    data.rooms = this.getUpdatedRooms(availableRooms, rooms);
+    this.setState({ data, availableRooms });
+  };
+
+  getUpdatedRooms = (availableRooms, rooms) => {
+    const roomsIndex = this.getIndexesToRemoveRoomsFromState(
+      availableRooms,
+      rooms
+    );
+    roomsIndex.forEach(index => {
+      rooms[index] = availableRooms.find(
+        r => r.roomType === rooms[index].roomType
+      );
+    });
+
+    return rooms;
+  };
+
+  getIndexesToRemoveRoomsFromState = (availableRooms, rooms) => {
+    const roomsIndex = [];
+    const r = rooms.filter(room => {
+      let a = availableRooms.findIndex(
+        availableRoom => availableRoom.roomNumber === room.roomNumber
+      );
+      return a === -1 ? room : null;
+    });
+
+    r.forEach(currentRoom => {
+      const index = rooms.findIndex(
+        room => room.roomNumber === currentRoom.roomNumber
+      );
+      roomsIndex.push(index);
+    });
+
+    return roomsIndex;
   };
 
   handleSelectChange = (event, index) => {
@@ -138,7 +185,7 @@ class BookingFormLayout extends Component {
     if (name === "roomType")
       room = this.state.availableRooms.find(room => room.roomType === value);
     else if (name === "roomNumber")
-      room = this.state.allRooms.find(room => room.roomNumber === value);
+      room = this.state.availableRooms.find(room => room.roomNumber === value);
 
     rooms[index] = {
       roomNumber: room.roomNumber,
@@ -251,13 +298,7 @@ class BookingFormLayout extends Component {
   };
 
   render() {
-    const {
-      data,
-      allRooms,
-      availableRooms,
-      errors,
-      shouldDisable
-    } = this.state;
+    const { data, availableRooms, errors, shouldDisable } = this.state;
 
     const cardContent = (
       <BookingForm
@@ -268,8 +309,7 @@ class BookingFormLayout extends Component {
         onAddRoom={this.handleAddRoom}
         onDeleteRoom={this.handleDeleteRoom}
         data={data}
-        allRooms={allRooms}
-        avilableRooms={availableRooms}
+        availableRooms={availableRooms}
         errors={errors}
         options={roomTypes}
         shouldDisable={shouldDisable}

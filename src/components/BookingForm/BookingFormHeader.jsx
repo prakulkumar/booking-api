@@ -20,10 +20,6 @@ const BookingFormHeader = props => {
     checkOut
   } = props;
 
-  console.log("currentDate", moment().toDate());
-  console.log("checkIn", moment(checkIn).toDate());
-  console.log("comparison", moment().toDate() >= moment(checkIn).toDate());
-
   return (
     <div className={classes.formHeader}>
       <AppBar position="static">

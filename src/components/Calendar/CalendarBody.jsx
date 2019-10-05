@@ -172,7 +172,7 @@ const getArgObj = (column, index, classes, dateObj) => {
       index >= currentDate || booking ? handleRedirect : () => {};
   }
 
-  const date = moment(`${dateObj.month + 1}/${index}/${dateObj.year}`).toDate();
+  const date = new Date(`${dateObj.month + 1}/${index}/${dateObj.year}`);
 
   if (show) return { key, value: room.roomNumber, classes };
   else

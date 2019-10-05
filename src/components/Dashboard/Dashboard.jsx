@@ -6,6 +6,7 @@ import Navbar from "./../Navbar/Navbar";
 import Snackbar from "../../common/Snackbar/Snackbar";
 import BookingFormLayout from "../BookingForm/BookingFormLayout";
 import BillingFormLayout from "../BillingForm/BillingFormLayout";
+import roomService from "../../services/roomService";
 
 import "./Dashboard.scss";
 import utils from "../../utils/utils";
@@ -16,6 +17,7 @@ class Dashboard extends Component {
     currentDate: utils.getDate(),
     isRefresh: false,
     selectedBooking: null,
+    allRooms: [],
     selectedRoom: null,
     selectedDate: null,
     snackbarObj: {
@@ -24,6 +26,11 @@ class Dashboard extends Component {
       variant: constants.snackbarVariants.success
     }
   };
+
+  async componentDidMount() {
+    const allRooms = await roomService.getRooms();
+    this.setState({ allRooms });
+  }
 
   handleRefresh = () => {
     // this.setState({ isRefresh: !this.state.isRefresh });
@@ -57,7 +64,8 @@ class Dashboard extends Component {
       snackbarObj,
       selectedBooking,
       selectedRoom,
-      selectedDate
+      selectedDate,
+      allRooms
     } = this.state;
 
     return (
@@ -85,7 +93,7 @@ class Dashboard extends Component {
             />
             <Route path="/billing" component={BillingFormLayout} />
             <Route
-              path={["/", "/calendar"]}
+              path="/"
               exact
               render={props => (
                 <Calendar
@@ -93,6 +101,7 @@ class Dashboard extends Component {
                   isRefresh={isRefresh}
                   onRefresh={this.handleRefresh}
                   onFormRedirect={this.handleFormRedirect}
+                  allRooms={allRooms}
                   {...props}
                 />
               )}

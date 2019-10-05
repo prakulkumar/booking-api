@@ -25,7 +25,7 @@ const BookingForm = props => {
     onSelectChange: selectfun,
     onAddRoom,
     onDeleteRoom,
-    avilableRooms,
+    availableRooms,
     data,
     errors,
     options,
@@ -33,12 +33,12 @@ const BookingForm = props => {
     shouldDisable
   } = props;
 
-  // const roomOptions = avilableRooms.map(room => {
+  // const roomOptions = availableRooms.map(room => {
   //   return { label: room.roomNumber, value: room.roomNumber };
   // });
 
   // data.rooms.map(roomId =>
-  //   avilableRooms.filter(room => {
+  //   availableRooms.filter(room => {
   //     if (room._id === roomId) selectedRooms.push(room);
   //     return room;
   //   })
@@ -74,9 +74,9 @@ const BookingForm = props => {
   };
 
   const getRoomOptions = roomType => {
-    if (avilableRooms.length === 0) return [];
+    if (availableRooms.length === 0) return [];
 
-    const roomsByType = avilableRooms.filter(
+    const roomsByType = availableRooms.filter(
       room => room.roomType === roomType
     );
     return roomsByType.map(room => {
