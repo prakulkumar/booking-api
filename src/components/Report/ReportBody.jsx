@@ -1,30 +1,35 @@
-import React from "react";
-import utils from "../../utils/utils";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { Component, useRef } from "react";
+import ReactToPrint from "react-to-print";
+import ReactToPdf from "react-to-pdf";
+
 import { Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+
 import FormUtils from "../../utils/formUtils";
+import utils from "../../utils/utils";
 
 const useStyles = makeStyles(theme => ({
-  button: {
+  btnGroup: {
     marginTop: 20,
     textAlign: "right"
   },
-  buttonSec: {
+  btnSecondary: {
     marginRight: 20
   }
 }));
 
-const ReportBody = ({ booking }) => {
-  const classes = useStyles();
+let booking;
+const pdfComponentRef = React.createRef();
 
-  const getFullName = () => `${booking.firstName} ${booking.lastName}`;
+class ReportGenerator extends Component {
+  getFullName = () => `${booking.firstName} ${booking.lastName}`;
 
-  const getNumberOfGuests = () =>
+  getNumberOfGuests = () =>
     parseInt(booking.adults) + parseInt(booking.children);
 
-  return (
-    <React.Fragment>
-      <div className="report">
+  render() {
+    return (
+      <div className="report" ref={pdfComponentRef}>
         <div className="report__container">
           <div className="report__header-primary">
             <Typography variant="h4">RECEIPT</Typography>
@@ -51,7 +56,7 @@ const ReportBody = ({ booking }) => {
           <div className="report__section">
             <div className="report-row">
               <span className="report-key">Name</span>
-              <span className="report-value">{getFullName()}</span>
+              <span className="report-value">{this.getFullName()}</span>
             </div>
             <div className="report-row">
               <span className="report-key">Contact Number</span>
@@ -88,7 +93,7 @@ const ReportBody = ({ booking }) => {
             </div>
             <div className="report-row">
               <span className="report-key">No of Guests</span>
-              <span className="report-value">{getNumberOfGuests()}</span>
+              <span className="report-value">{this.getNumberOfGuests()}</span>
             </div>
             <div className="report-row">
               <span className="report-key">No of Nights</span>
@@ -155,26 +160,45 @@ const ReportBody = ({ booking }) => {
           </div>
         </div>
       </div>
+    );
+  }
+}
 
-      <div className={classes.button}>
-        {FormUtils.renderButton({
-          type: "button",
-          size: "large",
-          label: "Print",
-          color: "secondary",
-          className: classes.buttonSec,
-          onClick: () => {}
-        })}
-        {FormUtils.renderButton({
-          type: "submit",
-          size: "large",
-          label: "Download",
-          color: "primary",
-          className: null,
-          onClick: () => {}
-        })}
+const ReportBody = props => {
+  const classes = useStyles();
+  const componentRef = useRef();
+  booking = props.booking;
+  return (
+    <div>
+      <ReportGenerator ref={componentRef} />
+      <div className={classes.btnGroup}>
+        <ReactToPrint
+          trigger={() =>
+            FormUtils.renderButton({
+              type: "button",
+              size: "large",
+              label: "Print",
+              color: "secondary",
+              className: classes.btnSecondary,
+              onClick: () => {}
+            })
+          }
+          content={() => componentRef.current}
+        />
+        <ReactToPdf targetRef={pdfComponentRef} filename="report.pdf">
+          {({ toPdf }) =>
+            FormUtils.renderButton({
+              type: "submit",
+              size: "large",
+              label: "Download",
+              color: "primary",
+              className: null,
+              onClick: toPdf
+            })
+          }
+        </ReactToPdf>
       </div>
-    </React.Fragment>
+    </div>
   );
 };
 
