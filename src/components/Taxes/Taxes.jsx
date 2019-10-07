@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import taxService from "../../services/taxService";
+
 import {
   DialogActions,
   DialogContent,
@@ -25,35 +27,28 @@ const useStyles = makeStyles(theme => ({
 
 const Taxes = ({ onClose }) => {
   const classes = useStyles();
-  const taxes = [
-    { _id: 1, greaterThan: 0, lessThanAndEqual: 2000, taxPercent: 3 },
-    { _id: 2, greaterThan: 2000, lessThanAndEqual: 5000, taxPercent: 10 },
-    { _id: 3, greaterThan: 5000, taxPercent: 18 }
-  ];
+  const [taxSlabs, setTaxSlabs] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const taxSlabs = await taxService.getTaxSlabs();
+      setTaxSlabs(taxSlabs);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <React.Fragment>
       <DialogTitle>Tax Slabs</DialogTitle>
       <DialogContent>
-        {taxes.map(taxInfo => (
+        {taxSlabs.map(taxInfo => (
           <div key={taxInfo._id} className={classes.formGroup}>
             <Typography
               display={"block"}
               nowrap={"true"}
               className={classes.inputItems}
             >
-              {/* {"Greater than "(
-                <span className={classes.span}>{taxInfo.greaterThan}</span>
-              )(
-                taxInfo.lessThanAndEqual
-                  ? "and less than equal to "(
-                      <span className={classes.span}>
-                        {taxInfo.lessThanAndEqual}
-                      </span>
-                    )
-                  : ""
-              )}
-              } */}
               Greater Than{" "}
               {<span className={classes.span}>{taxInfo.greaterThan}</span>}{" "}
               {taxInfo.lessThanAndEqual ? "and less than equal to " : ""}

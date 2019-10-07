@@ -22,6 +22,7 @@ class BillingFormLayout extends Component {
       taxStatus: "withoutTax"
     },
     errors: {},
+    taxSlabs: [],
     payment: {
       cash: { checked: false, disable: true },
       card: { checked: false, disable: true },
