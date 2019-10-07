@@ -4,6 +4,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import Calendar from "./../Calendar/Calendar";
 import Navbar from "./../Navbar/Navbar";
 import Snackbar from "../../common/Snackbar/Snackbar";
+import Dialog from "./../../common/Dialog/Dialog";
 import BookingFormLayout from "../BookingForm/BookingFormLayout";
 import BillingFormLayout from "../BillingForm/BillingFormLayout";
 import roomService from "../../services/roomService";
@@ -12,6 +13,7 @@ import "./Dashboard.scss";
 import utils from "../../utils/utils";
 import constants from "../../utils/constants";
 import Report from "../Report/Report";
+import Taxes from "../Taxes/Taxes";
 
 class Dashboard extends Component {
   state = {
@@ -25,6 +27,14 @@ class Dashboard extends Component {
       open: false,
       message: "",
       variant: constants.snackbarVariants.success
+    },
+    dialog: {
+      open: false,
+      contentOf: "",
+      size: "sm",
+      openFor: {
+        taxes: false
+      }
     }
   };
 
@@ -32,6 +42,21 @@ class Dashboard extends Component {
     const allRooms = await roomService.getRooms();
     this.setState({ allRooms });
   }
+
+  handleDialog = (showFor, size) => {
+    const dialog = { ...this.state.dialog };
+    const openFor = { ...dialog.openFor };
+    openFor[showFor] = !openFor[showFor];
+    dialog.open = !dialog.open;
+    dialog.contentOf = showFor;
+    dialog.size = size || "sm";
+    dialog.openFor = openFor;
+    this.setState({ dialog });
+  };
+
+  handleShowTaxes = () => {
+    this.handleDialog("taxes");
+  };
 
   handleRefresh = () => {
     window.location.reload();
@@ -82,7 +107,8 @@ class Dashboard extends Component {
       selectedBooking,
       selectedRoom,
       selectedDate,
-      allRooms
+      allRooms,
+      dialog
     } = this.state;
 
     return (
@@ -95,9 +121,20 @@ class Dashboard extends Component {
         />
         <Navbar
           onRefresh={this.handleRefresh}
+          showTaxes={this.handleShowTaxes}
           path={this.props.location.pathname}
           onRedirectFromNavbar={this.handleRedirectFromNavbar}
         />
+        <Dialog
+          open={dialog.open}
+          onClose={() => this.handleDialog(dialog.contentOf)}
+          size={dialog.size}
+        >
+          {dialog.openFor.taxes && (
+            <Taxes onClose={() => this.handleDialog(dialog.contentOf)} />
+          )}
+        </Dialog>
+
         <div className="subContainer">
           <Switch>
             <Route

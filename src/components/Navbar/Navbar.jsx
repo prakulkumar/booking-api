@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
-import "./Navbar.scss";
 
 const useStyles = makeStyles(theme => ({
   stepIn: {
@@ -15,10 +14,13 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1
+  },
+  buttonTaxes: {
+    marginRight: 20
   }
 }));
 
-const HeaderNavbar = ({ onRefresh, path, onRedirectFromNavbar }) => {
+const HeaderNavbar = ({ onRefresh, path, onRedirectFromNavbar, showTaxes }) => {
   const classes = useStyles();
 
   return (
@@ -30,6 +32,13 @@ const HeaderNavbar = ({ onRefresh, path, onRedirectFromNavbar }) => {
               STEPIN
             </div>
           </Typography>
+          <Button
+            className={classes.buttonTaxes}
+            color="inherit"
+            onClick={() => showTaxes()}
+          >
+            Taxes
+          </Button>
           {path === "/" && (
             <Button color="inherit" onClick={() => onRefresh()}>
               Refresh
