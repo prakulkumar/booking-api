@@ -26,7 +26,7 @@ class BookingFormLayout extends Component {
   state = {
     data: {
       hotelName: "Hotel Black Rose",
-      hotelAddress: "#234 street, Bengalore",
+      hotelAddress: "#234 street, Bangalore",
       firstName: "",
       lastName: "",
       address: "",
