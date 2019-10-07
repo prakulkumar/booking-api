@@ -6,6 +6,7 @@ import schemas from "../../utils/joiUtils";
 import FormUtils from "../../utils/formUtils";
 import constants from "../../utils/constants";
 
+import taxService from "../../services/taxService";
 import bookingService from "../../services/bookingService";
 import utils from "../../utils/utils";
 const { success, error } = constants.snackbarVariants;
@@ -23,6 +24,7 @@ class BillingFormLayout extends Component {
     },
     errors: {},
     taxSlabs: [],
+    roomCharges: "",
     payment: {
       cash: { checked: false, disable: true },
       card: { checked: false, disable: true },
@@ -30,11 +32,62 @@ class BillingFormLayout extends Component {
     }
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    const taxSlabs = await taxService.getTaxSlabs();
     const { selectedBooking, history } = this.props;
     if (selectedBooking === null) history.replace("/");
-    else this.setState({ selectedBooking });
+    else {
+      const roomCharges = selectedBooking.roomCharges;
+      this.setState({ selectedBooking, taxSlabs, roomCharges });
+    }
   }
+
+  implementTaxes = () => {
+    const obj = this.getUpdatedRoomCharges(this.state.roomCharges);
+    this.calculateRoomCharges(obj.roomCharges, obj.taxPercent, "withTax");
+  };
+
+  calculateRoomCharges = (roomCharges, taxPercent, taxType) => {
+    const selectedBooking = { ...this.state.selectedBooking };
+    const balance = roomCharges - parseInt(selectedBooking.advance);
+
+    selectedBooking.roomCharges = roomCharges.toString();
+    selectedBooking.balance = balance.toString();
+
+    const data = { ...this.state.data };
+    data.taxPercent = taxPercent;
+    data.taxStatus = taxType;
+
+    this.setState({ selectedBooking, data });
+  };
+
+  removeTaxes = () => {
+    this.calculateRoomCharges(this.state.roomCharges, null, "withoutTax");
+  };
+
+  getUpdatedRoomCharges = roomCharges => {
+    roomCharges = parseInt(roomCharges);
+    const taxSlabs = this.state.taxSlabs;
+    let taxPercent = 1;
+
+    for (let taxSlab of taxSlabs) {
+      if (taxSlab.lessThanAndEqual) {
+        const { greaterThan, lessThanAndEqual } = taxSlab;
+        if (roomCharges > greaterThan && roomCharges <= lessThanAndEqual) {
+          taxPercent = taxSlab.taxPercent;
+          break;
+        }
+      } else {
+        taxPercent = taxSlab.taxPercent;
+        break;
+      }
+    }
+
+    return {
+      roomCharges: roomCharges + (roomCharges * taxPercent) / 100,
+      taxPercent
+    };
+  };
 
   handleInputChange = ({ currentTarget: input }) => {
     const { data, errors } = this.state;
@@ -44,13 +97,14 @@ class BillingFormLayout extends Component {
       errors,
       schema
     );
+
     this.setState({ data: updatedState.data, errors: updatedState.errors });
   };
 
   handleRadioGroupChange = event => {
-    const data = { ...this.state.data };
-    data.taxStatus = event.currentTarget.value;
-    this.setState({ data });
+    const value = event.currentTarget.value;
+    if (value === "withTax") this.implementTaxes();
+    else if (value === "withoutTax") this.removeTaxes();
   };
 
   handleCheckboxChange = (event, name) => {
@@ -88,7 +142,8 @@ class BillingFormLayout extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    const data = this.state.data;
+    const data = { ...this.state.data };
+
     const errors = FormUtils.validate(data, schema);
     if (data.cash || data.card || data.wallet) delete errors.customError;
     else errors.customError = "Please select any payment mode";
@@ -106,9 +161,11 @@ class BillingFormLayout extends Component {
     this.setState({ errors });
     if (Object.keys(errors).length) return;
 
-    const { selectedBooking } = this.props;
+    const { selectedBooking } = this.state;
     selectedBooking.checkedOutTime = utils.getTime();
     selectedBooking.status = { ...selectedBooking.status, checkedOut: true };
+    selectedBooking.totalAmount = selectedBooking.roomCharges;
+    selectedBooking.roomCharges = this.state.roomCharges;
     const paymentData = { ...selectedBooking, payment: data };
     this.updateBookingPayment(paymentData);
   };

@@ -112,14 +112,22 @@ class ReportGenerator extends Component {
                 &#8377; {booking.roomCharges}
               </span>
             </div>
-            <div className="report-row">
-              <span className="report-key">Tax</span>
-              <span className="report-value">3%</span>
-            </div>
-            <div className="report-row">
-              <span className="report-key">Total</span>
-              <span className="report-value">&#8377; 11,000</span>
-            </div>
+            {booking.payment.taxStatus === "withTax" && (
+              <React.Fragment>
+                <div className="report-row">
+                  <span className="report-key">Tax</span>
+                  <span className="report-value">
+                    {booking.payment.taxPercent}%
+                  </span>
+                </div>
+                <div className="report-row">
+                  <span className="report-key">Total</span>
+                  <span className="report-value">
+                    &#8377; {booking.totalAmount}
+                  </span>
+                </div>
+              </React.Fragment>
+            )}
             <div className="report-row">
               <span className="report-key">Advance</span>
               <span className="report-value">&#8377; {booking.advance}</span>
