@@ -50,3 +50,14 @@
     margin-right: 10px;
   }
 }
+
+.btn {
+  &-group {
+    margin-top: 20px;
+    text-align: right;
+  }
+
+  &-secondary {
+    margin-right: 20px;
+  }
+}
