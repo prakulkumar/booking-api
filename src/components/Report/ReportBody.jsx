@@ -174,11 +174,10 @@ class ReportGenerator extends Component {
 
 const ReportBody = props => {
   const classes = useStyles();
-  const componentRef = useRef();
   booking = props.booking;
   return (
     <div>
-      <ReportGenerator ref={componentRef} />
+      <ReportGenerator />
       <div className={classes.btnGroup}>
         <ReactToPrint
           trigger={() =>
@@ -191,7 +190,7 @@ const ReportBody = props => {
               onClick: () => {}
             })
           }
-          content={() => componentRef.current}
+          content={() => pdfComponentRef.current}
         />
         <ReactToPdf targetRef={pdfComponentRef} filename="report.pdf">
           {({ toPdf }) =>
