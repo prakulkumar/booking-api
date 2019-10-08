@@ -3,26 +3,29 @@ import { Route, Switch, Redirect } from "react-router-dom";
 
 import Calendar from "./../Calendar/Calendar";
 import Navbar from "./../Navbar/Navbar";
-import Snackbar from "../../common/Snackbar/Snackbar";
-import Dialog from "./../../common/Dialog/Dialog";
 import BookingFormLayout from "../BookingForm/BookingFormLayout";
 import BillingFormLayout from "../BillingForm/BillingFormLayout";
-import roomService from "../../services/roomService";
-
-import "./Dashboard.scss";
-import utils from "../../utils/utils";
-import constants from "../../utils/constants";
 import Report from "../Report/Report";
 import Taxes from "../Taxes/Taxes";
+import POSDialog from "../POS/POSDialog";
+import Snackbar from "../../common/Snackbar/Snackbar";
+import Dialog from "./../../common/Dialog/Dialog";
+
+import roomService from "../../services/roomService";
+import utils from "../../utils/utils";
+import constants from "../../utils/constants";
+import "./Dashboard.scss";
 
 class Dashboard extends Component {
   state = {
     currentDate: utils.getDate(),
     isRefresh: false,
     selectedBooking: null,
+    allBookings: [],
     allRooms: [],
     selectedRoom: null,
     selectedDate: utils.getDate(),
+    posDialogTitle: "",
     snackbarObj: {
       open: false,
       message: "",
@@ -33,7 +36,8 @@ class Dashboard extends Component {
       contentOf: "",
       size: "sm",
       openFor: {
-        taxes: false
+        taxes: false,
+        pos: false
       }
     }
   };
@@ -42,6 +46,10 @@ class Dashboard extends Component {
     const allRooms = await roomService.getRooms();
     this.setState({ allRooms });
   }
+
+  setAllBookings = allBookings => {
+    this.setState({ allBookings });
+  };
 
   handleDialog = (showFor, size) => {
     const dialog = { ...this.state.dialog };
@@ -56,6 +64,11 @@ class Dashboard extends Component {
 
   handleShowTaxes = () => {
     this.handleDialog("taxes");
+  };
+
+  handleShowPOSDialog = title => {
+    this.setState({ posDialogTitle: title });
+    this.handleDialog("pos");
   };
 
   handleRefresh = () => {
@@ -109,7 +122,9 @@ class Dashboard extends Component {
       selectedRoom,
       selectedDate,
       allRooms,
-      dialog
+      allBookings,
+      dialog,
+      posDialogTitle
     } = this.state;
 
     return (
@@ -123,6 +138,7 @@ class Dashboard extends Component {
         <Navbar
           onRefresh={this.handleRefresh}
           showTaxes={this.handleShowTaxes}
+          showPOSDialog={this.handleShowPOSDialog}
           path={this.props.location.pathname}
           onRedirectFromNavbar={this.handleRedirectFromNavbar}
         />
@@ -133,6 +149,13 @@ class Dashboard extends Component {
         >
           {dialog.openFor.taxes && (
             <Taxes onClose={() => this.handleDialog(dialog.contentOf)} />
+          )}
+          {dialog.openFor.pos && (
+            <POSDialog
+              allBookings={allBookings}
+              title={posDialogTitle}
+              onClose={() => this.handleDialog(dialog.contentOf)}
+            />
           )}
         </Dialog>
 
@@ -178,6 +201,7 @@ class Dashboard extends Component {
                   onRefresh={this.handleRefresh}
                   onFormRedirect={this.handleFormRedirect}
                   allRooms={allRooms}
+                  setAllBookings={this.setAllBookings}
                   {...props}
                 />
               )}

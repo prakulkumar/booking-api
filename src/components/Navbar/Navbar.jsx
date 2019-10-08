@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
+import POSMenu from "../POS/POSMenu";
 
 const useStyles = makeStyles(theme => ({
   stepIn: {
@@ -20,7 +21,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const HeaderNavbar = ({ onRefresh, path, onRedirectFromNavbar, showTaxes }) => {
+const HeaderNavbar = ({
+  onRefresh,
+  path,
+  onRedirectFromNavbar,
+  showTaxes,
+  showPOSDialog
+}) => {
   const classes = useStyles();
 
   return (
@@ -40,9 +47,12 @@ const HeaderNavbar = ({ onRefresh, path, onRedirectFromNavbar, showTaxes }) => {
             Taxes
           </Button>
           {path === "/" && (
-            <Button color="inherit" onClick={() => onRefresh()}>
-              Refresh
-            </Button>
+            <React.Fragment>
+              <POSMenu showPOSDialog={showPOSDialog} />
+              <Button color="inherit" onClick={() => onRefresh()}>
+                Refresh
+              </Button>
+            </React.Fragment>
           )}
         </Toolbar>
       </AppBar>

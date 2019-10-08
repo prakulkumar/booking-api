@@ -125,6 +125,7 @@ class Calendar extends Component {
   getBookings = async dateObj => {
     if (!this.state.loading) this.setState({ loading: true });
     const bookings = await bookingService.getBookings(dateObj);
+    this.props.setAllBookings(bookings);
     this.setState({ loading: false });
     return bookings;
   };
