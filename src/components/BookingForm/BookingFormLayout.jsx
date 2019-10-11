@@ -95,8 +95,8 @@ class BookingFormLayout extends Component {
     this.setState({ data, availableRooms });
   };
 
-  getAvailableRooms = async (checkIn, checkOut) => {
-    return await roomService.getAvailableRooms(checkIn, checkOut);
+  getAvailableRooms = async (checkIn, checkOut, bookingId) => {
+    return await roomService.getAvailableRooms(checkIn, checkOut, bookingId);
   };
 
   getUpdatedRooms = (availableRooms, rooms) => {
@@ -175,9 +175,11 @@ class BookingFormLayout extends Component {
     let rooms = [...data.rooms];
     data[id] = utils.getDate(event);
     if (id === "checkIn") data["checkOut"] = data[id];
+
     const availableRooms = await this.getAvailableRooms(
       data.checkIn,
-      data.checkOut
+      data.checkOut,
+      data._id
     );
 
     data.rooms = this.getUpdatedRooms(availableRooms, rooms);
