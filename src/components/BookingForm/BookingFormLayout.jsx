@@ -49,6 +49,8 @@ class BookingFormLayout extends Component {
     },
     errors: {},
     availableRooms: [],
+    startDate: null,
+    endDate: null,
     isEdit: false,
     shouldDisable: false
   };
@@ -63,18 +65,16 @@ class BookingFormLayout extends Component {
 
   setViewBookingData = () => {
     const { selectedBooking } = this.props;
-    const availableRooms = this.props.selectedBooking.rooms;
-    const booking = {
-      ...selectedBooking,
-      checkIn: selectedBooking.checkIn,
-      checkOut: selectedBooking.checkOut
-    };
+    const availableRooms = selectedBooking.rooms;
+    const booking = { ...selectedBooking };
 
     this.setState({
       data: booking,
       disable: true,
       availableRooms,
-      shouldDisable: !this.state.isEdit
+      shouldDisable: !this.state.isEdit,
+      startDate: booking.checkIn,
+      endDate: booking.checkOut
     });
   };
 
@@ -95,8 +95,8 @@ class BookingFormLayout extends Component {
     this.setState({ data, availableRooms });
   };
 
-  getAvailableRooms = async (checkIn, checkOut) => {
-    return await roomService.getAvailableRooms(checkIn, checkOut);
+  getAvailableRooms = async (checkIn, checkOut, bookingId) => {
+    return await roomService.getAvailableRooms(checkIn, checkOut, bookingId);
   };
 
   getUpdatedRooms = (availableRooms, rooms) => {
@@ -176,10 +176,21 @@ class BookingFormLayout extends Component {
     let rooms = [...data.rooms];
     data[id] = utils.getDate(event);
     if (id === "checkIn") data["checkOut"] = data[id];
-    const availableRooms = await this.getAvailableRooms(
+
+    let availableRooms = await this.getAvailableRooms(
       data.checkIn,
-      data.checkOut
+      data.checkOut,
+      data._id
     );
+
+    if (
+      utils.getFormattedDate(data.checkIn) ===
+        utils.getFormattedDate(this.state.startDate) &&
+      utils.getFormattedDate(data.checkOut) ===
+        utils.getFormattedDate(this.state.endDate)
+    ) {
+      availableRooms = [...availableRooms, ...this.props.selectedBooking.rooms];
+    }
 
     data.rooms = this.getUpdatedRooms(availableRooms, rooms);
     this.setState({ data, availableRooms });
