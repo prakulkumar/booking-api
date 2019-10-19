@@ -5,7 +5,9 @@ import ReportHeader from "./ReportHeader";
 
 import "./Report.scss";
 
-const Report = ({ selectedBooking: booking }) => {
+const Report = ({ selectedBooking: booking, history }) => {
+  if (booking === null) history.replace("/");
+
   return (
     booking && (
       <Card
