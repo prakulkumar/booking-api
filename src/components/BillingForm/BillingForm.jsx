@@ -31,7 +31,16 @@ const useStyles = makeStyles(theme => ({
 
 const BillingForm = props => {
   const classes = useStyles();
-  const { onFormSubmit, onInputChange, data, errors } = props;
+  const {
+    onFormSubmit,
+    onInputChange,
+    onCheckboxChange,
+    onRadioGroupChange,
+    data,
+    errors,
+    booking,
+    payment
+  } = props;
 
   const renderInputItems = (label, value, inputId) => {
     return (
@@ -45,16 +54,15 @@ const BillingForm = props => {
         </Typography>
         <Typography>:</Typography>
         <div style={{ width: "50%" }}>
-          {FormUtils.renderInput(
-            inputId,
-            null,
-            "number",
-            value,
-            null,
-            null,
-            null,
-            true
-          )}
+          {FormUtils.renderInput({
+            id: inputId,
+            label: null,
+            type: "number",
+            value: value,
+            onChange: () => {},
+            error: null,
+            disabled: true
+          })}
         </div>
       </div>
     );
@@ -65,88 +73,108 @@ const BillingForm = props => {
     inputId,
     value,
     onInputChange,
+    onCheckboxChange,
     error,
-    disabled
+    disabled,
+    checked
   ) => {
     return (
       <div className={classes.formGroup}>
-        <Checkbox className={classes.checkbox} />
-        {FormUtils.renderInput(
-          inputId,
-          label,
-          "number",
-          value,
-          onInputChange,
-          !disabled && error,
-          null,
-          disabled
-        )}
+        <Checkbox
+          className={classes.checkbox}
+          name={inputId}
+          onChange={onCheckboxChange}
+          checked={checked}
+        />
+        {FormUtils.renderInput({
+          id: inputId,
+          label: label,
+          type: "number",
+          value: value,
+          onChange: onInputChange,
+          error: !disabled && error,
+          disabled: disabled
+        })}
       </div>
     );
   };
 
   const radioButtons = [
-    { value: "withOutTax", label: "WithOut Tax" },
+    { value: "withoutTax", label: "Without Tax" },
     { value: "withTax", label: "With Tax" }
   ];
 
   return (
-    <form onSubmit={event => onFormSubmit(event)}>
-      <div className={classes.radioGroup}>
-        {FormUtils.renderRadioGroup({
-          label: "",
-          ariaLabel: "taxInfo",
-          name: "tax",
-          value: data.tax,
-          onChange: onInputChange,
-          radioButtons
-        })}
-      </div>
-      <div>
-        {renderInputItems("Room Charges", 3000, "roomCharges")}
-        {renderInputItems("Advance", 1000, "advance")}
-        {renderInputItems("Misllaneous", 2000, "misllaneous")}
-        {renderInputItems("Balance", 4000, "balance")}
-      </div>
-      {/* <Divider className={classes.divider} /> */}
-      <div className={classes.paymentMethods}>
-        {renderPaymentMethods(
-          "Cash Payment",
-          "cash",
-          data.cash,
-          onInputChange,
-          errors.cash,
-          false
+    booking && (
+      <form onSubmit={event => onFormSubmit(event)}>
+        <div className={classes.radioGroup}>
+          {FormUtils.renderRadioGroup({
+            label: "",
+            ariaLabel: "taxInfo",
+            name: "tax",
+            value: data.taxStatus,
+            onChange: onRadioGroupChange,
+            radioButtons
+          })}
+        </div>
+        <div>
+          {renderInputItems("Room Charges", booking.roomCharges, "roomCharges")}
+          {renderInputItems("Advance", booking.advance, "advance")}
+          {renderInputItems("Misllaneous", 0, "misllaneous")}
+          {renderInputItems("Balance", booking.balance, "balance")}
+        </div>
+        {/* <Divider className={classes.divider} /> */}
+        <div className={classes.paymentMethods}>
+          {renderPaymentMethods(
+            "Cash Payment",
+            "cash",
+            data.cash,
+            onInputChange,
+            onCheckboxChange,
+            errors.cash,
+            payment.cash.disable,
+            payment.cash.checked
+          )}
+          {renderPaymentMethods(
+            "Card Payment",
+            "card",
+            data.card,
+            onInputChange,
+            onCheckboxChange,
+            errors.card,
+            payment.card.disable,
+            payment.card.checked
+          )}
+          {renderPaymentMethods(
+            "Wallet Payment",
+            "wallet",
+            data.wallet,
+            onInputChange,
+            onCheckboxChange,
+            errors.wallet,
+            payment.wallet.disable,
+            payment.wallet.checked
+          )}
+        </div>
+        {errors.customError && (
+          <div style={{ color: "#f44336" }}>
+            <p>{errors.customError}</p>
+          </div>
         )}
-        {renderPaymentMethods(
-          "Card Payment",
-          "card",
-          data.card,
-          onInputChange,
-          errors.card,
-          true
-        )}
-        {renderPaymentMethods(
-          "Wallet Payment",
-          "wallet",
-          data.wallet,
-          onInputChange,
-          errors.wallet,
-          true
-        )}
-      </div>
 
-      <div className={classes.button}>
-        {FormUtils.renderButton(
-          "submit",
-          "large",
-          "Submit",
-          "primary",
-          null,
-          Object.keys(errors).length ? true : false
-        )}
-      </div>
-    </form>
+        <div className={classes.button}>
+          {FormUtils.renderButton({
+            type: "submit",
+            size: "large",
+            label: "Submit",
+            color: "primary",
+            className: null,
+            disabled: Object.keys(errors).length ? true : false,
+            onClick: () => {}
+          })}
+        </div>
+      </form>
+    )
   );
 };
 

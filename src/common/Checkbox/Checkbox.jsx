@@ -2,24 +2,17 @@ import React from "react";
 import Checkbox from "@material-ui/core/Checkbox";
 import { FormControl, FormControlLabel, FormGroup } from "@material-ui/core";
 
-const CustomCheckbox = ({ label, className }) => {
-  const [checked, setState] = React.useState(false);
-
-  const handleChange = event => {
-    console.log(event.target.checked);
-    setState(event.target.checked);
-  };
-
+const CustomCheckbox = ({ label, name, className, onChange, checked }) => {
   return (
     <FormControl component="fieldset">
       <FormGroup>
         <FormControlLabel
           control={
             <Checkbox
+              name={name}
               className={className}
               checked={checked}
-              onChange={handleChange}
-              value="gilad"
+              onChange={event => onChange(event, name)}
             />
           }
           label={label}

@@ -16,7 +16,7 @@ const useStyles = makeStyles({
 const CustomRadioGroup = props => {
   const classes = useStyles(props);
 
-  const { label, ariaLabel, name, value, handleChange, radioButtons } = props;
+  const { label, ariaLabel, name, value, onChange, radioButtons } = props;
 
   return (
     <FormControl component="fieldset">
@@ -25,7 +25,7 @@ const CustomRadioGroup = props => {
         aria-label={ariaLabel}
         name={name}
         value={value}
-        onChange={handleChange}
+        onChange={event => onChange(event)}
       >
         <div className={classes.formGroup}>
           {radioButtons.map(radio => (

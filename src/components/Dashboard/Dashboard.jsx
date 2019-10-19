@@ -11,12 +11,13 @@ import roomService from "../../services/roomService";
 import "./Dashboard.scss";
 import utils from "../../utils/utils";
 import constants from "../../utils/constants";
+import Report from "../Report/Report";
 
 class Dashboard extends Component {
   state = {
     currentDate: utils.getDate(),
     isRefresh: false,
-    selectedBooking: {},
+    selectedBooking: null,
     allRooms: [],
     selectedRoom: null,
     selectedDate: utils.getDate(),
@@ -33,8 +34,11 @@ class Dashboard extends Component {
   }
 
   handleRefresh = () => {
-    // this.setState({ isRefresh: !this.state.isRefresh });
     window.location.reload();
+  };
+
+  handleRedirectFromNavbar = () => {
+    this.props.history.replace("/");
   };
 
   handleFormRedirect = (bookingObj, roomObj, selectedDate) => {
@@ -44,6 +48,18 @@ class Dashboard extends Component {
 
     if (bookingObj) this.props.history.push("/booking/viewBooking");
     else this.props.history.push("/booking/newBooking");
+  };
+
+  handleCheckOutRedirect = bookingObj => {
+    const selectedBooking = bookingObj && { ...bookingObj };
+    this.setState({ selectedBooking });
+    this.props.history.push("/billing");
+  };
+
+  handleRedirectFromBilling = bookingObj => {
+    const selectedBooking = bookingObj && { ...bookingObj };
+    this.setState({ selectedBooking });
+    this.props.history.push("/report");
   };
 
   handleSnackbarEvent = snackbarObj => {
@@ -76,7 +92,11 @@ class Dashboard extends Component {
           onClose={this.handleSnackBar}
           variant={snackbarObj.variant}
         />
-        <Navbar onRefresh={this.handleRefresh} />
+        <Navbar
+          onRefresh={this.handleRefresh}
+          path={this.props.location.pathname}
+          onRedirectFromNavbar={this.handleRedirectFromNavbar}
+        />
         <div className="subContainer">
           <Switch>
             <Route
@@ -87,11 +107,28 @@ class Dashboard extends Component {
                   selectedBooking={selectedBooking}
                   selectedRoom={selectedRoom}
                   selectedDate={selectedDate}
+                  onCheckOutRedirect={this.handleCheckOutRedirect}
                   {...props}
                 />
               )}
             />
-            <Route path="/billing" component={BillingFormLayout} />
+            <Route
+              path="/billing"
+              render={props => (
+                <BillingFormLayout
+                  onSnackbarEvent={this.handleSnackbarEvent}
+                  selectedBooking={selectedBooking}
+                  onRedirectFromBilling={this.handleRedirectFromBilling}
+                  {...props}
+                />
+              )}
+            />
+            <Route
+              path="/report"
+              render={props => (
+                <Report selectedBooking={selectedBooking} {...props} />
+              )}
+            />
             <Route
               path="/"
               exact

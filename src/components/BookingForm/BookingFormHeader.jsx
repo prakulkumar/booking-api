@@ -58,7 +58,7 @@ const BookingFormHeader = props => {
               <HotelIcon />
             </IconButton>
           )}
-          {moment().toDate() >= moment(checkOut).toDate() && (
+          {moment().toDate() >= moment(checkOut).toDate() && status.checkedIn && (
             <IconButton
               aria-label="account of current user"
               aria-controls="menu-appbar"

@@ -4,6 +4,10 @@ import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
 import "./Navbar.scss";
 
 const useStyles = makeStyles(theme => ({
+  stepIn: {
+    display: "inline-block",
+    cursor: "pointer"
+  },
   root: {
     position: "fixed",
     width: "100%",
@@ -14,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const HeaderNavbar = ({ onRefresh }) => {
+const HeaderNavbar = ({ onRefresh, path, onRedirectFromNavbar }) => {
   const classes = useStyles();
 
   return (
@@ -22,11 +26,15 @@ const HeaderNavbar = ({ onRefresh }) => {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            STEPIN
+            <div onClick={onRedirectFromNavbar} className={classes.stepIn}>
+              STEPIN
+            </div>
           </Typography>
-          <Button color="inherit" onClick={() => onRefresh()}>
-            Refresh
-          </Button>
+          {path === "/" && (
+            <Button color="inherit" onClick={() => onRefresh()}>
+              Refresh
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </div>

@@ -25,11 +25,15 @@ const roomTypes = [
 class BookingFormLayout extends Component {
   state = {
     data: {
+      hotelName: "Hotel Black Rose",
+      hotelAddress: "#234 street, Bengalore",
       firstName: "",
       lastName: "",
       address: "",
       checkIn: utils.getDate(),
       checkOut: utils.getDate(),
+      checkedInTime: "",
+      checkedOutTime: "",
       adults: "",
       children: 0,
       contactNumber: "",
@@ -95,50 +99,6 @@ class BookingFormLayout extends Component {
     return await roomService.getAvailableRooms(checkIn, checkOut);
   };
 
-  createBooking = async bookingData => {
-    const { status } = await bookingService.addBooking(bookingData);
-    if (status === 200) this.openSnackBar("Booking Successfull", success, "/");
-    else this.openSnackBar("Error Occurred", error);
-  };
-
-  updateBooking = async bookingData => {
-    const { status } = await bookingService.updateBooking(bookingData);
-    if (status === 200)
-      this.openSnackBar("Booking Updated Successfully", success, "/");
-    else this.openSnackBar("Error Occurred", error);
-  };
-
-  checkForErrors = () => {
-    const errors = FormUtils.validate(this.state.data, schema);
-    this.setState({ errors });
-    return Object.keys(errors).length;
-  };
-
-  handleInputChange = ({ currentTarget: input }) => {
-    const { data, errors } = this.state;
-    const updatedState = FormUtils.handleInputChange(
-      input,
-      data,
-      errors,
-      schema
-    );
-    this.setState({ data: updatedState.data, errors: updatedState.errors });
-  };
-
-  handleDatePickerChange = async (event, id) => {
-    const data = { ...this.state.data };
-    let rooms = [...data.rooms];
-    data[id] = utils.getDate(event);
-    if (id === "checkIn") data["checkOut"] = data[id];
-    const availableRooms = await this.getAvailableRooms(
-      data.checkIn,
-      data.checkOut
-    );
-
-    data.rooms = this.getUpdatedRooms(availableRooms, rooms);
-    this.setState({ data, availableRooms });
-  };
-
   getUpdatedRooms = (availableRooms, rooms) => {
     const roomsIndex = this.getIndexesToRemoveRoomsFromState(
       availableRooms,
@@ -170,6 +130,58 @@ class BookingFormLayout extends Component {
     });
 
     return roomsIndex;
+  };
+
+  createBooking = async bookingData => {
+    const { status } = await bookingService.addBooking(bookingData);
+    if (status === 200) this.openSnackBar("Booking Successfull", success, "/");
+    else this.openSnackBar("Error Occurred", error);
+  };
+
+  updateBooking = async (
+    bookingData,
+    message = "Booking Updated Successfully"
+  ) => {
+    const { status } = await bookingService.updateBooking(bookingData);
+    if (status === 200) this.openSnackBar(message, success, "/");
+    else this.openSnackBar("Error Occurred", error);
+  };
+
+  checkForErrors = () => {
+    const errors = FormUtils.validate(this.state.data, schema);
+    this.setState({ errors });
+    return Object.keys(errors).length;
+  };
+
+  openSnackBar = (message, variant, redirectTo) => {
+    const snakbarObj = { open: true, message, variant };
+    this.props.onSnackbarEvent(snakbarObj);
+    redirectTo && this.props.history.push(redirectTo);
+  };
+
+  handleInputChange = ({ currentTarget: input }) => {
+    const { data, errors } = this.state;
+    const updatedState = FormUtils.handleInputChange(
+      input,
+      data,
+      errors,
+      schema
+    );
+    this.setState({ data: updatedState.data, errors: updatedState.errors });
+  };
+
+  handleDatePickerChange = async (event, id) => {
+    const data = { ...this.state.data };
+    let rooms = [...data.rooms];
+    data[id] = utils.getDate(event);
+    if (id === "checkIn") data["checkOut"] = data[id];
+    const availableRooms = await this.getAvailableRooms(
+      data.checkIn,
+      data.checkOut
+    );
+
+    data.rooms = this.getUpdatedRooms(availableRooms, rooms);
+    this.setState({ data, availableRooms });
   };
 
   handleSelectChange = (event, index) => {
@@ -214,27 +226,6 @@ class BookingFormLayout extends Component {
     }
   };
 
-  createBooking = async bookingData => {
-    const { status } = await bookingService.addBooking(bookingData);
-    if (status === 200) this.openSnackBar("Booking Successfull", success, "/");
-    else this.openSnackBar("Error Occurred", error);
-  };
-
-  updateBooking = async (
-    bookingData,
-    message = "Booking Updated Successfully"
-  ) => {
-    const { status } = await bookingService.updateBooking(bookingData);
-    if (status === 200) this.openSnackBar(message, success, "/");
-    else this.openSnackBar("Error Occurred", error);
-  };
-
-  checkForErrors = () => {
-    const errors = FormUtils.validate(this.state.data, schema);
-    this.setState({ errors });
-    return Object.keys(errors).length;
-  };
-
   handleAddRoom = () => {
     const data = { ...this.state.data };
     const rooms = [...data.rooms];
@@ -266,12 +257,6 @@ class BookingFormLayout extends Component {
     this.props.history.push("/");
   };
 
-  openSnackBar = (message, variant, redirectTo) => {
-    const snakbarObj = { open: true, message, variant };
-    this.props.onSnackbarEvent(snakbarObj);
-    redirectTo && this.props.history.push(redirectTo);
-  };
-
   handleEdit = () => {
     this.setState({ isEdit: true, shouldDisable: false });
   };
@@ -285,16 +270,14 @@ class BookingFormLayout extends Component {
 
   handleCheckIn = () => {
     const data = { ...this.state.data };
+    data.checkedInTime = utils.getTime();
     data.status = { ...data.status, checkedIn: true };
     this.setState({ data });
     this.updateBooking(data, "Checked In Successfully");
   };
 
   handleCheckOut = () => {
-    const data = { ...this.state.data };
-    data.status = { ...data.status, checkedOut: true };
-    this.setState({ data });
-    this.updateBooking(data, "Checked Out Successfully");
+    this.props.onCheckOutRedirect(this.state.data);
   };
 
   render() {

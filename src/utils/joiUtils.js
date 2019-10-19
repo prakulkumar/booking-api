@@ -47,8 +47,8 @@ export default {
       .required()
   },
   billingFormSchema: {
-    card: Joi.number(),
     cash: Joi.number(),
+    card: Joi.number(),
     wallet: Joi.number()
   }
 };

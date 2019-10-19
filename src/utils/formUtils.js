@@ -48,11 +48,11 @@ const validateProperty = ({ name, value }, formSchema) => {
 /*
   renderInput
   renderDatepicker
-  args:   id: string
-          label: string
-          type: string
-          value: string
-          onChange: function
+  args:   id: string,
+          label: string,
+          type: string,
+          value: string,
+          onChange: function,
           error: string
 */
 const renderInput = args => <Input name={args.id} {...args} />;
@@ -60,10 +60,10 @@ const renderDatepicker = args => <DatePicker name={args.id} {...args} />;
 
 /*
   renderSelect
-  args:   id: string
-          label: string
-          value: string
-          onChange: function
+  args:   id: string,
+          label: string,
+          value: string,
+          onChange: function,
           options: array  => [{value: any, label: string}]
 */
 const renderSelect = args => <Select name={args.id} {...args} />;
@@ -87,11 +87,11 @@ const renderButton = args => (
 /*
    renderRadioGroup
    parameters :- label: string, 
-                 ariaLabel: string 
-                 formGroupClass: object
-                 name: string (required)
-                 value: string (required) 
-                 handleChange: function (required)
+                 ariaLabel: string, 
+                 formGroupClass: object,
+                 name: string (required),
+                 value: string (required), 
+                 handleChange: function (required),
                  radioButtons: array (required)
 */
 const renderRadioGroup = args => (

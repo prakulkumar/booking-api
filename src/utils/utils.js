@@ -8,6 +8,22 @@ export function getDateObj(date) {
   };
 }
 
+export function getFormattedDate(date) {
+  return moment(date).format("ll");
+}
+
+// Time format - 6:58 PM
+export function getTime(date) {
+  return moment(date).format("LT");
+}
+
+export function getDiffBetweenDays(date1, date2) {
+  date1 = moment(date1);
+  date2 = moment(date2);
+  const diff = date2.diff(date1, "days");
+  return diff === 0 ? 1 : diff;
+}
+
 export function daysBetweenDates(startDate, endDate) {
   let dates = [];
   const currDate = moment(startDate).startOf("day");
@@ -58,5 +74,8 @@ export default {
   daysBetweenDates,
   getDate,
   generateRandomColor,
-  getShortName
+  getShortName,
+  getFormattedDate,
+  getTime,
+  getDiffBetweenDays
 };
