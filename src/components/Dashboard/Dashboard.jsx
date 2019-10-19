@@ -46,7 +46,8 @@ class Dashboard extends Component {
     const selectedRoom = { ...roomObj };
     this.setState({ selectedBooking, selectedRoom, selectedDate });
 
-    if (bookingObj) this.props.history.push("/booking/viewBooking");
+    if (bookingObj.status.checkedOut) this.props.history.push("/report");
+    else if (bookingObj) this.props.history.push("/booking/viewBooking");
     else this.props.history.push("/booking/newBooking");
   };
 
