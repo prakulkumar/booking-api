@@ -14,5 +14,6 @@ const collections = {
 }
 
 const mongoUrl = process.env.MONGODB_URL;
+const test = "test"
 
 module.exports = { monthObj, dataBaseName, collections, mongoUrl };
